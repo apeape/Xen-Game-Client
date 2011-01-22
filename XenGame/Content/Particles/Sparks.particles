@@ -1,0 +1,130 @@
+<?xml version ="1.0" encoding ="utf-8" standalone ="yes"?>
+<particlesystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../bin/Xen.Ex.ParticleSystemImporter/particlesystem.xsd">
+
+  <particle name="shooter" blend="additive" texture="">
+  
+		<logic>
+			<once>
+				<rand_smooth target="local0" arg0="-150" arg1="150"/>
+				<add target="position.x" arg0="local0"/>
+				<add target="position.y" arg0="local0"/>
+				<add target="position.y" arg0="200"/>
+				<add target="position.x" arg0="400"/>
+
+
+        <set target="user0" arg0="position.x"/>
+        <set target="user1" arg0="position.y"/>
+
+				<rand_smooth target="local0" arg0="-50" arg1="50"/>
+				<add target="user0" arg0="local0"/>
+				<rand_smooth target="local0" arg0="-50" arg1="50"/>
+				<add target="user1" arg0="local0"/>
+
+			</once>
+			
+			<frame>
+			
+        <sub target="local0" arg0="position.x" arg1="user0"/>
+        <madd target="velocity.x" arg0="local0" arg1="-0.01"/>
+       
+        <sub target="local0" arg0="position.y" arg1="user1"/>
+        <madd target="velocity.y" arg0="local0" arg1="-0.01"/>
+			
+			</frame>
+		</logic>
+		<emitter>
+      <frame>
+        <loop count="250">
+          <emit type="spark" life="5" life_variance="4"/>
+				</loop>
+      </frame>
+		</emitter>
+		
+  </particle>
+
+	<particle name="spark" blend="alpha" texture="firework.png">
+		<logic>
+			<once>
+				
+				<mul target="velocity.x" arg0="5"/>
+				<mul target="velocity.y" arg0="5"/>
+    
+				<rand_smooth target="local0" arg0="-500" arg1="-175"/>
+				<add target="velocity.x" arg0="local0"/>
+				<rand_smooth target="local0" arg0="500" arg1="275"/>
+				<add target="velocity.y" arg0="local0"/>
+				
+				<rand_smooth target="local0" arg0="-10" arg1="10"/>
+				<add target="position.x" arg0="local0"/>
+				<rand_smooth target="local0" arg0="-10" arg1="10"/>
+				<add target="position.y" arg0="local0"/>
+			
+				<rand target="blue" arg0="0.5" arg1="0.75"/>
+				<rand target="green" arg0="0.05" arg1="0.4"/>
+				<set target="red" arg0="green"/>
+				
+				<set target="size" arg0="1"/>
+				<set target="rotation" arg0="2"/>
+				<set target="alpha" arg0="0"/>
+			</once>
+
+			<frame>
+        <add target="velocity.y" arg0="-5"/>
+        <mul target="velocity.x" arg0="0.999"/>
+        <mul target="velocity.y" arg0="0.999"/>
+        
+        <if_less arg0="position.y" arg1="0">        
+          <if_less arg0="velocity.y" arg1="0">
+            <rand target="local0" arg0="-0.25" arg1="-0.5"/>
+          
+            <mul target="velocity.y" arg0="local0"/>
+            
+            <rand target="local0" arg0="0.25" arg1="0.85"/>
+            <mul target="velocity.x" arg0="local0"/>
+          </if_less>
+        </if_less>
+        
+        <!--
+        <if_less arg0="position.x" arg1="-500">        
+          <if_less arg0="velocity.x" arg1="0">
+            <rand target="local0" arg0="-0.25" arg1="-0.95"/>
+          
+            <mul target="velocity.x" arg0="local0"/>
+            
+            <rand target="local0" arg0="0.25" arg1="0.85"/>
+            <mul target="velocity.y" arg0="local0"/>
+          </if_less>
+        </if_less>
+        -->
+        
+        <div target="alpha" arg0="age" arg1="life"/>
+        <mul target="alpha" arg0="alpha"/>
+        <sub target="alpha" arg0="1" arg1="alpha"/>
+        <mul target="alpha" arg0="0.1"/>
+			</frame>
+
+		</logic>
+		<!--<emitter>
+			<frame>
+
+			</frame>
+		</emitter>-->
+	</particle>
+
+	<system frame_rate="60hz">
+
+    <once>
+				<emit type="shooter" life="20" life_variance="5"/>
+    </once>
+		
+		<frame>
+
+      <every interval="10">
+				<emit type="shooter" life="20" life_variance="5"/>
+			</every>
+
+		</frame>
+
+	</system>
+
+</particlesystem>

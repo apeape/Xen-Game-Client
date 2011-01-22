@@ -1,0 +1,83 @@
+<?xml version ="1.0" encoding ="utf-8" standalone ="yes"?>
+<particlesystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../bin/Xen.Ex.ParticleSystemImporter/particlesystem.xsd">
+
+	<!-- 
+		For more detailed explaination of the particle system format, see Tutorial 21, and Fireworks.particles
+	-->
+
+
+	<!-- 
+		This system uses a trigger to fire a large burst of particles
+	-->
+	<system frame_rate="60hz">
+		
+		<triggers>
+			<!--
+				Enough memory will be allocated for 25 instances of this trigger to be firing at once
+			-->
+			<trigger name="burst" allocation_multiplier="25">
+
+				<emit type="flash" life="0.25"/>
+				
+				<loop count="250">
+					<emit type="burst" life="3" life_variance="2"/>
+				</loop>
+				
+			</trigger>
+		</triggers>
+		
+	</system>
+
+	<!-- 
+		see the documentation for the advanced particle tutorial to explain what 'gpu_buffer_position' does 
+		Short anser: the GPU particle system processes in 16 bit floating point, so if you start to see particles
+		'snap' or form a grid due to low precision, then set this to true! (you will lose user1,user2,user3 though)
+	-->
+	<particle name="burst" blend="additive_saturate" texture="fire.png" gpu_buffer_position="true">
+		<logic>
+			<once>
+				<rand_smooth target="velocity.x" arg0="-2" arg1="2"/>
+				<rand_smooth target="velocity.z" arg0="-2" arg1="2"/>
+				<rand_smooth target="velocity.y" arg0="15" arg1="25"/>
+				
+				<!-- add some extra randomness.. -->
+				<rand_smooth target="local0" arg0="0.5" arg1="1.25"/>
+				<mul target="velocity.x" arg0="local0"/>
+				<rand_smooth target="local0" arg0="0.5" arg1="1.25"/>
+				<mul target="velocity.y" arg0="local0"/>
+				<rand_smooth target="local0" arg0="0.5" arg1="1.25"/>
+				<mul target="velocity.z" arg0="local0"/>
+				
+				<rand target="size" arg0="0.075" arg1="0.1"/>
+			</once>
+			<frame>
+				<madd target="velocity.y" arg0="-2.5" arg1="size"/>
+
+				<!-- bounce -->
+				<if_less arg0="position.y" arg1="0">
+					<if_less arg0="velocity.y" arg1="0">
+						<mul target="velocity.y" arg0="-0.5"/>
+						<mul target="velocity.x" arg0="0.5"/>
+						<mul target="velocity.z" arg0="0.5"/>
+					</if_less>
+				</if_less>
+				
+			</frame>
+		</logic>
+	</particle>
+
+
+	<particle name="flash" blend="additive_saturate" texture="fire.png">
+		<logic>
+			<once>
+				<set target="size" arg0="1"/>
+			</once>
+			<frame>
+				<sub target="size" arg0="life" arg1="age"/>
+				<mul target="size" arg0="5"/>
+			</frame>
+		</logic>
+	</particle>
+
+</particlesystem>

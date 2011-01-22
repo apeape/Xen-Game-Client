@@ -1,0 +1,288 @@
+<?xml version ="1.0" encoding ="utf-8" standalone ="yes"?>
+<!-- 
+
+	This file declares a xen particle.
+
+	The following xml element is the root element for the file, this must always be 'particlesystem'.
+
+	Note: Here, on the second line, the local xml Schema is declared. (particlesystem.xsd)
+	This line is not required, but will make editing the particle system *much* easier.
+
+	The schema file defines a set of rules that control what can and cannot be added to the XML data.
+	With few exceptions, if the XML file passes schema validation, it should run in code.
+
+	When using a schema validating editor such as Visual Studio, any validation errors will be
+	highlighted, and intellisense will list the options available in context.
+	
+	In general, to get a list of options in context, simply start a new element by typing '<'
+	or press space within an element <> block. You can hover over most elements to get a description.
+
+	This XML file points to the copy of the schema included in the ParticleSystemImporter project.
+	However it is OK to make a local copy of this schema file.
+
+-->
+<particlesystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../bin/Xen.Ex.ParticleSystemImporter/particlesystem.xsd">
+
+	<!-- 
+		
+		The 'particlesystem' root element can have two child elements.
+		It is required to have a 'system' element,
+		and it may have as many 'particle' elements as it wants.
+	
+	-->
+	
+	<system frame_rate="60hz">
+
+		<!-- 
+			
+			'system' controls emitter logic for the entire particle system.
+			
+			This logic can be defined in four ways:
+			'once' is logic that occurs once when the system is created
+			'frame' is logic that is run every frame
+			
+			'triggers' is a group of 'trigger' logic that the application can fire
+			'toggles' is a group of 'toggle' logic that the application can enable/disable
+			
+		-->
+		
+		
+		<frame>
+			<!--
+				This is the 'frame' logic, which runs once every frame (60fps)
+				Typing '<' will give a list of commands available.
+				These commands are 'chance' 'emit' 'every' and 'loop'.
+			-->
+			<every interval ="0.25">
+				
+				<!--
+					'every' is a command that runs logic every 'interval' seconds.
+					The following logic will run every 0.25 seconds (4 times per second)
+				-->
+				
+				<emit type="firework" life="1.5" life_variance="0.5"/>
+				
+				<!--
+					Here, a particle of type 'firework' is emitted. (firework is defined below)
+					It has a life of 1.5 seconds, with an (optional) +/- variance of 0.5 seconds
+					(so it's life ranges from 1.0 to 2.0 seconds).
+					
+					Note: The XML Schema does not validate that 'firework' is a valid particle type
+				-->
+				
+			</every>
+		</frame>
+		
+		<!--	Also available here are 'once' 'triggers' and 'toggles' -->
+		
+	</system>
+	
+	
+	<!--
+		
+		Every particle in a particle system is stored as upto 18 floats:
+		
+		float3	position						Position of the particle
+		float 	size								Size of the particle
+		float3	velocity						Velocity of the particle (in units per second)
+		float 	rotation						Rotation of the particle (in radians)
+		float4	colour							(red, blue, green, alpha) Colour of the particle (0=black, 1=white)
+		float4	userValues					(user0,user1,user2,user3) Custom user specific values
+		float		age									(readonly) the age of the particle in seconds
+		float		life								(readonly) the life of the particle in seconds
+	
+		Globals / Locals:
+		
+		Similar to 'user0', particle systems can read/write four 'local' values, 'local0' to 'local3'.
+		These values are temporary and not stored between frames / particles.
+	
+		The particle system declares 16 readonly global values 'global0' to 'global15'.
+		These values can be set with the 'Globals' property on the ParticleSystem.
+		
+	
+		
+		
+		GPU particle processing will store these values as 16bit floats.
+		Velocity will automatically be added to position each frame.
+		
+		Note:
+		If a particle type does not use the 'colour', 'userValues', 'life' or 'age' then the processor
+		may detect this, and not store the values to save space (the colour will default to 1,1,1,1).
+		
+	-->
+	
+	
+	<particle name="firework" blend="alpha" texture="firework.png">
+		
+		<!-- 
+			Here, a particle type is declared (there are 4 particle types declared in this file).
+			This is the root firework particle, it curves off either left or right.
+			Every frame it generates two 'spark' particles which form the trial.
+			When the firework is removed, it generates a 'flash' and 100 'spread' particles.
+		-->
+		
+		<logic>
+			<!-- Logic is performed by the processor (GPU or CPU) -->
+			
+			<once>
+				<!-- This logic is run when the particle is created -->
+				
+				<!-- Add a random offset to position.x -->
+				<rand_smooth target="local0" arg0="-100" arg1="100"/>
+				<add target="position.x" arg0="local0"/>
+
+				<!-- user0 stores the angle the particle travels -->
+				<rand_smooth target="user0" arg0="-0.25" arg1="0.25"/>
+				<!-- user1 stores the speed of the particle -->
+				<rand_smooth target="user1" arg0="175" arg1="475"/>
+
+				<!-- random colour -->
+				<rand target="red" arg0="0.25" arg1="1"/>
+				<rand target="green" arg0="0.25" arg1="1"/>
+				<rand target="blue" arg0="0.25" arg1="1"/>
+			</once>
+			
+			<frame>
+				<!-- Every frame, flicker the size  -->
+				<rand_smooth target="size" arg0="10" arg1="30"/>
+
+				<!-- Set the velocity based on direction, and speed (user0 and user1) -->
+				<sin target="velocity.x" arg0="user0"/>
+				<cos target="velocity.y" arg0="user0"/>
+				<mul target="velocity.x" arg0="user1"/>
+				<mul target="velocity.y" arg0="user1"/>
+			
+				<!-- Make the particle slowly bend downwards -->
+				<if_greater arg0="user0" arg1="0">
+					<madd target="user0" arg0="0.000025" arg1="user1"/>
+				</if_greater>
+				<if_lessequal arg0="user0" arg1="0">
+					<madd target="user0" arg0="-0.000025" arg1="user1"/>
+				</if_lessequal>
+			</frame>
+		</logic>
+
+		<emitter>
+			<!-- 
+				A particle type can also declare an emitter. The emitter runs for each particle instance.
+				A 'frame' emitter runs every frame, and the 'remove' emitter runs when the particle is removed.
+				The emitter is always processed on the CPU, so should be kept simple.
+			-->
+			<frame>
+				<!-- The emitter uses the same logic as the emitters in 'system' -->
+				<loop count="2">
+					<!--
+						When a particle is emitted by another particle, it will copy *all* values of the source
+						The emitted 'spark' will be created with the same position, colour, velocity, etc as this firework.
+					-->
+					<emit type="spark" life="0.5" life_variance="0.25"/>
+				</loop>
+			</frame>
+			
+			<remove>
+				<!-- Bang -->
+				<emit type="flash" life="0.25"/>
+				<loop count="100">
+					<emit type="spread" life="1" life_variance="0.75"/>
+				</loop>
+			</remove>
+		</emitter>
+	</particle>
+
+
+
+	<particle name="spark" blend="additive_saturate" texture="spark.png">
+		<!-- The inital values of this particle are copied from the firework -->
+		<logic>
+			<once>
+				<!-- Set the velocity to pushing away from the firework -->
+				<mul target="velocity.x" arg0="-0.2"/>
+				<mul target="velocity.y" arg0="-0.2"/>
+
+				<rand_smooth target="local0" arg0="-25" arg1="25"/>
+				<add target="velocity.x" arg0="local0"/>
+				<rand_smooth target="local0" arg0="-25" arg1="25"/>
+				<add target="velocity.y" arg0="local0"/>
+
+				<rand_smooth target="size" arg0="8"/>
+				<!-- This is a 'hack' for the VelocityBillboard displayer -->
+				<set target="rotation" arg0="1"/>
+				
+				<rand_smooth target="local1" arg0="-0.15" arg1="0.15"/>
+				<add target="red" arg0="local1"/>
+				<rand_smooth target="local1" arg0="-0.15" arg1="0.15"/>
+				<add target="blue" arg0="local1"/>
+				<rand_smooth target="local1" arg0="-0.15" arg1="0.15"/>
+				<add target="green" arg0="local1"/>
+			</once>
+
+			<frame>
+				<!-- fade out -->
+				<sub target="alpha" arg0="life" arg1="age"/>
+				<mul target="alpha" arg0="4"/>
+
+				<!-- flicker -->
+				<rand_smooth target="local1" arg0="0.5" arg1="1.5"/>
+				<mul target="alpha" arg0="local1"/>
+			</frame>
+		</logic>
+	</particle>
+
+
+	<particle name="flash" blend="additive_saturate" texture="flash.png">
+		<logic>
+			<once>
+				<set target="velocity.x" arg0="0"/>
+				<set target="velocity.y" arg0="0"/>
+			</once>
+			<frame>
+				<mul target="local0" arg0="life" arg1="0.5"/>
+				<div target="alpha" arg0="age" arg1="life"/>
+				<sub target="alpha" arg0="1" arg1="alpha"/>
+				<mul target="size" arg0="alpha" arg1="256"/>
+			</frame>
+		</logic>
+	</particle>
+
+
+
+	<particle name="spread" blend="additive_saturate" texture="spark.png">
+		<logic>
+			<once>
+				<set target="size" arg0="3"/>
+				<set target="rotation" arg0="1"/>
+				
+				<rand target="local0" arg0="6.3"/>
+				<cos target="velocity.x" arg0="local0"/>
+				<sin target="velocity.y" arg0="local0"/>
+
+				<rand_smooth target="local0" arg0="200" arg1="400"/>
+				
+				<mul target="velocity.x" arg0="local0"/>
+				<mul target="velocity.y" arg0="local0"/>
+
+				<rand_smooth target="local0" arg0="-0.1" arg1="0.1"/>
+				<add target="red" arg0="local0"/>
+				<rand_smooth target="local0" arg0="-0.1" arg1="0.1"/>
+				<add target="blue" arg0="local0"/>
+				<rand_smooth target="local0" arg0="-0.1" arg1="0.1"/>
+				<add target="green" arg0="local0"/>
+			</once>
+			<frame>
+				<mul target="velocity.x" arg0="0.975"/>
+				<mul target="velocity.y" arg0="0.975"/>
+				<sub target="alpha" arg0="life" arg1="age"/>
+				<mul target="alpha" arg0="2"/>
+
+
+				<rand_smooth target="local0" arg0="0.5" arg1="1.5"/>
+				<mul target="alpha" arg0="local0"/>
+				
+			</frame>
+		</logic>
+	</particle>
+
+
+
+</particlesystem>
