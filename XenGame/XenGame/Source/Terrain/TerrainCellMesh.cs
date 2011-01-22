@@ -70,7 +70,6 @@ namespace GameClient.Terrain
             isEmpty = (verts.Count == 0);
             if (!isEmpty)
             {
-                isEmpty = false;
                 // TODO: redo polyvox wrapper to generate these instead of using LINQ hilarity
 
                 VertexPositionNormalTexture[] vertsConverted = verts.Select<PositionMaterialNormal, VertexPositionNormalTexture>(v =>

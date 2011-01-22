@@ -77,9 +77,7 @@ namespace GameClient.Terrain
             boundingBoxShader = new MaterialShader();
 
             if (!File.Exists("PolyVoxCore.dll"))
-            {
                 throw new FileNotFoundException("Missing PolyVoxCore.dll! Please place it in the same directory as the game executable.");
-            }
         }
 
         public void Draw(DrawState state)
