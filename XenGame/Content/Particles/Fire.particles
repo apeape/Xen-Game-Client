@@ -1,0 +1,172 @@
+<?xml version ="1.0" encoding ="utf-8" standalone ="yes"?>
+<particlesystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../bin/Xen.Ex.ParticleSystemImporter/particlesystem.xsd">
+
+	<!-- 
+		This particle system is here to look pretty
+		It's not intended to teach anything specific.
+		
+		For more detailed explaination of the particle system format, see Tutorial 21, and Fireworks.particles
+	-->
+	
+	<system frame_rate="60hz">
+		<frame>
+			<every interval="0.025">
+				<emit type="spark" life="1.5" life_variance="1.25"/>
+			</every>
+			<loop count="2">
+
+				<emit type="fire" life="1.25"/>
+			</loop>
+			<every interval ="0.02">
+				<emit type="fire_background" life="2"/>
+			</every>
+		</frame>
+	</system>
+
+	<particle name="fire_background" blend="subtract" texture="fire.png">
+		<logic>
+			<once>
+				<rand_smooth target="position.x" arg0="-0.5" arg1="0.5"/>
+				<rand_smooth target="position.z" arg0="-0.5" arg1="0.5"/>
+				<set target="size" arg0="0.5"/>
+				<set target="alpha" arg0="0"/>
+			</once>
+			<frame>
+				<add target="velocity.y" arg0="0.025"/>
+				<sub target="size" arg0="life" arg1="age"/>
+				<saturate target="size" arg0="size"/>
+				<set target="alpha" arg0="size"/>
+				<mul target="alpha" arg0="0.05"/>
+
+				<saturate target="local0" arg0="age"/>
+				<mul target="alpha" arg0="local0"/>
+				
+				<mul target="size" arg0="0.5"/>
+			</frame>
+		</logic>
+	</particle>
+
+	<particle name="fire" blend="additive_saturate" texture="fire2.png">
+		<logic>
+			<once>
+				<rand_smooth target="local0" arg0="-0.5" arg1="0.5"/>
+				<rand_smooth target="local1" arg0="-0.1" arg1="0.1"/>
+				<rand_smooth target="local2" arg0="-0.5" arg1="0.5"/>
+
+				<add target="position.x" arg0="local0"/>
+				<add target="position.y" arg0="local1"/>
+				<add target="position.z" arg0="local2"/>
+				
+				<madd target="velocity.x" arg0="local0" arg1="-0.5"/>
+				<madd target="velocity.z" arg0="local2" arg1="-0.5"/>
+				
+				<rand_smooth target="local0" arg0="-1" arg1="1"/>
+				<rand_smooth target="local1" arg0="-1" arg1="1"/>
+
+				<madd target="velocity.x" arg0="local0" arg1="0.25"/>
+				<madd target="velocity.z" arg0="local1" arg1="0.25"/>
+				
+				<set target="size" arg0="0"/>
+
+				<rand_smooth target="local0" arg0="0.75"/>
+				<rand_smooth target="red" arg0="-0.25"/>
+				<rand_smooth target="blue" arg0="0.75"/>
+				<rand_smooth target="green" arg0="0.25"/>
+				<add target="red" arg0="local0"/>
+				<add target="green" arg0="local0"/>
+				<add target="blue" arg0="local0"/>
+			</once>
+			<frame>
+				<add target="rotation" arg0="1"/>
+				<add target="velocity.y" arg0="0.25"/>
+				<sub target="size" arg0="life" arg1="age"/>
+				<saturate target="size" arg0="size"/>
+				<mul target="size" arg0="0.25"/>
+				<set target="alpha" arg0="1"/>
+
+				<rand target="local0" arg0="1"/>
+				<if_greater arg0="local0" arg1="0.975">
+					<rand_smooth target="velocity.x" arg0="-1" arg1="1"/>
+					<rand_smooth target="velocity.z" arg0="-1" arg1="1"/>
+					<mul target="velocity.y" arg0="0.25"/>
+				</if_greater>
+
+				<if_greater arg0="velocity.y" arg1="3">
+					<mul target="velocity.y" arg0="0.5"/>
+					<mul target="velocity.x" arg0="1.15"/>
+					<mul target="velocity.z" arg0="1.15"/>
+				</if_greater>
+			</frame>
+		</logic>
+	</particle>
+	
+	<particle name="spark" blend="additive_saturate" texture="fire.png">
+		<logic>
+			<once>
+				<sub target="local1" arg0="5" arg1="life"/>
+				<mul target="local1" arg0="0.5"/>
+				
+				<rand_smooth target="local0" arg0="-0.4" arg1="0.4"/>
+				<mul target="local0" arg0="local1"/>
+				<add target="position.x" arg0="local0"/>
+				<rand_smooth target="local0" arg0="-0.4" arg1="0.4"/>
+				<mul target="local0" arg0="local1"/>
+				<add target="position.z" arg0="local0"/>
+				<rand_smooth target="local0" arg0="-0.1" arg1="0.1"/>
+				<mul target="local0" arg0="local1"/>
+				<add target="position.y" arg0="local0"/>
+
+				<set target="alpha" arg0="0"/>
+				<rand_smooth target="size" arg0="0.01" arg1="0.025"/>
+				<rand_smooth target="user0" arg0="-0.025" arg1="0.1"/>
+				<set target="rotation" arg0="100"/>
+				
+				<rand_smooth target="velocity.x" arg0="-2" arg1="2"/>
+				<rand_smooth target="velocity.y" arg0="2" arg1="4"/>
+				<rand_smooth target="velocity.z" arg0="-2" arg1="2"/>
+
+				<rand_smooth target="user1" arg0="-2" arg1="2"/>
+				<rand_smooth target="user2" arg0="0" arg1="2"/>
+				<rand_smooth target="user3" arg0="-2" arg1="2"/>
+
+				<set target="red" arg0="15"/>
+				<set target="green" arg0="8"/>
+				<set target="blue" arg0="3"/>
+
+			</once>
+			<frame>
+				<mul target="velocity.y" arg0="0.975"/>
+				<add target="user2" arg0="0.05"/>
+
+				<saturate target="local0" arg0="age"/>
+				<sub target="local1" arg0="life" arg1="age"/>
+				<saturate target="local1" arg0="local1"/>
+
+				<mul target="alpha" arg0="local0" arg1="local1"/>
+				<mul target="alpha" arg0="0.25"/>
+
+				<rand target="local0" arg0="1"/>
+
+				<if_greater arg0="local0" arg1="0.9">
+
+					<rand_smooth target="user1" arg0="-4" arg1="4"/>
+					<rand_smooth target="user2" arg0="-1" arg1="8"/>
+					<rand_smooth target="user3" arg0="-4" arg1="4"/>
+					
+				</if_greater>
+
+				<mul target="velocity.x" arg0="0.9"/>
+				<mul target="velocity.y" arg0="0.9"/>
+				<mul target="velocity.z" arg0="0.9"/>
+
+				<madd target="velocity.x" arg0="user1" arg1="0.1"/>
+				<madd target="velocity.y" arg0="user2" arg1="0.1"/>
+				<madd target="velocity.z" arg0="user3" arg1="0.1"/>
+			</frame>
+		</logic>
+	</particle>
+
+
+
+</particlesystem>

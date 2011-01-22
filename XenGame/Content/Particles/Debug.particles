@@ -1,0 +1,51 @@
+<?xml version ="1.0" encoding ="utf-8" standalone ="yes"?>
+<particlesystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../bin/Xen.Ex.ParticleSystemImporter/particlesystem.xsd">
+
+	<system frame_rate="60hz">
+		<frame>
+			<every interval="0.01">
+				<loop count="20">
+				<emit type="test" life="2.5" life_variance="2"/>
+				</loop>
+			</every>
+		</frame>
+	</system>
+
+	<particle name="test" texture="fire.png" blend="additive_saturate">
+		<logic>
+			<once>
+				<rand_smooth target="position.x" arg0="-500" arg1="500"/>
+				<rand_smooth target="position.y" arg0="-500" arg1="500"/>
+
+				<rand_smooth target="velocity.x" arg0="-100" arg1="100"/>
+				<rand_smooth target="velocity.y" arg0="-100" arg1="100"/>
+
+				<rand_smooth target="local0" arg0="-100" arg1="100"/>
+				<add target="position.x" arg0="local0"/>
+
+				<rand_smooth target="size" arg0="40" arg1="80"/>
+				<rand target="rotation" arg0="6"/>
+				<set target="alpha" arg0="0"/>
+			</once>
+			<frame>
+				<div target="alpha" arg0="age" arg1="life"/>
+				<sub target="local0" arg0="1" arg1="alpha"/>
+				<mul target="alpha" arg0="local0"/>
+			</frame>
+		</logic>
+	</particle>
+
+
+	<!--<particle name="pop" texture="firework.png">
+		<logic>
+			<once>
+				<rand target="local0" arg0="-100" arg1="100"/>
+				<rand target="local1" arg0="-100" arg1="100"/>
+				<add target="velocity.x" arg0="local0"/>
+				<add target="velocity.y" arg0="local1"/>
+			</once>
+		</logic>
+	</particle>-->
+
+</particlesystem>

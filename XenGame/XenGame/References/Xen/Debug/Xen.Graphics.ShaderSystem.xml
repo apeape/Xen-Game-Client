@@ -1,0 +1,785 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Xen.Graphics.ShaderSystem</name>
+    </assembly>
+    <members>
+        <member name="T:Xen.Graphics.IShader">
+            <summary>
+            Allows for dynamic use of the shader
+            </summary>
+        </member>
+        <member name="M:Xen.Graphics.IShader.Begin(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Boolean,System.Boolean,Xen.Graphics.ShaderSystem.ShaderExtension)">
+            <summary>This method is called by the shader system, do not call this method directly.</summary>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,System.Boolean)">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Matrix@)">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector4@)">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector3@)">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector2@)">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,System.Single)">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Matrix[])">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector4[])">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector3[])">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector2[])">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,System.Single[])">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetTexture(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.Texture)">
+            <summary>
+            Set a shader texture
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the texture name</param>
+            <param name="texture">texture to set</param>
+            <returns>true if the texture was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetTexture(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Set a shader texture
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the texture name</param>
+            <param name="texture">texture to set</param>
+            <returns>true if the texture was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetTexture(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.Texture3D)">
+            <summary>
+            Set a shader texture
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the texture name</param>
+            <param name="texture">texture to set</param>
+            <returns>true if the texture was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetTexture(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.TextureCube)">
+            <summary>
+            Set a shader texture
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the texture name</param>
+            <param name="texture">texture to set</param>
+            <returns>true if the texture was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.SetSamplerState(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Xen.Graphics.TextureSamplerState)">
+            <summary>
+            Set a shader texture sampler state
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the sampler state name</param>
+            <param name="sampler">sampler state to set</param>
+            <returns>true if the sampler state was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.GetVertexInputCount">
+            <summary>
+            Get the number of vertex inputs required by the shader
+            </summary>
+            <returns>Returns the number of vertex inputs required by the shader</returns>
+        </member>
+        <member name="M:Xen.Graphics.IShader.GetVertexInput(System.Int32,Microsoft.Xna.Framework.Graphics.VertexElementUsage@,System.Int32@)">
+            <summary>
+            Gets a vertex input required by the shader, by index. <see cref="M:Xen.Graphics.IShader.GetVertexInputCount"/> to get the number of inputs required.
+            </summary>
+            <param name="index">Index of the element</param>
+            <param name="elementUsage">Gets the usage type of the vertex element (eg, <see cref="F:Microsoft.Xna.Framework.Graphics.VertexElementUsage.Position"/>)</param>
+            <param name="elementIndex">Gets the index of the vertex element (eg, there may be more than one <see cref="F:Microsoft.Xna.Framework.Graphics.VertexElementUsage.TextureCoordinate"/>)</param>
+            <remarks><para>Implementations should return elements in logical order, first all Position (0) elements in elementIndex order, all BlendWeights (1), etc.</para></remarks>
+        </member>
+        <member name="M:Xen.Graphics.IShader.GetExtensionSupport(System.Boolean@,System.Boolean@)">
+            <summary>Returns value to indicate if this shader instance supports animation blending or instancing</summary>
+        </member>
+        <member name="P:Xen.Graphics.IShader.HasChanged">
+            <summary>
+            True if a non-global has changed since this shader was last bound
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Xen.Graphics.ShaderSystem.BaseShader">
+            <summary>
+            Base shader class, provides empty implementations of the IShader methods, to reduce generated code
+            </summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.Begin(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Boolean,System.Boolean,Xen.Graphics.ShaderSystem.ShaderExtension)">
+            <summary>This method is called by the shader system, do not call this method directly.</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.Xen#Graphics#IShader#Begin(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Boolean,System.Boolean,Xen.Graphics.ShaderSystem.ShaderExtension)">
+            <summary>This method is called by the shader system, do not call this method directly.</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.GetExtensionSupport(System.Boolean@,System.Boolean@)">
+            <summary>Returns value to indicate if this shader instance supports animation blending or instancing</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.Changed">
+            <summary>
+            True if a non-global has changed since this shader was last bound
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,System.Boolean)">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Matrix@)">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector4@)">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector3@)">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector2@)">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,System.Single)">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Matrix[])">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector4[])">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector3[])">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector2[])">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,System.Single[])">
+            <summary>
+            Set a shader attribute
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the attribute name</param>
+            <param name="value">value to set</param>
+            <returns>true if the value was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetTexture(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.Texture)">
+            <summary>
+            Set a shader texture
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the texture name</param>
+            <param name="texture">texture to set</param>
+            <returns>true if the texture was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetTexture(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Set a shader texture
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the texture name</param>
+            <param name="texture">texture to set</param>
+            <returns>true if the texture was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetTexture(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.Texture3D)">
+            <summary>
+            Set a shader texture
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the texture name</param>
+            <param name="texture">texture to set</param>
+            <returns>true if the texture was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetTexture(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.TextureCube)">
+            <summary>
+            Set a shader texture
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the texture name</param>
+            <param name="texture">texture to set</param>
+            <returns>true if the texture was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetSamplerState(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Xen.Graphics.TextureSamplerState)">
+            <summary>
+            Set a shader texture sampler state
+            </summary>
+            <param name="state"></param>
+            <param name="name_uid">unique id of the sampler state name</param>
+            <param name="sampler">sampler state to set</param>
+            <returns>true if the sampler state was set</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.GetVertexInputCount">
+            <summary>
+            Get the number of vertex inputs required by the shader
+            </summary>
+            <returns>Returns the number of vertex inputs required by the shader</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.GetVertexInput(System.Int32,Microsoft.Xna.Framework.Graphics.VertexElementUsage@,System.Int32@)">
+            <summary>
+            Gets a vertex input required by the shader, by index. <see cref="M:Xen.Graphics.ShaderSystem.BaseShader.GetVertexInputCount"/> to get the number of inputs required.
+            </summary>
+            <param name="index">Index of the element</param>
+            <param name="elementUsage">Gets the usage type of the vertex element (eg, <see cref="F:Microsoft.Xna.Framework.Graphics.VertexElementUsage.Position"/>)</param>
+            <param name="elementIndex">Gets the index of the vertex element (eg, there may be more than one <see cref="F:Microsoft.Xna.Framework.Graphics.VertexElementUsage.TextureCoordinate"/>)</param>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.Xen#Graphics#IShader#GetVertexInputCount">
+            <summary>
+            Get the number of vertex inputs required by the shader
+            </summary>
+            <returns>Returns the number of vertex inputs required by the shader</returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.Xen#Graphics#IShader#GetVertexInput(System.Int32,Microsoft.Xna.Framework.Graphics.VertexElementUsage@,System.Int32@)">
+            <summary>
+            Gets a vertex input required by the shader, by index. <see cref="M:Xen.Graphics.ShaderSystem.BaseShader.GetVertexInputCount"/> to get the number of inputs required.
+            </summary>
+            <param name="index">Index of the element</param>
+            <param name="elementUsage">Gets the usage type of the vertex element (eg, <see cref="F:Microsoft.Xna.Framework.Graphics.VertexElementUsage.Position"/>)</param>
+            <param name="elementIndex">Gets the index of the vertex element (eg, there may be more than one <see cref="F:Microsoft.Xna.Framework.Graphics.VertexElementUsage.TextureCoordinate"/>)</param>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.Warm(Xen.Graphics.ShaderSystem.ShaderSystemBase)">
+            <summary>
+            Preload shader resources
+            </summary>
+            <param name="state"></param>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.WarmShader(Xen.Graphics.ShaderSystem.ShaderSystemBase)">
+            <summary>
+            Warm shader implementation
+            </summary>
+            <param name="state"></param>
+        </member>
+        <member name="T:Xen.Graphics.ShaderSystem.ShaderEffect">
+            <summary>
+            Storage for XNA Effect mapped shader
+            </summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderEffect.Effect">
+            <summary>XNA Effect</summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderEffect.Pass">
+            <summary>XNA Effect Passes</summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderEffect.BlendPass">
+            <summary>XNA Effect Passes</summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderEffect.InstancePass">
+            <summary>XNA Effect Passes</summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderEffect.vs_c">
+            <summary>XNA Effect Parameter for shader constants or booleans</summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderEffect.ps_c">
+            <summary>XNA Effect Parameter for shader constants or booleans</summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderEffect.vs_b">
+            <summary>XNA Effect Parameter for shader constants or booleans</summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderEffect.ps_b">
+            <summary>XNA Effect Parameter for shader constants or booleans</summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderEffect.vsb_c">
+            <summary>XNA Effect Parameter for shader constants or booleans</summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderEffect.vsi_c">
+            <summary>XNA Effect Parameter for shader constants or booleans</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderEffect.Dispose">
+            <summary>
+            Dispose of the Effect
+            </summary>
+        </member>
+        <member name="T:Xen.Graphics.ShaderSystem.ShaderExtension">
+            <summary>
+            Extension mode the shader is using
+            </summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderExtension.None">
+            <summary>
+            Shader runs with no extension
+            </summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderExtension.Blending">
+            <summary>
+            Shader runs as a animation blending shader
+            </summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderExtension.Instancing">
+            <summary>
+            Shader runs as an instancing shader
+            </summary>
+        </member>
+        <member name="T:Xen.Graphics.ShaderSystem.ShaderSystemBase">
+            <summary>
+            Interface for setting shader constants with common semantic such as 'WORLDVIEWPROJECTION' and the special 'GLOBAL' semantic. All methods are called back by the shader
+            </summary>
+        </member>
+        <member name="F:Xen.Graphics.ShaderSystem.ShaderSystemBase.DeviceUniqueIndex">
+            <summary>System-wide unique non-zero index for the current application graphics device (if this index changes, the shader will recreate itself automatically)</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.IsShaderBound(Xen.Graphics.IShader)">
+            <summary>
+            Returns true if the specified shader is current bound
+            </summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.CreateEffect(Xen.Graphics.ShaderSystem.ShaderEffect@,System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Create effects
+            </summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetEffect(Xen.Graphics.IShader,Xen.Graphics.ShaderSystem.ShaderEffect@,Xen.Graphics.ShaderSystem.ShaderExtension)">
+            <summary>
+            Set the effect. If the current effect is already set, the it's values are dirty and requires CommitChanges is called.
+            </summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetWorldViewProjectionMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetWorldViewProjectionInverseMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetWorldViewProjectionTransposeMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetWorldProjectionMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetWorldProjectionInverseMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetWorldProjectionTransposeMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetViewProjectionMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetViewProjectionInverseMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetViewProjectionTransposeMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetWorldViewMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetWorldViewInverseMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetWorldViewTransposeMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetWorldMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetWorldInverseMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetWorldTransposeMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetViewMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetViewInverseMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetViewTransposeMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetProjectionMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetProjectionInverseMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetProjectionTransposeMatrix(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetCameraNearFarVector2(Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetCameraFovVector2(Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetCameraFovTangentVector2(Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetViewDirectionVector3(Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetViewDirectionVector4(Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetViewPointVector3(Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetViewPointVector4(Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetWindowSizeVector2(Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetVertexCountSingle(Microsoft.Xna.Framework.Vector4@,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetBlendMatricesVector4Array(Microsoft.Xna.Framework.Vector4[],System.Int32,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetBlendMatricesDirect(Microsoft.Xna.Framework.Graphics.EffectParameter,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.GetGlobalUniqueID``1(System.String)">
+            <summary>
+            Get the unique id for the name of a global type
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.GetNameUniqueID(System.String)">
+            <summary>
+            Get the unique id for the name of an attibute, texture or sampler
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalBool(System.Boolean[],System.Int32,System.Int32)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalVector4(Microsoft.Xna.Framework.Vector4@,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalVector3(Microsoft.Xna.Framework.Vector4@,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalVector2(Microsoft.Xna.Framework.Vector4@,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalSingle(Microsoft.Xna.Framework.Vector4@,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalMatrix1(Microsoft.Xna.Framework.Vector4@,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalMatrix2(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalMatrix3(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalMatrix4(Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,Microsoft.Xna.Framework.Vector4@,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalVector4(Microsoft.Xna.Framework.Vector4[],System.Int32,System.Int32,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalVector3(Microsoft.Xna.Framework.Vector4[],System.Int32,System.Int32,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalVector2(Microsoft.Xna.Framework.Vector4[],System.Int32,System.Int32,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalSingle(Microsoft.Xna.Framework.Vector4[],System.Int32,System.Int32,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalMatrix4(Microsoft.Xna.Framework.Vector4[],System.Int32,System.Int32,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalMatrix3(Microsoft.Xna.Framework.Vector4[],System.Int32,System.Int32,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalMatrix2(Microsoft.Xna.Framework.Vector4[],System.Int32,System.Int32,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetGlobalMatrix1(Microsoft.Xna.Framework.Vector4[],System.Int32,System.Int32,System.Int32,System.Int32@)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.GetGlobalTexture(System.Int32)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.GetGlobalTexture2D(System.Int32)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.GetGlobalTexture3D(System.Int32)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.GetGlobalTextureCube(System.Int32)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.GetGlobalTextureSamplerState(System.Int32)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetPixelShaderSamplers(Microsoft.Xna.Framework.Graphics.Texture[],Xen.Graphics.TextureSamplerState[])">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetVertexShaderSamplers(Microsoft.Xna.Framework.Graphics.Texture[],Xen.Graphics.TextureSamplerState[])">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetPixelShaderSampler(System.Int32,Microsoft.Xna.Framework.Graphics.Texture,Xen.Graphics.TextureSamplerState)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SetVertexShaderSampler(System.Int32,Microsoft.Xna.Framework.Graphics.Texture,Xen.Graphics.TextureSamplerState)">
+            <summary>Method used by a generated shader</summary>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SimpleDecompress(System.Byte[])">
+            <summary>
+            Decompress a byte array with very simple run-length encoding based compression
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Xen.Graphics.ShaderSystem.ShaderSystemBase.SimpleCompress(System.Byte[])">
+            <summary>
+            Compress a byte array with very simple run-length encoding based compression
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Xen.Graphics.TextureSamplerState">
+            <summary>
+            Packed representation of common Texture Sampler states. 4 bytes
+            </summary>
+        </member>
+        <member name="M:Xen.Graphics.TextureSamplerState.op_Equality(Xen.Graphics.TextureSamplerState,Xen.Graphics.TextureSamplerState)">
+            <summary></summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Xen.Graphics.TextureSamplerState.op_Inequality(Xen.Graphics.TextureSamplerState,Xen.Graphics.TextureSamplerState)">
+            <summary></summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Xen.Graphics.TextureSamplerState.Equals(System.Object)">
+            <summary></summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Xen.Graphics.TextureSamplerState.GetHashCode">
+            <summary>
+            Gets the hash code for this sampler state. Returns the internal bitfield value
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Xen.Graphics.TextureSamplerState.op_Implicit(Xen.Graphics.TextureSamplerState)~System.Int32">
+            <summary>
+            Cast this sampler to it's internal bitfield representation
+            </summary>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Xen.Graphics.TextureSamplerState.op_Explicit(System.Int32)~Xen.Graphics.TextureSamplerState">
+            <summary>
+            Explicit case from an integer bitfield representation
+            </summary>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Xen.Graphics.TextureSamplerState.PointFiltering">
+            <summary>
+            Gets a texture sampler that applies simple pointer filtering
+            </summary>
+        </member>
+        <member name="P:Xen.Graphics.TextureSamplerState.BilinearFiltering">
+            <summary>
+            Gets a texture sampler that applies bilinear filtering (linear UV filtering with point mipmap filtering)
+            </summary>
+        </member>
+        <member name="P:Xen.Graphics.TextureSamplerState.TrilinearFiltering">
+            <summary>
+            Gets a texture sampler that applies trilinear filtering (linear UV filtering mipmap filtering)
+            </summary>
+        </member>
+        <member name="P:Xen.Graphics.TextureSamplerState.AnisotropicLowFiltering">
+            <summary>
+            Gets a texture sampler that applies anisotropic filtering with a low max anisotropic value
+            </summary>
+        </member>
+        <member name="P:Xen.Graphics.TextureSamplerState.AnisotropicMediumFiltering">
+            <summary>
+            Gets a texture sampler that applies anisotropic filtering with a medium max anisotropic value
+            </summary>
+        </member>
+        <member name="P:Xen.Graphics.TextureSamplerState.AnisotropicHighFiltering">
+            <summary>
+            Gets a texture sampler that applies anisotropic filtering with a high max anisotropic value
+            </summary>
+        </member>
+        <member name="P:Xen.Graphics.TextureSamplerState.AddressUV">
+            <summary>
+            Allows setting of both the <see cref="P:Xen.Graphics.TextureSamplerState.AddressU"/> and <see cref="P:Xen.Graphics.TextureSamplerState.AddressV"/> coordinate address modes at the same time
+            </summary>
+            <remarks>The safest values to use are <see cref="F:Microsoft.Xna.Framework.Graphics.TextureAddressMode.Wrap"/> for repeating textures, and <see cref="F:Microsoft.Xna.Framework.Graphics.TextureAddressMode.Clamp"/>.</remarks>
+        </member>
+        <member name="P:Xen.Graphics.TextureSamplerState.AddressU">
+            <summary>
+            Controls texture address behaviour for the U coordinate (The U coordinate is the x-axis in texture coordinate space)
+            </summary>
+            <remarks>The safest values to use are <see cref="F:Microsoft.Xna.Framework.Graphics.TextureAddressMode.Wrap"/> for repeating textures, and <see cref="F:Microsoft.Xna.Framework.Graphics.TextureAddressMode.Clamp"/>.</remarks>
+        </member>
+        <member name="P:Xen.Graphics.TextureSamplerState.AddressV">
+            <summary>
+            Controls texture address behaviour for the V coordinate (The V coordinate is the y-axis in texture coordinate space)
+            </summary>
+            <remarks>The safest values to use are <see cref="F:Microsoft.Xna.Framework.Graphics.TextureAddressMode.Wrap"/> for repeating textures, and <see cref="F:Microsoft.Xna.Framework.Graphics.TextureAddressMode.Clamp"/>.</remarks>
+        </member>
+        <member name="P:Xen.Graphics.TextureSamplerState.AddressW">
+            <summary>
+            Controls texture address behaviour for the W coordinate (The W coordinate is the z-axis in texture coordinate space). This filtering mode only applies to 3D textures.
+            </summary>
+            <remarks>The safest values to use are <see cref="F:Microsoft.Xna.Framework.Graphics.TextureAddressMode.Wrap"/> for repeating textures, and <see cref="F:Microsoft.Xna.Framework.Graphics.TextureAddressMode.Clamp"/>.</remarks>
+        </member>
+        <member name="P:Xen.Graphics.TextureSamplerState.Filter">
+            <summary>
+            Controls texture filtering, such as mipmap interpolation and smoothing algorithm
+            </summary>
+        </member>
+        <member name="P:Xen.Graphics.TextureSamplerState.MaxAnisotropy">
+            <summary>
+            Set the maximum number of samples used when <see cref="P:Xen.Graphics.TextureSamplerState.Filter"/> is set to <see cref="F:Microsoft.Xna.Framework.Graphics.TextureFilter.Anisotropic"/> filtering. Range of [1-16], usually limited to values that are a power of two.
+            </summary>
+        </member>
+        <member name="P:Xen.Graphics.TextureSamplerState.MaxMipmapLevel">
+            <summary>
+            Set the maximum mipmap level the video card will sample, where 0 is the largest map (and the default value). Set to 1 to prevent the highest mipmap level being sampled (this will effectivly half the resolution of the texture displayed).
+            </summary>
+        </member>
+    </members>
+</doc>
