@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -15,9 +16,20 @@ using Xen.Graphics;
 using Xen.Ex.Graphics;
 using Xen.Ex.Graphics2D;
 
-using GameClient.Terrain;
 using PolyVoxCore;
-using System.Threading.Tasks;
+
+using Jitter;
+
+//using RedBadger.Xpf;
+//using RedBadger.Xpf.Controls;
+//using RedBadger.Xpf.Adapters.Xna.Graphics;
+
+using GameClient.Terrain;
+using Jitter.Collision;
+using Jitter.Collision.Shapes;
+using Jitter.Dynamics;
+using Jitter.LinearMath;
+
 
 /*
  * This sample demonstrates how to accurately represent light for rendering realistic lighting.
@@ -36,199 +48,6 @@ using System.Threading.Tasks;
  */
 namespace GameClient
 {
-
-    //This tutorial is split into multiple files, 
-    //The following files are also included:
-    //
-    // RGBM Cubemap.cs    <-- A class for loading an RGBM encoded cubemap
-    // Config.cs          <-- Classes that display the on screen config options
-
-
-    // First, an overview of how this tutorial represents light:
-
-    /*/
-     * 
-     * An important step to rendering a realistic image is gaining an understanding of how
-     * light acts in the physical world.
-     * 
-     * Key to this understanding is the concept of linear and gamma space lighting.
-     * While it may not be immediately obvious, the eye percieves light in a non-linear way.
-     * 
-     * Consider the example of two identical household lights in a dark room:
-     * Turning on the first light will flood the room with bright light.
-     * However, turning on the second light will (perceptually) only marginally increase the
-     * brightness of the room. Physically, the room *has* doubled in brightness, however our
-     * perception is a smaller increase in brightness compared to the first light.
-     * 
-     * 
-     * A typical computer monitor will compensate for this perceptive difference.
-     * Most standard computer monitors work with a gamma curve of 2.2.
-     * 
-     * What does this means?
-     * It means that the light intensities sent to the monitor are modified before they are
-     * displayed. A gamma curve of 2.2 simple means the following function is applied:
-     * 
-     * output intensity = pow(input, 2.2)
-     * 
-     * As seen in the following image:
-     * http://en.wikipedia.org/wiki/File:Gamma06_600.png
-     * 
-     * What does this mean?
-     * Simply, if you clear the screen to 0.5, the monitor will output a light intensity of
-     * 0.218. If you clear to 0.75, it will output 0.53. Clear to 0.25, and the output is 0.047.
-     * 
-     * remember, input is the brighness value of the pixel, as sent to the monitor,
-     * output is the real world intensity of the light produced by the monitor
-     * 
-     * input	output
-     * 0.00		0.000
-     * 0.25		0.047
-     * 0.50		0.218
-     * 0.75		0.530
-     * 1.00		1.000
-     * 
-     * The key observation is that doubling the colour value of a pixel will actually more that
-     * quadruple the intensity of light displayed by the monitor!
-     * 
-     * 
-     * By extending this observation, it becomes clear that you must take gamma correction
-     * into account when representing light in your game.
-     * 
-     * Linear light is very simple to calculate:
-     * 0.25 + 0.25  = 0.5
-     * 1.0  * 0.5	= 0.5
-     * 
-     * However this breaks down if you try and do the same thing in gamma space.
-     * This can be shown by converting the numbers above using the table:
-     * 
-     * (numbers converted by the input->output table above):
-     * 0.047 + 0.047	= 0.218
-     * 1.0	 * 0.5		= 0.218
-     * 
-     * Clearly this output is totally incorrect, yet *many* games do exactly this!
-     * 
-     * The solution to this is quite simple:
-     * Treat all rendering as Linear Space light, then apply the inverse of the gamma 2.2 function
-     * when displaying the final rendered image on screen:
-     * 
-     * Normally, this would be done with a special hardware feature called sRGB blending and texture
-     * sampling. However XNA doesn't expose this capability.
-     * The only option is to render linear light directly into a high dynamic range render target,
-     * then convert the linear light to gamma space light when displaying it on screen.
-     * 
-     * output = pow(rendered image, 1.0 / 2.2)
-     * 
-     * This process is known as Gamma Correction.
-     * 
-     * --------------------------
-     * 
-     * A further observation is that almost all texture assets in a game are often stored in
-     * in Gamma Space. This is an important observation when dealing with artist drawn textures.
-     * However, Computer generated textures (eg Normal Maps) are usually generated in Linear Space.
-     * 
-     * --------------------------
-     * 
-     * Summary of the key points:
-     * Perform light calculations in linear space (2 + 2 = 4),
-     * Apply an inverse gamma curve function when displaying this output to the screen,
-     * And finally apply a gamma curve function to your non-linear input (such as colour textures)
-     * 
-     * 
-     * 
-     * 
-     * 
-     * However, that's not the end of the story:
-     * There is still the matter of tone mapping.
-     * 
-     * Tone mapping is an entirely artificial process that is not realistic at all, however it
-     * serves a very important purpose.
-     * 
-     * In the physical world, intensities vary by an enormous degree.
-     * Surfaces in a bright office will be lit by approximately 200 LUX. 
-     * (LUX being a measure of linear light intensity over an area).
-     * However, direct sunlight at midday can be over 100,000 LUX. This is 500x brighter.
-     * 
-     * These numbers clearly demonstrate how important gamma correction is to realistically capture
-     * light intensity. However even with gamma correction, the limited dynamic range of most monitors 
-     * simply cannot deal with such an extreme dynamic range.
-     * 
-     * This is where Tone Mapping comes in. The goal of tone mapping is to display an image with 
-     * extreme dynamic range on a monitor with a limited dynamic range.
-     * 
-     * For example, an image of a scene looking out a window from a dark office.
-     * If the view outside the window is ~ 100x brighter than the foreground, then displaying the 
-     * image on a display with limited dynamic range becomes quite difficult.
-     * Either the office becomes exceptionally dark, or the view out the window is too bright for the
-     * monitor, and it simply clamps to it's maximum value (white).
-     * 
-     * Tone mapping compresses the extreme bright values (and sometimes the extreme dark values) of an 
-     * image to allow as much of the limited range of the monitor to be used for displaying the important
-     * midtones (in this case, the office). While still retaining enough detail in the highlights and 
-     * shadows to produce a recognisable image.
-     * 
-     * --------------------------
-     * 
-     * Tone mapping is not just for games, it's also used in movies. The following images are the tone
-     * mapping curves for two commercial grade motion film brands:
-     * 
-     * http://www.fujifilm.com/products/motion_picture/lineup/eterna_cp_3521xd/#h3-2-2
-     * http://motion.kodak.com/US/en/motion/Quicklinks/Curves/f002_1254ac.htm
-     * 
-     * As can be seen, the extreme bright and dark values are compressed to boost the recordable range.
-     * 
-     * --------------------------
-     * 
-     * This tutorial uses three tone mapping approximations:
-     * 
-     * The first is exponetial exposure tonemapping. This uses an exponential curve to compress extreme 
-     * bright values. See here for an explaination:
-     * http://freespace.virgin.net/hugo.elias/graphics/x_posure.htm
-     * 
-     * The second is a similar curve to exponetial exposure, 'Inverse +One', defined by (x / (x + 1)).
-     * 
-     * The final, and most complex, is an approximation to film tone mapping - where both light and dark
-     * values are compressed. All credit goes to Jim Hejl of AMD:
-     * output = rgb * (0.5 + 6.2 * rgb) / (0.06 + rgb * (1.7 + 6.2 * rgb));
-     * Note: This approximation also does gamma correction too!
-     * http://home.hejl.com/
-     * 
-     * 
-     * --------------------------
-     *
-     * One final note:
-     * 
-     * For reasons of simplicity, this sample uses a gamma curve of 2.0, instead of 2.2.
-     * This makes a number of functions much simpler:
-     * 
-     * Converting from Gamma -> Linear is pow(X,2.0), which is X * X.
-     * Converting from Linear -> Gamma is pow(X,0.5), which is sqrt(X).
-     * 
-     * This is simpler and faster.
-     * 
-     * Squaring converts from Gamma to Linear,
-     * Square Root converts from Linear to Gamma.
-     * 
-     * --------------------------
-     * 
-     * 
-     * 
-     * There are large number of shaders included in this project (in the Shaders directory)
-     * 
-     * These are:
-     * 
-     * AlphaOutput.fx		<-- A very simple shader that displays the alpha value of a texture
-     * Background.fx		<-- A shader used to display the background cubemap
-     * Character.fx			<-- The complex character rendering shader
-     * Composite.fx			<-- A set of shaders for compositing to the screen, tone mapping, bloom, etc.
-     * 
-     * Headers:
-     * Environment.fx.h		<-- Helper functions for sampling the Spherical Harmonic and Cubemap
-     * RGBM.fx.h			<-- Helper functions for dealing with RGBM encoding/decoding
-     * ShadowMap.fx.h		<-- Logic for sampling the character's shadow map
-     * 
-    /*/
-
-
     public class Game : Application
     {
         //This object configures how the scene is drawn
@@ -286,6 +105,7 @@ namespace GameClient
         private ModelInstance model;
         private AnimationInstance modelAnimation;
         private DrawRotated modelRotation;							//draws the model, but rotating.
+        private DrawCharacter modelPhysics;                         // draws the model at its physically simulated position
 
         //Draw statistics
         private Xen.Ex.Graphics2D.Statistics.DrawStatisticsDisplay drawStats;
@@ -294,6 +114,13 @@ namespace GameClient
         private TerrainManager terrainManager;
         private float terrainNoiseDensity = 50.0f;
         private Stopwatch terrainGenerationTimer;
+
+        // xpf gui
+        //private SpriteBatchAdapter spriteBatchAdapter;
+        //private RootElement rootElement;
+
+        // jitter physics simulation
+        World world;
 
         protected override void Initialise()
         {
@@ -366,8 +193,12 @@ namespace GameClient
             this.modelRotation = new DrawRotated(model);
             this.modelRotation.RotationAngle = 3;
 
+            this.modelPhysics = new DrawCharacter(model);
+
             //add the model to be drawn
-            drawToRenderTarget.Add(modelRotation);
+            //drawToRenderTarget.Add(modelRotation);
+            //drawToRenderTarget.Add(model);
+            drawToRenderTarget.Add(modelPhysics);
 
             //setup the shaders
             this.characterRenderShader = new Shaders.Character();
@@ -409,6 +240,10 @@ namespace GameClient
             //add a statistics overlay.
             drawStats = new Xen.Ex.Graphics2D.Statistics.DrawStatisticsDisplay(this.UpdateManager);
             drawToScreen.Add(drawStats);
+
+            // initialize physics simulation
+            CollisionSystemSAP collision = new CollisionSystemSAP();
+            world = new World(collision);
         }
 
         protected override void Frame(FrameState state)
@@ -452,7 +287,8 @@ namespace GameClient
 
 
             //set the shadow scene
-            shadowDrawer.Scene = this.modelRotation;
+            //shadowDrawer.Scene = this.modelRotation;
+            shadowDrawer.Scene = this.modelPhysics;
 
             //draw the shadow map first
             if (this.renderConfig.ShadowMapTermScale > 0)
@@ -503,10 +339,23 @@ namespace GameClient
 
             //draw everything else to the screen
             drawToScreen.Draw(state);
+
+            //rootElement.Draw();
         }
 
         protected override void Update(UpdateState state)
         {
+            //this.rootElement.Update();
+
+            // update physics
+            world.Step(state.DeltaTimeSeconds,
+                true); // multithreaded
+            modelPhysics.Position = new Vector3(
+                world.RigidBodies[0].Position.X,
+                world.RigidBodies[0].Position.Y,
+                world.RigidBodies[0].Position.Z);
+            modelPhysics.Orientation = world.RigidBodies[0].Orientation;
+
             configEditor.Instance = this.renderConfig;
 
             //lerp the lens exposure to the curent target exposure, this allows nice exposure transitions
@@ -542,6 +391,7 @@ namespace GameClient
             if (state.PlayerInput[PlayerIndex.One].InputState.Buttons.Back.OnPressed)
                 this.Shutdown();
 
+            // unlock mouse cursor while left control is down
             if (state.KeyboardState.IsKeyDown(Keys.LeftControl))
             {
                 if (state.PlayerInput[PlayerIndex.One].InputMapper.CentreMouseToWindow)
@@ -610,12 +460,8 @@ namespace GameClient
             {
                 graphics.PreferredBackBufferWidth = 1280;
                 graphics.PreferredBackBufferHeight = 720;
+                graphics.PreferMultiSampling = true;
             }
-        }
-
-        private void SetTriplanarTextureScale()
-        {
-            //terrainDrawContext.Effect.Parameters["textureScale"].SetValue(0.015f + ((1 / cellRes) / 2.5f));
         }
 
         private void GenerateTerrain(int seed)
@@ -758,11 +604,11 @@ namespace GameClient
             drawToRenderTarget.Add(terrainManager);
         }
 
-
         protected override void LoadContent(ContentState state)
         {
             //load the default font.
-            drawStats.Font = state.Load<SpriteFont>("Arial");
+            SpriteFont arial = state.Load<SpriteFont>("Arial");
+            drawStats.Font = arial;
 
             //load the character model
             model.ModelData = state.Load<Xen.Ex.Graphics.Content.ModelData>(@"xna_dude/dude");
@@ -875,23 +721,100 @@ namespace GameClient
             const int terrainSeed = 70;
             GenerateTerrain(terrainSeed);
 
-            terrainManager.SideTexture = localManager.Load<Texture2D>("TerrainTextures/cliffs2");
-            terrainManager.BottomTexture = localManager.Load<Texture2D>("TerrainTextures/rock1");
-            terrainManager.TopTexture = localManager.Load<Texture2D>("TerrainTextures/grassyrock2");
-            
-            terrainManager.terrainShader.SideTexture = terrainManager.SideTexture;
-            terrainManager.terrainShader.BottomTexture = terrainManager.BottomTexture;
-            terrainManager.terrainShader.TopTexture = terrainManager.TopTexture;
+            terrainManager.SideColor = localManager.Load<Texture2D>("TerrainTextures/cliffs2");
+            terrainManager.BottomColor = localManager.Load<Texture2D>("TerrainTextures/rock1");
+            terrainManager.TopColor = localManager.Load<Texture2D>("TerrainTextures/grassyrock2");
+            terrainManager.SideNormal = localManager.Load<Texture2D>("TerrainTextures/rock_normal");
+            terrainManager.TopNormal = terrainManager.SideNormal;
+            terrainManager.BottomNormal = terrainManager.SideNormal;
+
+            terrainManager.terrainShader.SideColor = terrainManager.SideColor;
+            terrainManager.terrainShader.SideNormal = terrainManager.SideNormal;
+            terrainManager.terrainShader.BottomColor = terrainManager.BottomColor;
+            terrainManager.terrainShader.BottomNormal = terrainManager.BottomNormal;
+            terrainManager.terrainShader.TopColor = terrainManager.TopColor;
+            terrainManager.terrainShader.TopNormal = terrainManager.TopNormal;
 
             terrainManager.terrainShader.TextureScale = 0.1f + ((1 / terrainManager.cellDimensions.X) / 2.5f);
 
             SetupTerrainShader();
+
+            // xpf gui initialisation
+            /*
+            Microsoft.Xna.Framework.Game g = (Microsoft.Xna.Framework.Game)this;
+            this.spriteBatchAdapter = new SpriteBatchAdapter(new SpriteBatch(g.GraphicsDevice));
+            var primitivesService = new PrimitivesService(g.GraphicsDevice);
+            var renderer = new Renderer(this.spriteBatchAdapter, primitivesService);
+
+            this.rootElement = new RootElement(g.GraphicsDevice.Viewport.ToRect(), renderer);
+
+            var spriteFontAdapter = new SpriteFontAdapter(arial);
+
+            var textBlock = new TextBlock(spriteFontAdapter)
+            {
+                Text = "Hello from XPF!",
+                Foreground = new RedBadger.Xpf.Media.SolidColorBrush(RedBadger.Xpf.Media.Colors.White),
+                //Background = new RedBadger.Xpf.Media.SolidColorBrush(RedBadger.Xpf.Media.Colors.Red),
+                HorizontalAlignment = RedBadger.Xpf.HorizontalAlignment.Left,
+                VerticalAlignment = RedBadger.Xpf.VerticalAlignment.Top
+            };
+
+            this.rootElement.Content = textBlock;*/
+
+
+            // add player model to physics sim
+            float length = model.ModelData.StaticBounds.Maximum.X - model.ModelData.StaticBounds.Minimum.X;
+            float height = model.ModelData.StaticBounds.Maximum.Y - model.ModelData.StaticBounds.Minimum.Y;
+            float width = model.ModelData.StaticBounds.Maximum.Z - model.ModelData.StaticBounds.Minimum.Z;
+            Shape playerShape = new BoxShape(length, height, width);
+            RigidBody playerBody = new RigidBody(playerShape);
+            playerBody.Position = new JVector(0, 50, 0);
+
+            world.AddBody(playerBody);
         }
     }
 
 
 
     //Helper classes:
+
+
+    //draw the character with physics sim
+    class DrawCharacter : IDraw
+    {
+        public Vector3 Position;
+        public JMatrix Orientation;
+        private readonly IDraw item;
+
+        public DrawCharacter(IDraw item)
+        {
+            this.item = item;
+        }
+
+        public void Draw(DrawState state)
+        {
+            //generate the rotation matrix for the object.
+            //Matrix basis = new Matrix(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1); //xna_dude model is on his side
+            Matrix basis = new Matrix(Orientation.M11, Orientation.M12, Orientation.M13, 0.0f,
+                        Orientation.M21, Orientation.M22, Orientation.M23, 0.0f,
+                        Orientation.M31, Orientation.M32, Orientation.M33, 0.0f,
+                        0, 0, 0, 1) * Matrix.CreateTranslation(Position);
+                        //* Matrix.CreateRotationY(-MathHelper.Pi);
+            //basis.Translation = Position;
+            using (state.WorldMatrix.PushMultiply(ref basis))
+            {
+                //Matrix.CreateRotationZ(RotationAngle, out basis); // generate the rotation.
+                state.WorldMatrix.Multiply(ref basis);
+                if (item.CullTest(state))
+                    item.Draw(state);
+            }
+        }
+
+        bool ICullable.CullTest(ICuller culler)
+        {
+            return true;
+        }
+    }
 
     //draw the character with a specific rotation
     class DrawRotated : IDraw

@@ -6,7 +6,7 @@
 namespace GameClient.Shaders
 {
 	
-	/// <summary><para>Technique 'Triplanar' generated from file 'Triplanar.fx'</para><para>Vertex Shader: approximately 11 instruction slots used, 7 registers</para><para>Pixel Shader: approximately 34 instruction slots used (4 texture, 30 arithmetic), 5 registers</para></summary>
+	/// <summary><para>Technique 'Triplanar' generated from file 'Triplanar.fx'</para><para>Vertex Shader: approximately 37 instruction slots used, 6 registers</para><para>Pixel Shader: approximately 47 instruction slots used (8 texture, 39 arithmetic), 5 registers</para></summary>
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("Xen.Graphics.ShaderSystem.CustomTool.dll", "47301628-bcee-4c1a-8aea-2eb652e288f0")]
 	public sealed class Triplanar : Xen.Graphics.ShaderSystem.BaseShader
@@ -17,27 +17,36 @@ namespace GameClient.Shaders
 			this.sc0 = -1;
 			this.sc1 = -1;
 			this.sc2 = -1;
-			this.sc3 = -1;
-			this.pts[1] = ((Xen.Graphics.TextureSamplerState)(3200));
-			this.pts[0] = ((Xen.Graphics.TextureSamplerState)(3200));
 			this.pts[2] = ((Xen.Graphics.TextureSamplerState)(3200));
+			this.pts[3] = ((Xen.Graphics.TextureSamplerState)(3200));
+			this.pts[0] = ((Xen.Graphics.TextureSamplerState)(3200));
+			this.pts[1] = ((Xen.Graphics.TextureSamplerState)(3200));
+			this.pts[4] = ((Xen.Graphics.TextureSamplerState)(3200));
+			this.pts[5] = ((Xen.Graphics.TextureSamplerState)(3200));
 		}
 		/// <summary>Setup shader static values</summary><param name="state"/>
 		private static void gdInit(Xen.Graphics.ShaderSystem.ShaderSystemBase state)
 		{
 			// set the graphics ID
 			Triplanar.gd = state.DeviceUniqueIndex;
-			Triplanar.cid0 = state.GetNameUniqueID("fogColor");
-			Triplanar.cid1 = state.GetNameUniqueID("fogEnd");
-			Triplanar.cid2 = state.GetNameUniqueID("fogStart");
-			Triplanar.cid3 = state.GetNameUniqueID("lightDirection");
-			Triplanar.cid4 = state.GetNameUniqueID("textureScale");
-			Triplanar.sid0 = state.GetNameUniqueID("BottomTextureSampler");
-			Triplanar.sid1 = state.GetNameUniqueID("SideTextureSampler");
-			Triplanar.sid2 = state.GetNameUniqueID("TopTextureSampler");
-			Triplanar.tid0 = state.GetNameUniqueID("SideTexture");
-			Triplanar.tid1 = state.GetNameUniqueID("BottomTexture");
-			Triplanar.tid2 = state.GetNameUniqueID("TopTexture");
+			Triplanar.cid0 = state.GetNameUniqueID("cameraPosition");
+			Triplanar.cid1 = state.GetNameUniqueID("lightDirection");
+			Triplanar.cid2 = state.GetNameUniqueID("fogColor");
+			Triplanar.cid3 = state.GetNameUniqueID("fogEnd");
+			Triplanar.cid4 = state.GetNameUniqueID("fogStart");
+			Triplanar.cid5 = state.GetNameUniqueID("textureScale");
+			Triplanar.sid0 = state.GetNameUniqueID("BottomColorSampler");
+			Triplanar.sid1 = state.GetNameUniqueID("BottomNormalSampler");
+			Triplanar.sid2 = state.GetNameUniqueID("SideColorSampler");
+			Triplanar.sid3 = state.GetNameUniqueID("SideNormalSampler");
+			Triplanar.sid4 = state.GetNameUniqueID("TopColorSampler");
+			Triplanar.sid5 = state.GetNameUniqueID("TopNormalSampler");
+			Triplanar.tid0 = state.GetNameUniqueID("SideColor");
+			Triplanar.tid1 = state.GetNameUniqueID("SideNormal");
+			Triplanar.tid2 = state.GetNameUniqueID("BottomColor");
+			Triplanar.tid3 = state.GetNameUniqueID("BottomNormal");
+			Triplanar.tid4 = state.GetNameUniqueID("TopColor");
+			Triplanar.tid5 = state.GetNameUniqueID("TopNormal");
 		}
 		/// <summary>Bind the shader, 'ic' indicates the shader instance has changed and 'ec' indicates the extension has changed.</summary><param name="state"/><param name="ic"/><param name="ec"/><param name="ext"/>
 		protected override void Begin(Xen.Graphics.ShaderSystem.ShaderSystemBase state, bool ic, bool ec, Xen.Graphics.ShaderSystem.ShaderExtension ext)
@@ -53,11 +62,8 @@ namespace GameClient.Shaders
 			this.preg_change = (this.preg_change | ic);
 			this.vbreg_change = (this.vbreg_change | ic);
 			this.vireg_change = (this.vireg_change | ic);
-			Microsoft.Xna.Framework.Vector4 unused = new Microsoft.Xna.Framework.Vector4();
-			// Set the value for attribute 'worldMatrix'
-			this.vreg_change = (this.vreg_change | state.SetWorldMatrix(ref this.vreg[4], ref this.vreg[5], ref this.vreg[6], ref unused, ref this.sc0));
 			// Set the value for attribute 'worldViewProj'
-			this.vreg_change = (this.vreg_change | state.SetWorldViewProjectionMatrix(ref this.vreg[0], ref this.vreg[1], ref this.vreg[2], ref this.vreg[3], ref this.sc1));
+			this.vreg_change = (this.vreg_change | state.SetWorldViewProjectionMatrix(ref this.vreg[0], ref this.vreg[1], ref this.vreg[2], ref this.vreg[3], ref this.sc0));
 			// Assign pixel shader textures and samplers
 			if ((ic | this.ptc))
 			{
@@ -78,11 +84,11 @@ namespace GameClient.Shaders
 			}
 			if ((ext == Xen.Graphics.ShaderSystem.ShaderExtension.Blending))
 			{
-				ic = (ic | state.SetBlendMatricesDirect(Triplanar.fx.vsb_c, ref this.sc2));
+				ic = (ic | state.SetBlendMatricesDirect(Triplanar.fx.vsb_c, ref this.sc1));
 			}
 			if ((ext == Xen.Graphics.ShaderSystem.ShaderExtension.Instancing))
 			{
-				this.vireg_change = (this.vireg_change | state.SetViewProjectionMatrix(ref this.vireg[0], ref this.vireg[1], ref this.vireg[2], ref this.vireg[3], ref this.sc3));
+				this.vireg_change = (this.vireg_change | state.SetViewProjectionMatrix(ref this.vireg[0], ref this.vireg[1], ref this.vireg[2], ref this.vireg[3], ref this.sc2));
 				if ((this.vireg_change == true))
 				{
 					Triplanar.fx.vsi_c.SetValue(this.vireg);
@@ -111,7 +117,7 @@ namespace GameClient.Shaders
 			}
 			Triplanar.fx.Dispose();
 			// Create the effect instance
-			state.CreateEffect(out Triplanar.fx, Triplanar.fxb, 13, 40);
+			state.CreateEffect(out Triplanar.fx, Triplanar.fxb, 40, 56);
 		}
 		/// <summary>True if a shader constant has changed since the last Bind()</summary>
 		protected override bool Changed()
@@ -148,8 +154,42 @@ namespace GameClient.Shaders
 			blendingSupport = true;
 			instancingSupport = true;
 		}
-		/// <summary>Name ID for 'fogColor'</summary>
+		/// <summary>Name ID for 'cameraPosition'</summary>
 		private static int cid0;
+		/// <summary>Set the shader value 'float3 cameraPosition'</summary><param name="value"/>
+		public void SetCameraPosition(ref Microsoft.Xna.Framework.Vector3 value)
+		{
+			this.vreg[5] = new Microsoft.Xna.Framework.Vector4(value.X, value.Y, value.Z, 0F);
+			this.vreg_change = true;
+		}
+		/// <summary>Assign the shader value 'float3 cameraPosition'</summary>
+		public Microsoft.Xna.Framework.Vector3 CameraPosition
+		{
+			set
+			{
+				this.SetCameraPosition(ref value);
+			}
+		}
+		/// <summary>Name ID for 'lightDirection'</summary>
+		private static int cid1;
+		/// <summary>Set the shader value 'float3 lightDirection'</summary><param name="value"/>
+		public void SetLightDirection(ref Microsoft.Xna.Framework.Vector3 value)
+		{
+			this.vreg[4] = new Microsoft.Xna.Framework.Vector4(value.X, value.Y, value.Z, 0F);
+			this.vreg_change = true;
+			this.preg[4] = new Microsoft.Xna.Framework.Vector4(value.X, value.Y, value.Z, 0F);
+			this.preg_change = true;
+		}
+		/// <summary>Assign the shader value 'float3 lightDirection'</summary>
+		public Microsoft.Xna.Framework.Vector3 LightDirection
+		{
+			set
+			{
+				this.SetLightDirection(ref value);
+			}
+		}
+		/// <summary>Name ID for 'fogColor'</summary>
+		private static int cid2;
 		/// <summary>Set the shader value 'float3 fogColor'</summary><param name="value"/>
 		public void SetFogColor(ref Microsoft.Xna.Framework.Vector3 value)
 		{
@@ -165,7 +205,7 @@ namespace GameClient.Shaders
 			}
 		}
 		/// <summary>Name ID for 'fogEnd'</summary>
-		private static int cid1;
+		private static int cid3;
 		/// <summary>Assign the shader value 'float fogEnd'</summary>
 		public float FogEnd
 		{
@@ -176,7 +216,7 @@ namespace GameClient.Shaders
 			}
 		}
 		/// <summary>Name ID for 'fogStart'</summary>
-		private static int cid2;
+		private static int cid4;
 		/// <summary>Assign the shader value 'float fogStart'</summary>
 		public float FogStart
 		{
@@ -186,24 +226,8 @@ namespace GameClient.Shaders
 				this.preg_change = true;
 			}
 		}
-		/// <summary>Name ID for 'lightDirection'</summary>
-		private static int cid3;
-		/// <summary>Set the shader value 'float3 lightDirection'</summary><param name="value"/>
-		public void SetLightDirection(ref Microsoft.Xna.Framework.Vector3 value)
-		{
-			this.preg[4] = new Microsoft.Xna.Framework.Vector4(value.X, value.Y, value.Z, 0F);
-			this.preg_change = true;
-		}
-		/// <summary>Assign the shader value 'float3 lightDirection'</summary>
-		public Microsoft.Xna.Framework.Vector3 LightDirection
-		{
-			set
-			{
-				this.SetLightDirection(ref value);
-			}
-		}
 		/// <summary>Name ID for 'textureScale'</summary>
-		private static int cid4;
+		private static int cid5;
 		/// <summary>Assign the shader value 'float textureScale'</summary>
 		public float TextureScale
 		{
@@ -213,48 +237,14 @@ namespace GameClient.Shaders
 				this.preg_change = true;
 			}
 		}
-		/// <summary>Change ID for Semantic bound attribute 'worldMatrix'</summary>
-		private int sc0;
 		/// <summary>Change ID for Semantic bound attribute 'worldViewProj'</summary>
-		private int sc1;
+		private int sc0;
 		/// <summary>Change ID for Semantic bound attribute '__BLENDMATRICES__GENMATRIX'</summary>
-		private int sc2;
+		private int sc1;
 		/// <summary>Change ID for Semantic bound attribute '__VIEWPROJECTION__GENMATRIX'</summary>
-		private int sc3;
-		/// <summary>Get/Set the Texture Sampler State for 'Sampler2D BottomTextureSampler'</summary>
-		public Xen.Graphics.TextureSamplerState BottomTextureSampler
-		{
-			get
-			{
-				return this.pts[1];
-			}
-			set
-			{
-				if ((value != this.pts[1]))
-				{
-					this.pts[1] = value;
-					this.ptc = true;
-				}
-			}
-		}
-		/// <summary>Get/Set the Texture Sampler State for 'Sampler2D SideTextureSampler'</summary>
-		public Xen.Graphics.TextureSamplerState SideTextureSampler
-		{
-			get
-			{
-				return this.pts[0];
-			}
-			set
-			{
-				if ((value != this.pts[0]))
-				{
-					this.pts[0] = value;
-					this.ptc = true;
-				}
-			}
-		}
-		/// <summary>Get/Set the Texture Sampler State for 'Sampler2D TopTextureSampler'</summary>
-		public Xen.Graphics.TextureSamplerState TopTextureSampler
+		private int sc2;
+		/// <summary>Get/Set the Texture Sampler State for 'Sampler2D BottomColorSampler'</summary>
+		public Xen.Graphics.TextureSamplerState BottomColorSampler
 		{
 			get
 			{
@@ -269,8 +259,88 @@ namespace GameClient.Shaders
 				}
 			}
 		}
-		/// <summary>Get/Set the Bound texture for 'Texture SideTexture'</summary>
-		public Microsoft.Xna.Framework.Graphics.Texture SideTexture
+		/// <summary>Get/Set the Texture Sampler State for 'Sampler2D BottomNormalSampler'</summary>
+		public Xen.Graphics.TextureSamplerState BottomNormalSampler
+		{
+			get
+			{
+				return this.pts[3];
+			}
+			set
+			{
+				if ((value != this.pts[3]))
+				{
+					this.pts[3] = value;
+					this.ptc = true;
+				}
+			}
+		}
+		/// <summary>Get/Set the Texture Sampler State for 'Sampler2D SideColorSampler'</summary>
+		public Xen.Graphics.TextureSamplerState SideColorSampler
+		{
+			get
+			{
+				return this.pts[0];
+			}
+			set
+			{
+				if ((value != this.pts[0]))
+				{
+					this.pts[0] = value;
+					this.ptc = true;
+				}
+			}
+		}
+		/// <summary>Get/Set the Texture Sampler State for 'Sampler2D SideNormalSampler'</summary>
+		public Xen.Graphics.TextureSamplerState SideNormalSampler
+		{
+			get
+			{
+				return this.pts[1];
+			}
+			set
+			{
+				if ((value != this.pts[1]))
+				{
+					this.pts[1] = value;
+					this.ptc = true;
+				}
+			}
+		}
+		/// <summary>Get/Set the Texture Sampler State for 'Sampler2D TopColorSampler'</summary>
+		public Xen.Graphics.TextureSamplerState TopColorSampler
+		{
+			get
+			{
+				return this.pts[4];
+			}
+			set
+			{
+				if ((value != this.pts[4]))
+				{
+					this.pts[4] = value;
+					this.ptc = true;
+				}
+			}
+		}
+		/// <summary>Get/Set the Texture Sampler State for 'Sampler2D TopNormalSampler'</summary>
+		public Xen.Graphics.TextureSamplerState TopNormalSampler
+		{
+			get
+			{
+				return this.pts[5];
+			}
+			set
+			{
+				if ((value != this.pts[5]))
+				{
+					this.pts[5] = value;
+					this.ptc = true;
+				}
+			}
+		}
+		/// <summary>Get/Set the Bound texture for 'Texture SideColor'</summary>
+		public Microsoft.Xna.Framework.Graphics.Texture SideColor
 		{
 			get
 			{
@@ -285,8 +355,8 @@ namespace GameClient.Shaders
 				}
 			}
 		}
-		/// <summary>Get/Set the Bound texture for 'Texture BottomTexture'</summary>
-		public Microsoft.Xna.Framework.Graphics.Texture BottomTexture
+		/// <summary>Get/Set the Bound texture for 'Texture SideNormal'</summary>
+		public Microsoft.Xna.Framework.Graphics.Texture SideNormal
 		{
 			get
 			{
@@ -301,8 +371,8 @@ namespace GameClient.Shaders
 				}
 			}
 		}
-		/// <summary>Get/Set the Bound texture for 'Texture TopTexture'</summary>
-		public Microsoft.Xna.Framework.Graphics.Texture TopTexture
+		/// <summary>Get/Set the Bound texture for 'Texture BottomColor'</summary>
+		public Microsoft.Xna.Framework.Graphics.Texture BottomColor
 		{
 			get
 			{
@@ -317,18 +387,78 @@ namespace GameClient.Shaders
 				}
 			}
 		}
-		/// <summary>Name uid for sampler for 'Sampler2D BottomTextureSampler'</summary>
+		/// <summary>Get/Set the Bound texture for 'Texture BottomNormal'</summary>
+		public Microsoft.Xna.Framework.Graphics.Texture BottomNormal
+		{
+			get
+			{
+				return ((Microsoft.Xna.Framework.Graphics.Texture)(this.ptx[3]));
+			}
+			set
+			{
+				if ((value != this.ptx[3]))
+				{
+					this.ptc = true;
+					this.ptx[3] = value;
+				}
+			}
+		}
+		/// <summary>Get/Set the Bound texture for 'Texture TopColor'</summary>
+		public Microsoft.Xna.Framework.Graphics.Texture TopColor
+		{
+			get
+			{
+				return ((Microsoft.Xna.Framework.Graphics.Texture)(this.ptx[4]));
+			}
+			set
+			{
+				if ((value != this.ptx[4]))
+				{
+					this.ptc = true;
+					this.ptx[4] = value;
+				}
+			}
+		}
+		/// <summary>Get/Set the Bound texture for 'Texture TopNormal'</summary>
+		public Microsoft.Xna.Framework.Graphics.Texture TopNormal
+		{
+			get
+			{
+				return ((Microsoft.Xna.Framework.Graphics.Texture)(this.ptx[5]));
+			}
+			set
+			{
+				if ((value != this.ptx[5]))
+				{
+					this.ptc = true;
+					this.ptx[5] = value;
+				}
+			}
+		}
+		/// <summary>Name uid for sampler for 'Sampler2D BottomColorSampler'</summary>
 		static int sid0;
-		/// <summary>Name uid for sampler for 'Sampler2D SideTextureSampler'</summary>
+		/// <summary>Name uid for sampler for 'Sampler2D BottomNormalSampler'</summary>
 		static int sid1;
-		/// <summary>Name uid for sampler for 'Sampler2D TopTextureSampler'</summary>
+		/// <summary>Name uid for sampler for 'Sampler2D SideColorSampler'</summary>
 		static int sid2;
-		/// <summary>Name uid for texture for 'Texture SideTexture'</summary>
+		/// <summary>Name uid for sampler for 'Sampler2D SideNormalSampler'</summary>
+		static int sid3;
+		/// <summary>Name uid for sampler for 'Sampler2D TopColorSampler'</summary>
+		static int sid4;
+		/// <summary>Name uid for sampler for 'Sampler2D TopNormalSampler'</summary>
+		static int sid5;
+		/// <summary>Name uid for texture for 'Texture SideColor'</summary>
 		static int tid0;
-		/// <summary>Name uid for texture for 'Texture BottomTexture'</summary>
+		/// <summary>Name uid for texture for 'Texture SideNormal'</summary>
 		static int tid1;
-		/// <summary>Name uid for texture for 'Texture TopTexture'</summary>
+		/// <summary>Name uid for texture for 'Texture BottomColor'</summary>
 		static int tid2;
+		/// <summary>Name uid for texture for 'Texture BottomNormal'</summary>
+		static int tid3;
+		/// <summary>Name uid for texture for 'Texture TopColor'</summary>
+		static int tid4;
+		/// <summary>Name uid for texture for 'Texture TopNormal'</summary>
+		static int tid5;
 		/// <summary>Pixel samplers/textures changed</summary>
 		bool ptc;
 		/// <summary>array storing vertex usages, and element indices</summary>
@@ -336,7 +466,7 @@ readonly
 		private static int[] vin = new int[] {0,3,0,0};
 		/// <summary>Vertex shader register storage</summary>
 readonly 
-		private Microsoft.Xna.Framework.Vector4[] vreg = new Microsoft.Xna.Framework.Vector4[7];
+		private Microsoft.Xna.Framework.Vector4[] vreg = new Microsoft.Xna.Framework.Vector4[6];
 		/// <summary>Pixel shader register storage</summary>
 readonly 
 		private Microsoft.Xna.Framework.Vector4[] preg = new Microsoft.Xna.Framework.Vector4[5];
@@ -345,17 +475,17 @@ readonly
 		private Microsoft.Xna.Framework.Vector4[] vireg = new Microsoft.Xna.Framework.Vector4[4];
 		/// <summary>Bound pixel textures</summary>
 readonly 
-		Microsoft.Xna.Framework.Graphics.Texture[] ptx = new Microsoft.Xna.Framework.Graphics.Texture[3];
+		Microsoft.Xna.Framework.Graphics.Texture[] ptx = new Microsoft.Xna.Framework.Graphics.Texture[6];
 		/// <summary>Bound pixel samplers</summary>
 readonly 
-		Xen.Graphics.TextureSamplerState[] pts = new Xen.Graphics.TextureSamplerState[3];
+		Xen.Graphics.TextureSamplerState[] pts = new Xen.Graphics.TextureSamplerState[6];
 #if XBOX360
 		/// <summary>Static RLE compressed shader byte code (Xbox360)</summary>
 		private static byte[] fxb
 		{
 			get
 			{
-				return new byte[] {4,188,240,11,207,131,0,1,32,152,0,8,254,255,9,1,0,0,16,80,135,0,1,3,131,0,1,1,131,0,1,144,135,0,1,7,131,0,1,4,131,0,1,1,229,0,0,142,0,0,1,6,1,95,1,118,1,115,1,95,1,99,134,0,0,1,3,131,0,0,1,1,1,0,1,0,1,1,1,8,135,0,0,1,5,131,0,0,1,4,131,0,0,1,1,211,0,0,1,6,1,95,1,112,1,115,1,95,1,99,134,0,0,1,3,131,0,0,1,1,1,0,1,0,1,14,1,176,135,0,0,1,216,131,0,0,1,4,131,0,0,1,1,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,153,0,0,1,7,1,95,1,118,1,115,1,98,1,95,1,99,133,0,0,1,3,131,0,0,1,1,1,0,1,0,1,15,1,24,135,0,0,1,4,131,0,0,1,4,131,0,0,1,1,195,0,0,1,7,1,95,1,118,1,115,1,105,1,95,1,99,133,0,0,1,12,131,0,0,1,4,1,0,1,0,1,15,1,60,143,0,0,1,7,1,95,1,112,1,115,1,95,1,115,1,48,133,0,0,1,12,131,0,0,1,4,1,0,1,0,1,15,1,96,143,0,0,1,7,1,95,1,112,1,115,1,95,1,115,1,49,133,0,0,1,12,131,0,0,1,4,1,0,1,0,1,15,1,132,143,0,0,1,7,1,95,1,112,1,115,1,95,1,115,1,50,133,0,0,1,1,131,0,0,1,16,131,0,0,1,4,143,0,0,1,2,131,0,0,1,15,131,0,0,1,4,147,0,0,1,3,131,0,0,1,16,131,0,0,1,4,143,0,0,1,4,131,0,0,1,15,131,0,0,1,4,143,0,0,1,9,1,66,1,108,1,101,1,110,1,100,1,105,1,110,1,103,135,0,0,1,5,131,0,0,1,16,131,0,0,1,4,143,0,0,1,6,131,0,0,1,15,131,0,0,1,4,143,0,0,1,11,1,73,1,110,1,115,1,116,1,97,1,110,1,99,1,105,1,110,1,103,133,0,0,1,7,1,83,1,104,1,97,1,100,1,101,1,114,133,0,0,1,7,131,0,0,1,1,131,0,0,1,12,131,0,0,1,7,131,0,0,1,4,131,0,0,1,32,139,0,0,1,156,131,0,0,1,184,138,0,0,1,1,1,20,1,0,1,0,1,1,1,48,138,0,0,1,14,1,188,1,0,1,0,1,14,1,216,138,0,0,1,15,1,36,1,0,1,0,1,15,1,56,138,0,0,1,15,1,72,1,0,1,0,1,15,1,92,138,0,0,1,15,1,108,1,0,1,0,1,15,1,128,138,0,0,1,16,1,68,135,0,0,1,3,1,0,1,0,1,15,1,192,135,0,0,1,2,131,0,0,1,92,134,0,0,1,15,1,148,1,0,1,0,1,15,1,144,131,0,0,1,93,134,0,0,1,15,1,172,1,0,1,0,1,15,1,168,1,0,1,0,1,15,1,244,135,0,0,1,2,131,0,0,1,92,134,0,0,1,15,1,200,1,0,1,0,1,15,1,196,131,0,0,1,93,134,0,0,1,15,1,224,1,0,1,0,1,15,1,220,1,0,1,0,1,16,1,52,135,0,0,1,2,131,0,0,1,92,134,0,0,1,16,1,8,1,0,1,0,1,16,1,4,131,0,0,1,93,134,0,0,1,16,1,32,1,0,1,0,1,16,1,28,135,0,0,1,6,135,0,0,1,2,132,255,0,131,0,0,1,1,134,0,0,1,3,1,28,1,16,1,42,1,17,131,0,0,1,1,1,140,1,0,1,0,1,1,1,144,135,0,0,1,36,1,0,1,0,1,1,1,56,1,0,1,0,1,1,1,96,138,0,0,1,1,1,16,131,0,0,1,28,1,0,1,0,1,1,1,1,1,255,1,255,1,3,132,0,0,1,4,131,0,0,1,28,135,0,0,1,250,131,0,0,1,108,1,0,1,2,131,0,0,1,5,133,0,0,1,116,131,0,0,1,132,131,0,0,1,212,1,0,1,3,131,0,0,1,1,133,0,0,1,220,135,0,0,1,236,1,0,1,3,1,0,1,1,1,0,1,1,133,0,0,1,220,135,0,0,1,243,1,0,1,3,1,0,1,2,1,0,1,1,133,0,0,1,220,132,0,0,1,95,1,112,1,115,1,95,1,99,1,0,1,171,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,5,214,0,0,1,95,1,112,1,115,1,95,1,115,1,48,1,0,1,171,1,0,1,4,1,0,1,12,1,0,1,1,1,0,1,1,1,0,1,1,134,0,0,1,95,1,112,1,115,1,95,1,115,1,49,1,0,1,95,1,112,1,115,1,95,1,115,1,50,1,0,1,112,1,115,1,95,1,51,1,95,1,48,1,0,1,50,1,46,1,48,1,46,1,49,1,49,1,54,1,50,1,54,1,46,1,48,1,0,131,171,0,135,0,0,1,1,139,0,0,1,20,1,1,1,252,1,0,1,16,147,0,0,1,64,1,0,1,0,1,1,1,80,1,16,1,0,1,5,132,0,0,1,4,134,0,0,1,28,1,99,1,0,1,7,1,0,1,7,131,0,0,1,1,1,0,1,0,1,112,1,80,1,0,1,0,1,113,1,81,1,0,1,0,1,18,1,82,160,0,0,1,62,1,204,1,204,1,205,1,63,1,25,1,160,1,40,1,191,1,25,1,153,1,154,132,0,0,1,63,1,128,1,0,1,0,1,191,1,230,1,102,1,103,132,0,0,1,61,1,204,1,204,1,205,1,0,1,36,1,96,1,4,1,32,1,10,1,16,1,0,1,86,1,0,1,0,1,9,1,0,1,9,1,32,1,12,1,16,1,14,1,82,1,0,1,18,1,0,1,0,1,1,132,0,0,1,96,1,15,1,196,1,0,1,18,133,0,0,1,96,1,21,1,0,1,0,1,34,133,0,0,1,200,1,7,1,0,1,4,1,0,1,192,1,108,1,0,1,161,1,1,1,0,1,0,1,100,1,8,1,16,1,129,1,31,1,31,1,254,1,10,1,0,1,0,1,64,1,0,1,20,1,135,1,3,1,3,1,0,1,98,1,177,1,108,1,130,1,128,1,254,1,255,1,200,1,8,131,0,0,1,172,1,62,1,0,1,111,1,255,1,3,1,0,1,76,1,142,1,0,1,2,1,0,1,252,1,198,1,27,1,160,1,3,1,254,1,0,1,116,1,7,1,0,1,3,1,1,1,183,1,27,1,177,1,225,1,2,1,0,1,0,1,8,1,24,1,32,1,129,1,159,1,31,1,240,1,87,1,128,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,8,1,40,1,32,1,129,1,159,1,31,1,240,1,87,1,0,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,16,1,8,1,64,1,129,1,31,1,31,1,254,1,136,1,0,1,0,1,64,1,0,1,20,1,129,1,0,1,2,1,0,1,190,1,190,1,108,1,48,1,4,1,4,1,2,1,88,1,24,1,2,1,1,1,2,131,108,0,1,32,1,1,1,2,1,130,1,76,1,135,1,1,1,5,1,0,1,198,1,180,1,27,1,225,1,3,1,4,1,1,1,200,1,7,1,0,1,4,1,0,1,108,1,192,1,0,1,161,1,2,1,4,1,0,1,200,1,7,1,0,1,2,1,0,1,177,1,183,1,180,1,235,1,3,1,2,1,5,1,200,1,7,1,0,1,1,1,0,1,108,1,98,1,192,1,235,1,3,1,1,1,2,1,184,1,33,1,0,1,0,1,5,1,190,1,190,1,67,1,208,1,4,1,0,1,1,1,20,1,1,131,0,0,1,108,1,198,1,177,1,162,1,0,1,255,1,0,1,14,1,129,131,0,0,1,108,1,108,1,27,1,160,1,0,1,254,1,1,1,200,1,7,1,0,1,0,1,1,1,192,1,108,1,192,1,203,1,1,1,0,1,3,1,200,1,7,131,0,0,1,27,1,192,1,192,1,203,1,0,1,0,1,3,1,20,1,135,1,128,1,0,1,0,1,192,1,27,1,27,1,129,1,0,1,255,1,255,147,0,0,1,2,132,255,0,138,0,0,1,2,1,60,1,16,1,42,1,17,1,1,1,0,1,0,1,1,1,28,1,0,1,0,1,1,1,32,135,0,0,1,36,135,0,0,1,196,139,0,0,1,156,131,0,0,1,28,131,0,0,1,143,1,255,1,254,1,3,132,0,0,1,1,131,0,0,1,28,135,0,0,1,136,131,0,0,1,48,1,0,1,2,1,0,1,7,1,0,1,4,133,0,0,1,56,131,0,0,1,72,1,95,1,118,1,115,1,105,1,95,1,99,1,0,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,4,198,0,0,1,118,1,115,1,95,1,51,1,95,1,48,1,0,1,50,1,46,1,48,1,46,1,49,1,49,1,54,1,50,1,54,1,46,1,48,1,0,1,171,134,0,0,1,1,1,32,1,0,1,33,1,0,1,6,138,0,0,1,28,1,99,131,0,0,1,1,131,0,0,1,6,131,0,0,1,3,1,0,1,0,1,2,1,144,1,0,1,16,1,0,1,3,1,0,1,0,1,48,1,4,1,0,1,12,1,0,1,5,1,0,1,13,1,0,1,6,1,0,1,14,1,0,1,7,1,0,1,47,1,0,1,8,1,0,1,0,1,112,1,80,1,0,1,1,1,113,1,81,1,0,1,2,1,18,1,82,1,0,1,0,1,16,1,22,1,0,1,0,1,16,1,21,1,0,1,0,1,16,1,20,1,245,1,85,1,96,1,3,1,0,1,0,1,18,1,3,1,194,133,0,0,1,96,1,9,1,48,1,15,1,18,1,0,1,18,135,0,0,1,80,1,18,1,196,1,0,1,34,131,0,0,1,5,1,248,1,32,131,0,0,1,6,1,136,132,0,0,1,5,1,248,133,0,0,1,143,132,0,0,1,5,1,248,1,16,131,0,0,1,6,1,136,132,0,0,1,5,1,248,1,80,131,0,0,1,6,1,136,132,0,0,1,5,1,248,1,48,131,0,0,1,6,1,136,132,0,0,1,5,1,248,1,64,131,0,0,1,6,1,136,132,0,0,1,200,1,15,1,0,1,4,1,0,1,27,1,0,1,0,1,225,1,2,1,4,1,0,1,200,1,15,1,0,1,4,1,0,1,198,1,0,1,0,1,235,1,2,1,3,1,4,1,200,1,15,1,0,1,4,1,0,1,177,1,148,1,148,1,235,1,2,1,5,1,4,1,200,1,15,1,0,1,6,1,0,1,108,1,248,1,148,1,235,1,2,1,1,1,4,1,200,1,8,1,0,1,4,1,0,1,233,1,167,1,0,1,175,1,6,1,10,1,0,1,200,1,4,1,0,1,4,1,0,1,233,1,167,1,0,1,175,1,6,1,9,1,0,1,200,1,2,1,0,1,4,1,0,1,233,1,167,1,0,1,175,1,6,1,8,1,0,1,200,1,1,1,0,1,4,1,0,1,233,1,167,1,0,1,175,1,6,1,7,1,0,1,200,1,15,1,128,1,62,132,0,0,1,226,1,4,1,4,1,0,1,76,1,30,1,3,1,3,1,0,1,198,1,140,1,27,1,225,1,0,1,3,1,2,1,200,1,7,131,0,0,1,177,1,180,1,21,1,235,1,0,1,5,1,3,1,20,1,16,1,128,1,2,131,0,0,1,198,1,226,1,0,1,0,1,4,1,200,1,7,1,128,1,1,1,0,1,108,1,192,1,0,1,225,1,3,1,2,1,0,1,200,1,7,1,128,1,0,1,0,1,27,1,192,1,180,1,235,1,0,1,1,148,0,0,1,1,132,255,0,131,0,0,1,1,134,0,0,1,3,1,28,1,16,1,42,1,17,131,0,0,1,1,1,140,1,0,1,0,1,1,1,144,135,0,0,1,36,1,0,1,0,1,1,1,56,1,0,1,0,1,1,1,96,138,0,0,1,1,1,16,131,0,0,1,28,1,0,1,0,1,1,1,1,1,255,1,255,1,3,132,0,0,1,4,131,0,0,1,28,135,0,0,1,250,131,0,0,1,108,1,0,1,2,131,0,0,1,5,133,0,0,1,116,131,0,0,1,132,131,0,0,1,212,1,0,1,3,131,0,0,1,1,133,0,0,1,220,135,0,0,1,236,1,0,1,3,1,0,1,1,1,0,1,1,133,0,0,1,220,135,0,0,1,243,1,0,1,3,1,0,1,2,1,0,1,1,133,0,0,1,220,132,0,0,1,95,1,112,1,115,1,95,1,99,1,0,1,171,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,5,214,0,0,1,95,1,112,1,115,1,95,1,115,1,48,1,0,1,171,1,0,1,4,1,0,1,12,1,0,1,1,1,0,1,1,1,0,1,1,134,0,0,1,95,1,112,1,115,1,95,1,115,1,49,1,0,1,95,1,112,1,115,1,95,1,115,1,50,1,0,1,112,1,115,1,95,1,51,1,95,1,48,1,0,1,50,1,46,1,48,1,46,1,49,1,49,1,54,1,50,1,54,1,46,1,48,1,0,131,171,0,135,0,0,1,1,139,0,0,1,20,1,1,1,252,1,0,1,16,147,0,0,1,64,1,0,1,0,1,1,1,80,1,16,1,0,1,5,132,0,0,1,4,134,0,0,1,28,1,99,1,0,1,7,1,0,1,7,131,0,0,1,1,1,0,1,0,1,112,1,80,1,0,1,0,1,113,1,81,1,0,1,0,1,18,1,82,160,0,0,1,62,1,204,1,204,1,205,1,63,1,25,1,160,1,40,1,191,1,25,1,153,1,154,132,0,0,1,63,1,128,1,0,1,0,1,191,1,230,1,102,1,103,132,0,0,1,61,1,204,1,204,1,205,1,0,1,36,1,96,1,4,1,32,1,10,1,16,1,0,1,86,1,0,1,0,1,9,1,0,1,9,1,32,1,12,1,16,1,14,1,82,1,0,1,18,1,0,1,0,1,1,132,0,0,1,96,1,15,1,196,1,0,1,18,133,0,0,1,96,1,21,1,0,1,0,1,34,133,0,0,1,200,1,7,1,0,1,4,1,0,1,192,1,108,1,0,1,161,1,1,1,0,1,0,1,100,1,8,1,16,1,129,1,31,1,31,1,254,1,10,1,0,1,0,1,64,1,0,1,20,1,135,1,3,1,3,1,0,1,98,1,177,1,108,1,130,1,128,1,254,1,255,1,200,1,8,131,0,0,1,172,1,62,1,0,1,111,1,255,1,3,1,0,1,76,1,142,1,0,1,2,1,0,1,252,1,198,1,27,1,160,1,3,1,254,1,0,1,116,1,7,1,0,1,3,1,1,1,183,1,27,1,177,1,225,1,2,1,0,1,0,1,8,1,24,1,32,1,129,1,159,1,31,1,240,1,87,1,128,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,8,1,40,1,32,1,129,1,159,1,31,1,240,1,87,1,0,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,16,1,8,1,64,1,129,1,31,1,31,1,254,1,136,1,0,1,0,1,64,1,0,1,20,1,129,1,0,1,2,1,0,1,190,1,190,1,108,1,48,1,4,1,4,1,2,1,88,1,24,1,2,1,1,1,2,131,108,0,1,32,1,1,1,2,1,130,1,76,1,135,1,1,1,5,1,0,1,198,1,180,1,27,1,225,1,3,1,4,1,1,1,200,1,7,1,0,1,4,1,0,1,108,1,192,1,0,1,161,1,2,1,4,1,0,1,200,1,7,1,0,1,2,1,0,1,177,1,183,1,180,1,235,1,3,1,2,1,5,1,200,1,7,1,0,1,1,1,0,1,108,1,98,1,192,1,235,1,3,1,1,1,2,1,184,1,33,1,0,1,0,1,5,1,190,1,190,1,67,1,208,1,4,1,0,1,1,1,20,1,1,131,0,0,1,108,1,198,1,177,1,162,1,0,1,255,1,0,1,14,1,129,131,0,0,1,108,1,108,1,27,1,160,1,0,1,254,1,1,1,200,1,7,1,0,1,0,1,1,1,192,1,108,1,192,1,203,1,1,1,0,1,3,1,200,1,7,131,0,0,1,27,1,192,1,192,1,203,1,0,1,0,1,3,1,20,1,135,1,128,1,0,1,0,1,192,1,27,1,27,1,129,1,0,1,255,1,255,147,0,0,1,1,132,255,0,138,0,0,1,17,1,112,1,16,1,42,1,17,1,1,1,0,1,0,1,15,1,32,1,0,1,0,1,2,1,80,135,0,0,1,36,1,0,1,0,1,14,1,160,1,0,1,0,1,14,1,200,138,0,0,1,14,1,120,131,0,0,1,28,1,0,1,0,1,14,1,107,1,255,1,254,1,3,132,0,0,1,2,131,0,0,1,28,134,0,0,1,14,1,100,131,0,0,1,68,1,0,1,2,131,0,0,1,7,133,0,0,1,76,131,0,0,1,92,131,0,0,1,204,1,0,1,2,1,0,1,7,1,0,1,216,133,0,0,1,212,131,0,0,1,228,1,95,1,118,1,115,1,95,1,99,1,0,1,171,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,7,229,0,0,145,0,0,1,95,1,118,1,115,1,98,1,95,1,99,1,0,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,216,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,156,0,0,1,118,1,115,1,95,1,51,1,95,1,48,1,0,1,50,1,46,1,48,1,46,1,49,1,49,1,54,1,50,1,54,1,46,1,48,1,0,1,171,135,0,0,1,1,139,0,0,1,20,1,0,1,252,1,0,1,16,147,0,0,1,64,1,0,1,0,1,2,1,16,1,0,1,33,1,0,1,7,138,0,0,1,28,1,99,131,0,0,1,1,131,0,0,1,4,131,0,0,1,5,1,0,1,0,1,2,1,144,1,0,1,16,1,0,1,5,1,0,1,0,1,48,1,6,1,0,1,0,1,16,1,7,1,0,1,48,1,32,1,8,1,0,1,0,1,112,1,80,1,0,1,3,1,113,1,81,1,0,1,4,1,18,1,82,131,0,0,1,40,131,0,0,1,41,1,0,1,0,1,16,1,42,1,0,1,0,1,16,1,39,1,0,1,0,1,16,1,38,180,0,0,1,63,1,128,1,0,1,0,1,64,1,64,134,0,0,1,240,1,85,1,64,1,5,1,0,1,0,1,18,1,0,1,194,133,0,0,1,96,1,9,1,96,1,15,1,18,1,0,1,18,133,0,0,1,96,1,21,1,96,1,27,1,18,1,0,1,18,133,0,0,1,32,1,33,1,0,1,0,1,18,1,0,1,196,133,0,0,1,96,1,35,1,32,1,41,1,18,1,0,1,34,131,0,0,1,5,1,248,1,16,131,0,0,1,6,1,136,132,0,0,1,5,1,248,1,48,131,0,0,1,14,1,136,132,0,0,1,5,1,248,1,80,131,0,0,1,6,1,136,132,0,0,1,5,1,248,132,0,0,1,6,1,136,132,0,0,1,200,1,15,1,0,1,6,1,0,1,148,1,198,1,0,1,161,1,0,1,255,1,0,1,92,134,0,0,1,198,1,226,1,0,1,0,1,6,1,200,1,15,1,0,1,2,1,160,1,27,1,136,1,0,1,161,1,5,1,7,1,0,1,200,1,15,1,0,1,0,1,160,1,27,1,136,1,0,1,161,1,5,1,8,1,0,1,92,1,15,1,0,1,4,1,160,1,27,1,136,1,177,1,161,1,5,1,9,1,6,1,200,1,15,1,0,1,4,1,160,1,198,1,136,1,0,1,171,1,5,1,9,1,4,1,200,1,15,1,0,1,0,1,160,1,198,1,136,1,0,1,171,1,5,1,8,1,0,1,200,1,15,1,0,1,2,1,160,1,198,1,136,1,0,1,171,1,5,1,7,1,2,1,92,1,2,1,0,1,6,1,0,131,27,0,1,161,1,1,1,0,1,6,1,200,1,15,1,0,1,2,1,160,1,177,1,52,1,148,1,171,1,5,1,7,1,2,1,200,1,15,1,0,1,0,1,160,1,177,1,52,1,148,1,171,1,5,1,8,1,0,1,200,1,15,1,0,1,4,1,160,1,177,1,52,1,148,1,171,1,5,1,9,1,4,1,92,1,8,1,0,1,6,1,0,1,27,1,27,1,108,1,161,1,1,1,1,1,6,1,200,1,15,1,0,1,4,1,160,1,108,1,208,1,148,1,171,1,5,1,9,1,4,1,200,1,15,1,0,1,0,1,160,1,108,1,255,1,143,1,171,1,5,1,8,1,0,1,200,1,15,1,0,1,5,1,160,1,108,1,208,1,148,1,171,1,5,1,7,1,2,1,200,1,1,1,0,1,2,1,0,1,170,1,167,1,0,1,239,1,5,1,1,1,0,1,200,1,2,1,0,1,2,1,0,1,248,1,167,1,0,1,239,1,0,1,1,1,0,1,200,1,4,1,0,1,2,1,0,1,170,1,167,1,0,1,239,1,4,1,1,1,0,1,200,1,1,1,0,1,6,1,0,1,190,1,190,1,0,1,176,1,2,1,0,1,0,1,200,1,4,1,0,1,6,1,0,1,190,1,190,1,0,1,176,1,2,1,1,1,0,1,200,1,15,1,0,1,7,1,0,1,176,1,27,1,166,1,108,1,255,1,1,1,2,1,200,1,8,1,0,1,2,1,0,1,85,1,62,1,0,1,175,1,7,1,3,1,0,1,200,1,4,1,0,1,2,1,0,1,85,1,62,1,0,1,175,1,7,1,2,1,0,1,200,1,3,1,0,1,2,1,0,1,196,1,25,1,0,1,224,1,6,1,6,1,0,1,200,1,15,1,128,1,62,132,0,0,1,226,1,2,1,2,1,0,1,200,1,1,131,0,0,1,191,1,190,1,0,1,240,1,5,1,3,1,0,1,200,1,2,131,0,0,1,195,1,190,1,0,1,240,1,0,1,3,1,0,1,76,1,132,131,0,0,1,191,1,190,1,27,1,240,1,4,1,3,1,1,1,20,1,16,1,128,1,2,131,0,0,1,198,1,226,1,0,1,0,1,2,1,200,1,7,1,128,1,1,1,0,1,27,1,192,1,0,1,225,1,0,1,1,1,0,1,200,1,1,1,128,1,0,1,0,1,190,1,190,1,0,1,176,1,0,1,4,1,0,1,200,1,2,1,128,1,0,1,0,1,190,1,190,1,0,1,176,1,0,1,5,1,0,1,200,1,4,1,128,1,0,1,0,1,190,1,190,1,0,1,176,1,0,1,6,149,0,0,132,255,0,131,0,0,1,1,134,0,0,1,3,1,28,1,16,1,42,1,17,131,0,0,1,1,1,140,1,0,1,0,1,1,1,144,135,0,0,1,36,1,0,1,0,1,1,1,56,1,0,1,0,1,1,1,96,138,0,0,1,1,1,16,131,0,0,1,28,1,0,1,0,1,1,1,1,1,255,1,255,1,3,132,0,0,1,4,131,0,0,1,28,135,0,0,1,250,131,0,0,1,108,1,0,1,2,131,0,0,1,5,133,0,0,1,116,131,0,0,1,132,131,0,0,1,212,1,0,1,3,131,0,0,1,1,133,0,0,1,220,135,0,0,1,236,1,0,1,3,1,0,1,1,1,0,1,1,133,0,0,1,220,135,0,0,1,243,1,0,1,3,1,0,1,2,1,0,1,1,133,0,0,1,220,132,0,0,1,95,1,112,1,115,1,95,1,99,1,0,1,171,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,5,214,0,0,1,95,1,112,1,115,1,95,1,115,1,48,1,0,1,171,1,0,1,4,1,0,1,12,1,0,1,1,1,0,1,1,1,0,1,1,134,0,0,1,95,1,112,1,115,1,95,1,115,1,49,1,0,1,95,1,112,1,115,1,95,1,115,1,50,1,0,1,112,1,115,1,95,1,51,1,95,1,48,1,0,1,50,1,46,1,48,1,46,1,49,1,49,1,54,1,50,1,54,1,46,1,48,1,0,131,171,0,135,0,0,1,1,139,0,0,1,20,1,1,1,252,1,0,1,16,147,0,0,1,64,1,0,1,0,1,1,1,80,1,16,1,0,1,5,132,0,0,1,4,134,0,0,1,28,1,99,1,0,1,7,1,0,1,7,131,0,0,1,1,1,0,1,0,1,112,1,80,1,0,1,0,1,113,1,81,1,0,1,0,1,18,1,82,160,0,0,1,62,1,204,1,204,1,205,1,63,1,25,1,160,1,40,1,191,1,25,1,153,1,154,132,0,0,1,63,1,128,1,0,1,0,1,191,1,230,1,102,1,103,132,0,0,1,61,1,204,1,204,1,205,1,0,1,36,1,96,1,4,1,32,1,10,1,16,1,0,1,86,1,0,1,0,1,9,1,0,1,9,1,32,1,12,1,16,1,14,1,82,1,0,1,18,1,0,1,0,1,1,132,0,0,1,96,1,15,1,196,1,0,1,18,133,0,0,1,96,1,21,1,0,1,0,1,34,133,0,0,1,200,1,7,1,0,1,4,1,0,1,192,1,108,1,0,1,161,1,1,1,0,1,0,1,100,1,8,1,16,1,129,1,31,1,31,1,254,1,10,1,0,1,0,1,64,1,0,1,20,1,135,1,3,1,3,1,0,1,98,1,177,1,108,1,130,1,128,1,254,1,255,1,200,1,8,131,0,0,1,172,1,62,1,0,1,111,1,255,1,3,1,0,1,76,1,142,1,0,1,2,1,0,1,252,1,198,1,27,1,160,1,3,1,254,1,0,1,116,1,7,1,0,1,3,1,1,1,183,1,27,1,177,1,225,1,2,1,0,1,0,1,8,1,24,1,32,1,129,1,159,1,31,1,240,1,87,1,128,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,8,1,40,1,32,1,129,1,159,1,31,1,240,1,87,1,0,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,16,1,8,1,64,1,129,1,31,1,31,1,254,1,136,1,0,1,0,1,64,1,0,1,20,1,129,1,0,1,2,1,0,1,190,1,190,1,108,1,48,1,4,1,4,1,2,1,88,1,24,1,2,1,1,1,2,131,108,0,1,32,1,1,1,2,1,130,1,76,1,135,1,1,1,5,1,0,1,198,1,180,1,27,1,225,1,3,1,4,1,1,1,200,1,7,1,0,1,4,1,0,1,108,1,192,1,0,1,161,1,2,1,4,1,0,1,200,1,7,1,0,1,2,1,0,1,177,1,183,1,180,1,235,1,3,1,2,1,5,1,200,1,7,1,0,1,1,1,0,1,108,1,98,1,192,1,235,1,3,1,1,1,2,1,184,1,33,1,0,1,0,1,5,1,190,1,190,1,67,1,208,1,4,1,0,1,1,1,20,1,1,131,0,0,1,108,1,198,1,177,1,162,1,0,1,255,1,0,1,14,1,129,131,0,0,1,108,1,108,1,27,1,160,1,0,1,254,1,1,1,200,1,7,1,0,1,0,1,1,1,192,1,108,1,192,1,203,1,1,1,0,1,3,1,200,1,7,131,0,0,1,27,1,192,1,192,1,203,1,0,1,0,1,3,1,20,1,135,1,128,1,0,1,0,1,192,1,27,1,27,1,129,1,0,1,255,1,255,148,0,0,132,255,0,138,0,0,1,2,1,4,1,16,1,42,1,17,1,1,1,0,1,0,1,1,1,68,131,0,0,1,192,135,0,0,1,36,135,0,0,1,244,139,0,0,1,204,131,0,0,1,28,131,0,0,1,191,1,255,1,254,1,3,132,0,0,1,1,131,0,0,1,28,135,0,0,1,184,131,0,0,1,48,1,0,1,2,131,0,0,1,7,133,0,0,1,56,131,0,0,1,72,1,95,1,118,1,115,1,95,1,99,1,0,1,171,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,7,229,0,0,145,0,0,1,118,1,115,1,95,1,51,1,95,1,48,1,0,1,50,1,46,1,48,1,46,1,49,1,49,1,54,1,50,1,54,1,46,1,48,1,0,1,171,135,0,0,1,192,1,0,1,33,1,0,1,2,138,0,0,1,28,1,99,131,0,0,1,1,131,0,0,1,2,131,0,0,1,5,1,0,1,0,1,2,1,144,1,0,1,16,1,0,1,3,1,0,1,48,1,48,1,4,1,0,1,0,1,112,1,80,1,0,1,3,1,113,1,81,1,0,1,4,1,18,1,82,131,0,0,1,12,131,0,0,1,13,1,0,1,0,1,16,1,14,1,0,1,0,1,16,1,11,1,0,1,0,1,16,1,10,1,48,1,5,1,32,1,3,1,0,1,0,1,18,1,0,1,194,133,0,0,1,80,1,5,1,0,1,0,1,18,1,0,1,196,133,0,0,1,80,1,10,1,0,1,0,1,34,133,0,0,1,5,1,248,1,16,131,0,0,1,6,1,136,132,0,0,1,5,1,248,132,0,0,1,14,1,136,132,0,0,1,200,1,4,1,0,1,2,1,0,1,167,1,167,1,0,1,175,1,1,1,2,1,0,1,200,1,2,1,0,1,2,1,0,1,167,1,167,1,0,1,175,1,1,1,1,1,0,1,200,1,1,1,0,1,2,1,0,1,167,1,167,1,0,1,175,1,1,1,0,1,0,1,76,1,136,1,0,1,2,1,0,1,167,1,167,1,27,1,175,1,1,1,3,1,1,1,200,1,15,1,128,1,62,132,0,0,1,226,1,2,1,2,1,0,1,20,1,16,1,128,1,2,131,0,0,1,198,1,226,1,0,1,0,1,2,1,200,1,7,1,128,1,1,1,0,1,27,1,192,1,0,1,225,1,0,1,1,1,0,1,200,1,1,1,128,1,0,1,0,1,190,1,190,1,0,1,176,1,0,1,4,1,0,1,200,1,2,1,128,1,0,1,0,1,190,1,190,1,0,1,176,1,0,1,5,1,0,1,200,1,4,1,128,1,0,1,0,1,190,1,190,1,0,1,176,1,0,1,6,140,0,0,1,0};
+				return new byte[] {4,188,240,11,207,131,0,1,32,152,0,8,254,255,9,1,0,0,16,172,135,0,1,3,131,0,1,1,131,0,1,128,135,0,1,6,131,0,1,4,131,0,1,1,227,0,0,1,6,1,95,1,118,1,115,1,95,1,99,134,0,0,1,3,131,0,0,1,1,131,0,0,1,248,135,0,0,1,5,131,0,0,1,4,131,0,0,1,1,211,0,0,1,6,1,95,1,112,1,115,1,95,1,99,134,0,0,1,3,131,0,0,1,1,1,0,1,0,1,14,1,160,135,0,0,1,216,131,0,0,1,4,131,0,0,1,1,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,153,0,0,1,7,1,95,1,118,1,115,1,98,1,95,1,99,133,0,0,1,3,131,0,0,1,1,1,0,1,0,1,15,1,8,135,0,0,1,4,131,0,0,1,4,131,0,0,1,1,195,0,0,1,7,1,95,1,118,1,115,1,105,1,95,1,99,133,0,0,1,12,131,0,0,1,4,1,0,1,0,1,15,1,44,143,0,0,1,7,1,95,1,112,1,115,1,95,1,115,1,48,133,0,0,1,12,131,0,0,1,4,1,0,1,0,1,15,1,80,143,0,0,1,7,1,95,1,112,1,115,1,95,1,115,1,49,133,0,0,1,12,131,0,0,1,4,1,0,1,0,1,15,1,116,143,0,0,1,7,1,95,1,112,1,115,1,95,1,115,1,50,133,0,0,1,12,131,0,0,1,4,1,0,1,0,1,15,1,152,143,0,0,1,7,1,95,1,112,1,115,1,95,1,115,1,51,133,0,0,1,12,131,0,0,1,4,1,0,1,0,1,15,1,188,143,0,0,1,7,1,95,1,112,1,115,1,95,1,115,1,52,133,0,0,1,12,131,0,0,1,4,1,0,1,0,1,15,1,224,143,0,0,1,7,1,95,1,112,1,115,1,95,1,115,1,53,133,0,0,1,1,131,0,0,1,16,131,0,0,1,4,143,0,0,1,2,131,0,0,1,15,131,0,0,1,4,147,0,0,1,3,131,0,0,1,16,131,0,0,1,4,143,0,0,1,4,131,0,0,1,15,131,0,0,1,4,143,0,0,1,9,1,66,1,108,1,101,1,110,1,100,1,105,1,110,1,103,135,0,0,1,5,131,0,0,1,16,131,0,0,1,4,143,0,0,1,6,131,0,0,1,15,131,0,0,1,4,143,0,0,1,11,1,73,1,110,1,115,1,116,1,97,1,110,1,99,1,105,1,110,1,103,133,0,0,1,7,1,83,1,104,1,97,1,100,1,101,1,114,133,0,0,1,10,131,0,0,1,1,131,0,0,1,15,131,0,0,1,7,131,0,0,1,4,131,0,0,1,32,139,0,0,1,140,131,0,0,1,168,138,0,0,1,1,1,4,1,0,1,0,1,1,1,32,138,0,0,1,14,1,172,1,0,1,0,1,14,1,200,138,0,0,1,15,1,20,1,0,1,0,1,15,1,40,138,0,0,1,15,1,56,1,0,1,0,1,15,1,76,138,0,0,1,15,1,92,1,0,1,0,1,15,1,112,138,0,0,1,15,1,128,1,0,1,0,1,15,1,148,138,0,0,1,15,1,164,1,0,1,0,1,15,1,184,138,0,0,1,15,1,200,1,0,1,0,1,15,1,220,138,0,0,1,16,1,160,135,0,0,1,3,1,0,1,0,1,16,1,28,135,0,0,1,2,131,0,0,1,92,134,0,0,1,15,1,240,1,0,1,0,1,15,1,236,131,0,0,1,93,134,0,0,1,16,1,8,1,0,1,0,1,16,1,4,1,0,1,0,1,16,1,80,135,0,0,1,2,131,0,0,1,92,134,0,0,1,16,1,36,1,0,1,0,1,16,1,32,131,0,0,1,93,134,0,0,1,16,1,60,1,0,1,0,1,16,1,56,1,0,1,0,1,16,1,144,135,0,0,1,2,131,0,0,1,92,134,0,0,1,16,1,100,1,0,1,0,1,16,1,96,131,0,0,1,93,134,0,0,1,16,1,124,1,0,1,0,1,16,1,120,135,0,0,1,6,135,0,0,1,2,132,255,0,131,0,0,1,1,134,0,0,1,4,1,148,1,16,1,42,1,17,131,0,0,1,1,1,240,1,0,1,0,1,2,1,164,135,0,0,1,36,1,0,1,0,1,1,1,136,1,0,1,0,1,1,1,176,138,0,0,1,1,1,96,131,0,0,1,28,1,0,1,0,1,1,1,82,1,255,1,255,1,3,132,0,0,1,7,131,0,0,1,28,134,0,0,1,1,1,75,131,0,0,1,168,1,0,1,2,131,0,0,1,5,133,0,0,1,176,131,0,0,1,192,1,0,1,0,1,1,1,16,1,0,1,3,131,0,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,40,1,0,1,3,1,0,1,1,1,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,47,1,0,1,3,1,0,1,2,1,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,54,1,0,1,3,1,0,1,3,1,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,61,1,0,1,3,1,0,1,4,1,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,68,1,0,1,3,1,0,1,5,1,0,1,1,132,0,0,1,1,1,24,132,0,0,1,95,1,112,1,115,1,95,1,99,1,0,1,171,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,5,214,0,0,1,95,1,112,1,115,1,95,1,115,1,48,1,0,1,171,1,0,1,4,1,0,1,12,1,0,1,1,1,0,1,1,1,0,1,1,134,0,0,1,95,1,112,1,115,1,95,1,115,1,49,1,0,1,95,1,112,1,115,1,95,1,115,1,50,1,0,1,95,1,112,1,115,1,95,1,115,1,51,1,0,1,95,1,112,1,115,1,95,1,115,1,52,1,0,1,95,1,112,1,115,1,95,1,115,1,53,1,0,1,112,1,115,1,95,1,51,1,95,1,48,1,0,1,50,1,46,1,48,1,46,1,49,1,49,1,54,1,50,1,54,1,46,1,48,1,0,1,171,1,171,135,0,0,1,1,139,0,0,1,20,1,1,1,252,1,0,1,16,147,0,0,1,64,1,0,1,0,1,2,1,100,1,16,1,0,1,7,132,0,0,1,4,134,0,0,1,81,1,8,1,0,1,255,1,0,1,255,131,0,0,1,1,1,0,1,0,1,112,1,80,1,0,1,0,1,113,1,81,1,0,1,0,1,18,1,82,1,0,1,0,1,115,1,83,1,0,1,0,1,52,1,84,1,0,1,0,1,117,1,85,1,0,1,0,1,54,1,86,1,0,1,0,1,119,1,87,160,0,0,1,191,1,25,1,153,1,154,1,62,1,204,1,204,1,205,1,62,1,25,1,153,1,154,132,0,0,1,63,1,128,1,0,1,0,1,191,1,230,1,102,1,103,132,0,0,1,63,1,25,1,160,1,40,1,0,1,36,1,96,1,7,1,32,1,13,1,16,1,0,1,86,1,0,1,0,1,9,1,0,1,9,1,32,1,15,1,96,1,17,1,82,1,0,1,18,1,0,1,0,1,148,1,0,1,0,1,96,1,23,1,48,1,29,1,18,1,0,1,16,132,0,0,1,9,131,32,0,1,34,1,86,1,0,1,82,1,0,1,0,1,9,1,0,1,1,1,16,1,36,1,0,1,0,1,18,1,0,1,196,133,0,0,1,96,1,37,1,96,1,43,1,18,1,0,1,18,133,0,0,1,16,1,49,1,0,1,0,1,34,133,0,0,1,200,1,7,1,0,1,5,1,0,1,192,1,108,1,0,1,161,1,1,1,0,1,0,1,100,1,8,1,32,1,161,1,31,1,31,1,244,1,71,1,0,1,0,1,64,1,0,1,20,1,135,1,1,1,1,1,0,1,98,1,27,1,108,1,130,1,128,1,255,1,255,1,200,1,8,131,0,0,1,172,1,62,1,0,1,111,1,255,1,1,1,0,1,76,1,135,1,0,1,1,1,0,1,192,1,108,1,27,1,160,1,1,1,254,1,0,1,116,1,7,1,0,1,3,1,1,1,98,1,27,1,177,1,225,1,1,1,0,1,0,1,8,1,40,1,64,1,161,1,159,1,31,1,254,1,10,1,128,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,8,1,72,1,64,1,161,1,159,1,31,1,254,1,10,1,0,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,20,1,136,1,5,1,0,1,0,1,108,1,108,1,177,1,226,1,2,1,2,1,5,1,36,1,24,1,96,1,161,1,31,1,31,1,244,1,200,1,0,1,0,1,64,1,0,1,48,1,8,1,16,1,161,1,31,1,31,1,245,1,200,1,0,1,0,1,64,1,0,1,184,1,132,1,3,1,1,1,3,1,108,1,108,1,67,1,0,1,1,1,2,1,1,1,76,1,72,1,1,1,0,1,0,1,190,1,190,1,198,1,48,1,4,1,4,1,1,1,88,1,135,1,0,1,7,1,0,1,198,1,99,1,27,1,225,1,3,1,1,1,128,1,168,1,131,1,1,1,1,1,0,1,27,1,197,1,67,1,129,1,0,1,4,1,4,1,200,1,7,1,0,1,4,1,0,1,177,1,192,1,192,1,235,1,3,1,4,1,7,1,200,1,7,1,0,1,2,1,0,1,108,1,201,1,190,1,235,1,3,1,2,1,4,1,200,1,7,1,0,1,4,1,3,1,102,1,109,1,27,1,108,1,255,1,1,1,1,1,20,1,8,1,0,1,1,1,0,1,192,1,98,1,27,1,240,1,4,1,0,1,3,1,14,1,72,1,1,1,1,1,0,1,27,1,198,1,198,1,162,1,1,1,255,1,1,1,116,1,8,1,0,1,1,1,1,1,27,1,177,1,177,1,160,1,1,1,254,1,0,1,200,1,7,1,0,1,0,1,1,1,101,1,27,1,98,1,203,1,2,1,1,1,3,1,200,1,7,1,0,1,2,1,0,1,198,1,98,1,192,1,203,1,1,1,0,1,3,1,8,1,56,1,64,1,161,1,159,1,31,1,244,1,200,1,128,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,8,1,88,1,64,1,161,1,159,1,31,1,244,1,200,1,0,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,16,1,24,1,80,1,161,1,31,1,31,1,246,1,136,1,0,1,0,1,64,1,0,1,200,1,7,131,0,0,1,102,1,109,1,108,1,76,1,255,1,1,1,4,1,200,1,15,1,0,1,1,1,0,1,198,1,0,1,0,1,225,1,3,1,5,1,0,1,200,1,15,1,0,1,1,1,0,1,177,1,208,1,0,1,235,1,3,1,4,1,1,1,200,1,15,1,0,1,1,1,0,1,108,1,158,1,143,1,235,1,3,1,6,1,1,1,200,1,8,1,0,1,2,1,0,1,52,1,52,1,0,1,239,1,1,1,1,1,0,1,88,1,16,1,1,132,0,0,1,27,1,226,1,0,1,0,1,130,1,200,1,7,1,0,1,1,1,0,1,201,1,108,1,0,1,225,1,1,1,1,1,0,1,200,1,8,1,0,1,1,1,0,1,108,1,27,1,0,1,225,1,1,1,0,1,0,1,200,1,1,131,0,0,1,18,1,192,1,0,1,240,1,1,1,0,1,0,1,200,1,1,131,0,0,1,108,1,198,1,0,1,162,1,0,1,255,1,0,1,168,1,128,133,0,0,1,192,1,194,1,0,1,0,1,254,1,200,1,7,131,0,0,1,27,1,192,1,0,1,225,1,0,1,2,1,0,1,200,1,15,1,128,133,0,0,1,226,150,0,0,1,2,132,255,0,138,0,0,1,4,1,140,1,16,1,42,1,17,1,1,1,0,1,0,1,2,131,0,0,1,2,1,140,135,0,0,1,36,1,0,1,0,1,1,1,80,1,0,1,0,1,1,1,120,138,0,0,1,1,1,40,131,0,0,1,28,1,0,1,0,1,1,1,27,1,255,1,254,1,3,132,0,0,1,2,131,0,0,1,28,134,0,0,1,1,1,20,131,0,0,1,68,1,0,1,2,131,0,0,1,6,133,0,0,1,76,131,0,0,1,92,131,0,0,1,188,1,0,1,2,1,0,1,6,1,0,1,4,133,0,0,1,196,131,0,0,1,212,1,95,1,118,1,115,1,95,1,99,1,0,1,171,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,6,229,0,0,1,0,1,95,1,118,1,115,1,105,1,95,1,99,1,0,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,4,198,0,0,1,118,1,115,1,95,1,51,1,95,1,48,1,0,1,50,1,46,1,48,1,46,1,49,1,49,1,54,1,50,1,54,1,46,1,48,1,0,1,171,135,0,0,1,1,139,0,0,1,20,1,0,1,252,1,0,1,16,147,0,0,1,64,1,0,1,0,1,2,1,76,1,0,1,113,1,0,1,9,138,0,0,1,81,1,8,131,0,0,1,1,131,0,0,1,6,131,0,0,1,10,1,0,1,0,1,2,1,144,1,0,1,16,1,0,1,5,1,0,1,0,1,48,1,6,1,0,1,12,1,0,1,7,1,0,1,13,1,0,1,8,1,0,1,14,1,0,1,9,1,0,1,63,1,0,1,10,1,0,1,0,1,112,1,80,1,0,1,1,1,113,1,81,1,0,1,2,1,18,1,82,1,0,1,3,1,115,1,83,1,0,1,5,1,52,1,84,1,0,1,6,1,117,1,85,1,0,1,7,1,54,1,86,1,0,1,9,1,119,1,87,1,0,1,0,1,16,1,38,1,0,1,0,1,16,1,39,1,0,1,0,1,16,1,36,131,0,0,1,41,1,0,1,0,1,16,1,45,1,0,1,0,1,16,1,37,1,0,1,0,1,16,1,47,131,0,0,1,35,1,0,1,0,1,16,1,43,1,0,1,0,1,16,1,40,176,0,0,1,61,143,0,0,1,245,1,85,1,96,1,5,1,0,1,0,1,18,1,3,1,194,133,0,0,1,96,1,11,1,48,1,17,1,18,1,0,1,18,135,0,0,1,96,1,20,1,196,1,0,1,18,133,0,0,1,96,1,26,1,96,1,32,1,18,1,0,1,18,133,0,0,1,96,1,38,1,64,1,44,1,18,1,0,1,34,131,0,0,1,5,1,248,1,80,131,0,0,1,6,1,136,132,0,0,1,5,1,248,1,32,131,0,0,1,14,1,136,132,0,0,1,5,1,248,1,16,131,0,0,1,6,1,136,132,0,0,1,5,1,248,1,48,131,0,0,1,6,1,136,132,0,0,1,5,1,248,1,64,131,0,0,1,6,1,136,132,0,0,1,5,1,248,132,0,0,1,6,1,136,132,0,0,1,200,1,15,131,0,0,1,27,1,0,1,0,1,225,1,5,1,0,1,0,1,200,1,15,131,0,0,1,198,1,0,1,0,1,235,1,5,1,4,1,0,1,200,1,15,131,0,0,1,177,1,148,1,148,1,235,1,5,1,3,1,0,1,200,1,15,131,0,0,1,108,1,248,1,148,1,235,1,5,1,1,1,0,1,200,1,8,1,0,1,8,1,0,1,233,1,167,1,0,1,175,1,0,1,9,1,0,1,200,1,4,1,0,1,8,1,0,1,233,1,167,1,0,1,175,1,0,1,8,1,0,1,200,1,2,1,0,1,8,1,0,1,233,1,167,1,0,1,175,1,0,1,7,1,0,1,200,1,1,1,0,1,8,1,0,1,233,1,167,1,0,1,175,1,0,1,6,1,0,1,200,1,15,1,128,1,62,132,0,0,1,226,1,8,1,8,1,0,1,200,1,1,131,0,0,1,176,1,176,1,177,1,209,1,2,1,2,1,255,1,200,1,11,1,0,1,3,1,0,1,98,1,205,1,0,1,161,1,2,1,4,1,0,1,200,1,15,1,0,1,7,1,0,1,205,1,226,1,0,1,161,1,2,1,4,1,0,1,76,1,40,1,1,1,1,1,2,1,177,1,177,1,27,1,224,1,7,1,3,1,5,1,200,1,1,1,0,1,1,1,0,1,190,1,190,1,0,1,240,1,2,1,2,1,0,1,200,1,7,1,0,1,4,1,4,1,177,1,192,1,192,1,203,1,1,1,5,1,5,1,200,1,14,1,0,1,0,1,2,1,60,1,252,1,0,1,224,1,3,1,7,1,0,1,20,1,31,1,0,1,6,1,0,1,1,1,98,1,108,1,225,1,0,1,2,1,0,1,20,1,40,131,0,0,1,190,1,190,1,108,1,208,1,4,1,4,1,255,1,88,1,132,1,0,1,0,1,2,1,27,1,177,1,27,1,224,1,6,1,6,1,128,1,20,1,39,1,0,1,9,1,0,1,192,1,27,1,97,1,225,1,4,1,0,1,0,1,88,1,65,1,1,1,0,1,0,1,190,1,190,1,108,1,240,1,9,1,2,1,129,1,88,1,39,1,0,1,7,1,0,1,98,1,180,1,177,1,225,1,9,1,2,1,128,1,200,1,1,1,0,1,1,1,1,1,177,1,108,1,198,1,235,1,9,1,2,1,7,1,200,1,7,1,0,1,3,1,4,1,98,1,205,1,101,1,235,1,9,1,2,1,7,1,200,1,1,1,128,1,6,1,1,1,198,1,198,1,108,1,235,1,9,1,2,1,7,1,20,1,16,1,128,1,2,131,0,0,1,198,1,226,1,0,1,0,1,8,1,100,1,33,1,128,1,4,1,2,1,27,1,27,1,102,1,224,1,7,1,3,1,6,1,200,1,7,1,128,1,0,1,0,1,198,1,192,1,0,1,225,1,1,1,2,1,0,1,200,1,7,1,128,1,1,1,0,1,177,1,192,1,0,1,225,1,1,1,5,1,0,1,200,1,7,1,128,1,7,1,0,1,192,1,27,1,0,1,225,1,4,1,0,1,0,1,200,1,4,1,128,1,3,1,0,1,190,1,190,1,0,1,176,1,2,1,4,1,0,1,200,1,15,1,0,1,2,1,0,1,116,1,174,1,0,1,225,1,3,1,2,1,0,1,100,1,32,1,128,1,6,131,0,0,1,102,1,226,1,0,1,0,1,2,1,20,1,6,1,0,1,1,1,2,1,188,1,22,1,198,1,224,1,2,1,2,1,0,1,12,1,33,1,128,1,3,1,0,1,27,1,177,1,177,1,225,1,1,1,0,1,0,1,200,1,14,131,0,0,1,12,1,177,1,0,1,225,1,1,1,0,1,0,1,200,1,7,1,128,1,5,1,0,1,101,1,101,1,0,1,226,150,0,0,1,1,132,255,0,131,0,0,1,1,134,0,0,1,4,1,148,1,16,1,42,1,17,131,0,0,1,1,1,240,1,0,1,0,1,2,1,164,135,0,0,1,36,1,0,1,0,1,1,1,136,1,0,1,0,1,1,1,176,138,0,0,1,1,1,96,131,0,0,1,28,1,0,1,0,1,1,1,82,1,255,1,255,1,3,132,0,0,1,7,131,0,0,1,28,134,0,0,1,1,1,75,131,0,0,1,168,1,0,1,2,131,0,0,1,5,133,0,0,1,176,131,0,0,1,192,1,0,1,0,1,1,1,16,1,0,1,3,131,0,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,40,1,0,1,3,1,0,1,1,1,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,47,1,0,1,3,1,0,1,2,1,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,54,1,0,1,3,1,0,1,3,1,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,61,1,0,1,3,1,0,1,4,1,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,68,1,0,1,3,1,0,1,5,1,0,1,1,132,0,0,1,1,1,24,132,0,0,1,95,1,112,1,115,1,95,1,99,1,0,1,171,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,5,214,0,0,1,95,1,112,1,115,1,95,1,115,1,48,1,0,1,171,1,0,1,4,1,0,1,12,1,0,1,1,1,0,1,1,1,0,1,1,134,0,0,1,95,1,112,1,115,1,95,1,115,1,49,1,0,1,95,1,112,1,115,1,95,1,115,1,50,1,0,1,95,1,112,1,115,1,95,1,115,1,51,1,0,1,95,1,112,1,115,1,95,1,115,1,52,1,0,1,95,1,112,1,115,1,95,1,115,1,53,1,0,1,112,1,115,1,95,1,51,1,95,1,48,1,0,1,50,1,46,1,48,1,46,1,49,1,49,1,54,1,50,1,54,1,46,1,48,1,0,1,171,1,171,135,0,0,1,1,139,0,0,1,20,1,1,1,252,1,0,1,16,147,0,0,1,64,1,0,1,0,1,2,1,100,1,16,1,0,1,7,132,0,0,1,4,134,0,0,1,81,1,8,1,0,1,255,1,0,1,255,131,0,0,1,1,1,0,1,0,1,112,1,80,1,0,1,0,1,113,1,81,1,0,1,0,1,18,1,82,1,0,1,0,1,115,1,83,1,0,1,0,1,52,1,84,1,0,1,0,1,117,1,85,1,0,1,0,1,54,1,86,1,0,1,0,1,119,1,87,160,0,0,1,191,1,25,1,153,1,154,1,62,1,204,1,204,1,205,1,62,1,25,1,153,1,154,132,0,0,1,63,1,128,1,0,1,0,1,191,1,230,1,102,1,103,132,0,0,1,63,1,25,1,160,1,40,1,0,1,36,1,96,1,7,1,32,1,13,1,16,1,0,1,86,1,0,1,0,1,9,1,0,1,9,1,32,1,15,1,96,1,17,1,82,1,0,1,18,1,0,1,0,1,148,1,0,1,0,1,96,1,23,1,48,1,29,1,18,1,0,1,16,132,0,0,1,9,131,32,0,1,34,1,86,1,0,1,82,1,0,1,0,1,9,1,0,1,1,1,16,1,36,1,0,1,0,1,18,1,0,1,196,133,0,0,1,96,1,37,1,96,1,43,1,18,1,0,1,18,133,0,0,1,16,1,49,1,0,1,0,1,34,133,0,0,1,200,1,7,1,0,1,5,1,0,1,192,1,108,1,0,1,161,1,1,1,0,1,0,1,100,1,8,1,32,1,161,1,31,1,31,1,244,1,71,1,0,1,0,1,64,1,0,1,20,1,135,1,1,1,1,1,0,1,98,1,27,1,108,1,130,1,128,1,255,1,255,1,200,1,8,131,0,0,1,172,1,62,1,0,1,111,1,255,1,1,1,0,1,76,1,135,1,0,1,1,1,0,1,192,1,108,1,27,1,160,1,1,1,254,1,0,1,116,1,7,1,0,1,3,1,1,1,98,1,27,1,177,1,225,1,1,1,0,1,0,1,8,1,40,1,64,1,161,1,159,1,31,1,254,1,10,1,128,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,8,1,72,1,64,1,161,1,159,1,31,1,254,1,10,1,0,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,20,1,136,1,5,1,0,1,0,1,108,1,108,1,177,1,226,1,2,1,2,1,5,1,36,1,24,1,96,1,161,1,31,1,31,1,244,1,200,1,0,1,0,1,64,1,0,1,48,1,8,1,16,1,161,1,31,1,31,1,245,1,200,1,0,1,0,1,64,1,0,1,184,1,132,1,3,1,1,1,3,1,108,1,108,1,67,1,0,1,1,1,2,1,1,1,76,1,72,1,1,1,0,1,0,1,190,1,190,1,198,1,48,1,4,1,4,1,1,1,88,1,135,1,0,1,7,1,0,1,198,1,99,1,27,1,225,1,3,1,1,1,128,1,168,1,131,1,1,1,1,1,0,1,27,1,197,1,67,1,129,1,0,1,4,1,4,1,200,1,7,1,0,1,4,1,0,1,177,1,192,1,192,1,235,1,3,1,4,1,7,1,200,1,7,1,0,1,2,1,0,1,108,1,201,1,190,1,235,1,3,1,2,1,4,1,200,1,7,1,0,1,4,1,3,1,102,1,109,1,27,1,108,1,255,1,1,1,1,1,20,1,8,1,0,1,1,1,0,1,192,1,98,1,27,1,240,1,4,1,0,1,3,1,14,1,72,1,1,1,1,1,0,1,27,1,198,1,198,1,162,1,1,1,255,1,1,1,116,1,8,1,0,1,1,1,1,1,27,1,177,1,177,1,160,1,1,1,254,1,0,1,200,1,7,1,0,1,0,1,1,1,101,1,27,1,98,1,203,1,2,1,1,1,3,1,200,1,7,1,0,1,2,1,0,1,198,1,98,1,192,1,203,1,1,1,0,1,3,1,8,1,56,1,64,1,161,1,159,1,31,1,244,1,200,1,128,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,8,1,88,1,64,1,161,1,159,1,31,1,244,1,200,1,0,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,16,1,24,1,80,1,161,1,31,1,31,1,246,1,136,1,0,1,0,1,64,1,0,1,200,1,7,131,0,0,1,102,1,109,1,108,1,76,1,255,1,1,1,4,1,200,1,15,1,0,1,1,1,0,1,198,1,0,1,0,1,225,1,3,1,5,1,0,1,200,1,15,1,0,1,1,1,0,1,177,1,208,1,0,1,235,1,3,1,4,1,1,1,200,1,15,1,0,1,1,1,0,1,108,1,158,1,143,1,235,1,3,1,6,1,1,1,200,1,8,1,0,1,2,1,0,1,52,1,52,1,0,1,239,1,1,1,1,1,0,1,88,1,16,1,1,132,0,0,1,27,1,226,1,0,1,0,1,130,1,200,1,7,1,0,1,1,1,0,1,201,1,108,1,0,1,225,1,1,1,1,1,0,1,200,1,8,1,0,1,1,1,0,1,108,1,27,1,0,1,225,1,1,1,0,1,0,1,200,1,1,131,0,0,1,18,1,192,1,0,1,240,1,1,1,0,1,0,1,200,1,1,131,0,0,1,108,1,198,1,0,1,162,1,0,1,255,1,0,1,168,1,128,133,0,0,1,192,1,194,1,0,1,0,1,254,1,200,1,7,131,0,0,1,27,1,192,1,0,1,225,1,0,1,2,1,0,1,200,1,15,1,128,133,0,0,1,226,150,0,0,1,1,132,255,0,138,0,0,1,18,1,160,1,16,1,42,1,17,1,1,1,0,1,0,1,15,1,60,1,0,1,0,1,3,1,100,135,0,0,1,36,1,0,1,0,1,14,1,144,1,0,1,0,1,14,1,184,138,0,0,1,14,1,104,131,0,0,1,28,1,0,1,0,1,14,1,91,1,255,1,254,1,3,132,0,0,1,2,131,0,0,1,28,134,0,0,1,14,1,84,131,0,0,1,68,1,0,1,2,131,0,0,1,6,133,0,0,1,76,131,0,0,1,92,131,0,0,1,188,1,0,1,2,1,0,1,6,1,0,1,216,133,0,0,1,196,131,0,0,1,212,1,95,1,118,1,115,1,95,1,99,1,0,1,171,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,6,229,0,0,1,0,1,95,1,118,1,115,1,98,1,95,1,99,1,0,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,216,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,229,0,0,156,0,0,1,118,1,115,1,95,1,51,1,95,1,48,1,0,1,50,1,46,1,48,1,46,1,49,1,49,1,54,1,50,1,54,1,46,1,48,1,0,1,171,135,0,0,1,1,139,0,0,1,20,1,0,1,252,1,0,1,16,147,0,0,1,64,1,0,1,0,1,3,1,36,1,0,1,113,1,0,1,10,138,0,0,1,81,1,8,131,0,0,1,1,131,0,0,1,4,131,0,0,1,11,1,0,1,0,1,2,1,144,1,0,1,16,1,0,1,7,1,0,1,0,1,48,1,8,1,0,1,0,1,16,1,9,1,0,1,48,1,32,1,10,1,0,1,0,1,112,1,80,1,0,1,1,1,113,1,81,1,0,1,2,1,18,1,82,1,0,1,3,1,115,1,83,1,0,1,5,1,52,1,84,1,0,1,7,1,117,1,85,1,0,1,8,1,54,1,86,1,0,1,10,1,119,1,87,1,0,1,0,1,16,1,61,1,0,1,0,1,16,1,62,1,0,1,0,1,16,1,56,131,0,0,1,58,1,0,1,0,1,16,1,64,131,0,0,1,57,1,0,1,0,1,16,1,60,1,0,1,0,1,16,1,65,131,0,0,1,54,1,0,1,0,1,16,1,55,1,0,1,0,1,16,1,63,180,0,0,1,63,1,128,1,0,1,0,1,64,1,64,1,0,1,0,1,61,131,0,0,1,240,1,85,1,64,1,7,1,0,1,0,1,18,1,0,1,194,133,0,0,1,96,1,11,1,96,1,17,1,18,1,0,1,18,133,0,0,1,96,1,23,1,96,1,29,1,18,1,0,1,18,133,0,0,1,48,1,35,1,0,1,0,1,18,1,0,1,196,133,0,0,1,96,1,38,1,96,1,44,1,18,1,0,1,18,133,0,0,1,96,1,50,1,96,1,56,1,18,1,0,1,18,133,0,0,1,64,1,62,1,0,1,0,1,34,133,0,0,1,5,1,248,1,48,131,0,0,1,4,1,67,132,0,0,1,5,1,248,1,16,131,0,0,1,4,1,71,132,0,0,1,5,1,248,1,112,131,0,0,1,6,1,136,132,0,0,1,5,1,248,132,0,0,1,6,1,136,132,0,0,1,200,1,15,131,0,0,1,148,1,198,1,0,1,161,1,0,1,255,1,0,1,92,1,8,1,0,1,2,1,0,1,108,1,27,1,198,1,161,1,3,1,3,1,0,1,200,1,15,1,0,1,4,1,160,1,27,1,136,1,0,1,161,1,7,1,6,1,0,1,200,1,15,1,0,1,6,1,160,1,27,1,136,1,0,1,161,1,7,1,7,1,0,1,92,1,15,1,0,1,5,1,160,1,27,1,136,1,177,1,161,1,7,1,8,1,0,1,200,1,15,1,0,1,5,1,160,1,198,1,136,1,0,1,171,1,7,1,8,1,5,1,200,1,15,1,0,1,6,1,160,1,198,1,136,1,0,1,171,1,7,1,7,1,6,1,200,1,15,1,0,1,4,1,160,1,198,1,136,1,0,1,171,1,7,1,6,1,4,1,92,1,2,131,0,0,1,108,1,27,1,27,1,161,1,3,1,1,1,0,1,200,1,15,1,0,1,4,1,160,1,177,1,52,1,148,1,171,1,7,1,6,1,4,1,200,1,15,1,0,1,6,1,160,1,177,1,52,1,148,1,171,1,7,1,7,1,6,1,200,1,15,1,0,1,5,1,160,1,177,1,52,1,148,1,171,1,7,1,8,1,5,1,92,1,8,131,0,0,1,108,1,27,1,108,1,161,1,3,1,0,1,0,1,200,1,15,1,0,1,5,1,160,1,108,1,208,1,148,1,171,1,7,1,8,1,5,1,200,1,15,1,0,1,6,1,160,1,108,1,208,1,148,1,171,1,7,1,7,1,6,1,200,1,15,1,0,1,4,1,160,1,108,1,208,1,148,1,171,1,7,1,6,1,4,1,200,1,1,1,0,1,4,1,0,1,170,1,248,1,0,1,239,1,4,1,3,1,0,1,200,1,2,1,0,1,4,1,0,1,170,1,248,1,0,1,239,1,6,1,3,1,0,1,200,1,4,1,0,1,4,1,0,1,170,1,248,1,0,1,239,1,5,1,3,1,0,1,200,1,1,1,0,1,2,1,0,1,190,1,190,1,0,1,176,1,4,1,3,1,0,1,200,1,1,131,0,0,1,190,1,190,1,0,1,176,1,4,1,1,1,0,1,8,1,36,1,2,1,0,1,0,1,190,1,190,1,177,1,176,1,4,1,0,1,1,1,200,1,15,1,0,1,4,1,0,1,176,1,108,1,166,1,108,1,255,1,3,1,4,1,8,1,68,1,2,1,7,1,0,1,85,1,62,1,198,1,175,1,4,1,2,1,1,1,0,1,35,1,7,1,6,1,0,1,176,1,199,1,97,1,224,1,2,1,2,1,0,1,0,1,24,1,7,1,7,1,0,1,108,1,108,1,203,1,226,1,6,1,6,1,0,1,200,1,15,1,128,1,62,132,0,0,1,226,1,7,1,7,1,0,1,200,1,8,1,0,1,4,1,0,1,195,1,195,1,0,1,240,1,1,1,1,1,0,1,200,1,7,1,0,1,4,1,0,1,195,1,101,1,0,1,161,1,1,1,4,1,0,1,76,1,31,1,3,1,5,1,0,1,18,1,226,1,108,1,161,1,1,1,4,1,3,1,200,1,7,1,0,1,2,1,4,1,108,1,21,1,192,1,203,1,3,1,3,1,5,1,200,1,7,1,0,1,0,1,2,1,180,1,192,1,0,1,224,1,4,1,5,1,0,1,200,1,15,131,0,0,1,164,1,146,1,0,1,225,1,0,1,1,1,0,1,200,1,1,1,0,1,1,1,0,1,190,1,190,1,0,1,240,1,2,1,2,1,0,1,88,1,130,1,2,1,0,1,2,1,177,1,108,1,108,1,224,1,0,1,0,1,129,1,200,1,7,1,0,1,9,1,0,1,192,1,27,1,0,1,225,1,2,1,2,1,0,1,200,1,1,131,0,0,1,190,1,195,1,0,1,240,1,9,1,1,1,0,1,20,1,7,1,0,1,8,1,0,1,98,1,201,1,177,1,225,1,9,1,1,1,5,1,200,1,1,1,0,1,6,1,1,1,177,1,177,1,198,1,235,1,9,1,1,1,8,1,200,1,7,1,0,1,10,1,4,1,98,1,18,1,101,1,235,1,9,1,1,1,8,1,4,1,143,1,6,1,10,1,1,1,116,1,243,1,198,1,225,1,10,1,1,1,4,1,88,1,17,1,4,1,1,1,0,1,177,1,27,1,27,1,162,1,6,1,255,1,132,1,88,1,22,1,1,1,6,1,2,1,188,1,22,1,108,1,224,1,10,1,10,1,129,1,100,1,32,1,128,1,6,131,0,0,1,102,1,226,1,0,1,0,1,10,1,200,1,1,1,128,1,6,1,1,1,198,1,27,1,108,1,235,1,9,1,1,1,8,1,20,1,16,1,128,1,2,131,0,0,1,198,1,226,1,0,1,0,1,7,1,100,1,32,1,128,1,4,131,0,0,1,203,1,226,131,0,0,1,200,1,2,1,128,1,3,1,0,1,177,1,108,1,0,1,225,1,0,1,1,1,0,1,20,1,14,131,0,0,1,12,1,108,1,27,1,225,1,6,1,1,1,6,1,200,1,1,1,128,1,4,1,2,1,27,1,177,1,0,1,224,1,5,1,4,1,0,1,200,1,7,1,128,1,0,1,0,1,108,1,21,1,0,1,225,1,4,1,1,1,0,1,200,1,7,1,128,1,1,1,0,1,108,1,21,1,0,1,225,1,3,1,3,1,0,1,200,1,7,1,128,1,7,1,0,1,192,1,27,1,0,1,225,1,2,1,2,1,0,1,12,1,20,1,128,1,3,1,0,1,195,1,190,1,108,1,176,1,1,1,4,1,1,1,200,1,7,1,128,1,5,1,0,1,101,1,101,1,0,1,226,151,0,0,132,255,0,131,0,0,1,1,134,0,0,1,4,1,148,1,16,1,42,1,17,131,0,0,1,1,1,240,1,0,1,0,1,2,1,164,135,0,0,1,36,1,0,1,0,1,1,1,136,1,0,1,0,1,1,1,176,138,0,0,1,1,1,96,131,0,0,1,28,1,0,1,0,1,1,1,82,1,255,1,255,1,3,132,0,0,1,7,131,0,0,1,28,134,0,0,1,1,1,75,131,0,0,1,168,1,0,1,2,131,0,0,1,5,133,0,0,1,176,131,0,0,1,192,1,0,1,0,1,1,1,16,1,0,1,3,131,0,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,40,1,0,1,3,1,0,1,1,1,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,47,1,0,1,3,1,0,1,2,1,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,54,1,0,1,3,1,0,1,3,1,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,61,1,0,1,3,1,0,1,4,1,0,1,1,132,0,0,1,1,1,24,134,0,0,1,1,1,68,1,0,1,3,1,0,1,5,1,0,1,1,132,0,0,1,1,1,24,132,0,0,1,95,1,112,1,115,1,95,1,99,1,0,1,171,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,5,214,0,0,1,95,1,112,1,115,1,95,1,115,1,48,1,0,1,171,1,0,1,4,1,0,1,12,1,0,1,1,1,0,1,1,1,0,1,1,134,0,0,1,95,1,112,1,115,1,95,1,115,1,49,1,0,1,95,1,112,1,115,1,95,1,115,1,50,1,0,1,95,1,112,1,115,1,95,1,115,1,51,1,0,1,95,1,112,1,115,1,95,1,115,1,52,1,0,1,95,1,112,1,115,1,95,1,115,1,53,1,0,1,112,1,115,1,95,1,51,1,95,1,48,1,0,1,50,1,46,1,48,1,46,1,49,1,49,1,54,1,50,1,54,1,46,1,48,1,0,1,171,1,171,135,0,0,1,1,139,0,0,1,20,1,1,1,252,1,0,1,16,147,0,0,1,64,1,0,1,0,1,2,1,100,1,16,1,0,1,7,132,0,0,1,4,134,0,0,1,81,1,8,1,0,1,255,1,0,1,255,131,0,0,1,1,1,0,1,0,1,112,1,80,1,0,1,0,1,113,1,81,1,0,1,0,1,18,1,82,1,0,1,0,1,115,1,83,1,0,1,0,1,52,1,84,1,0,1,0,1,117,1,85,1,0,1,0,1,54,1,86,1,0,1,0,1,119,1,87,160,0,0,1,191,1,25,1,153,1,154,1,62,1,204,1,204,1,205,1,62,1,25,1,153,1,154,132,0,0,1,63,1,128,1,0,1,0,1,191,1,230,1,102,1,103,132,0,0,1,63,1,25,1,160,1,40,1,0,1,36,1,96,1,7,1,32,1,13,1,16,1,0,1,86,1,0,1,0,1,9,1,0,1,9,1,32,1,15,1,96,1,17,1,82,1,0,1,18,1,0,1,0,1,148,1,0,1,0,1,96,1,23,1,48,1,29,1,18,1,0,1,16,132,0,0,1,9,131,32,0,1,34,1,86,1,0,1,82,1,0,1,0,1,9,1,0,1,1,1,16,1,36,1,0,1,0,1,18,1,0,1,196,133,0,0,1,96,1,37,1,96,1,43,1,18,1,0,1,18,133,0,0,1,16,1,49,1,0,1,0,1,34,133,0,0,1,200,1,7,1,0,1,5,1,0,1,192,1,108,1,0,1,161,1,1,1,0,1,0,1,100,1,8,1,32,1,161,1,31,1,31,1,244,1,71,1,0,1,0,1,64,1,0,1,20,1,135,1,1,1,1,1,0,1,98,1,27,1,108,1,130,1,128,1,255,1,255,1,200,1,8,131,0,0,1,172,1,62,1,0,1,111,1,255,1,1,1,0,1,76,1,135,1,0,1,1,1,0,1,192,1,108,1,27,1,160,1,1,1,254,1,0,1,116,1,7,1,0,1,3,1,1,1,98,1,27,1,177,1,225,1,1,1,0,1,0,1,8,1,40,1,64,1,161,1,159,1,31,1,254,1,10,1,128,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,8,1,72,1,64,1,161,1,159,1,31,1,254,1,10,1,0,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,20,1,136,1,5,1,0,1,0,1,108,1,108,1,177,1,226,1,2,1,2,1,5,1,36,1,24,1,96,1,161,1,31,1,31,1,244,1,200,1,0,1,0,1,64,1,0,1,48,1,8,1,16,1,161,1,31,1,31,1,245,1,200,1,0,1,0,1,64,1,0,1,184,1,132,1,3,1,1,1,3,1,108,1,108,1,67,1,0,1,1,1,2,1,1,1,76,1,72,1,1,1,0,1,0,1,190,1,190,1,198,1,48,1,4,1,4,1,1,1,88,1,135,1,0,1,7,1,0,1,198,1,99,1,27,1,225,1,3,1,1,1,128,1,168,1,131,1,1,1,1,1,0,1,27,1,197,1,67,1,129,1,0,1,4,1,4,1,200,1,7,1,0,1,4,1,0,1,177,1,192,1,192,1,235,1,3,1,4,1,7,1,200,1,7,1,0,1,2,1,0,1,108,1,201,1,190,1,235,1,3,1,2,1,4,1,200,1,7,1,0,1,4,1,3,1,102,1,109,1,27,1,108,1,255,1,1,1,1,1,20,1,8,1,0,1,1,1,0,1,192,1,98,1,27,1,240,1,4,1,0,1,3,1,14,1,72,1,1,1,1,1,0,1,27,1,198,1,198,1,162,1,1,1,255,1,1,1,116,1,8,1,0,1,1,1,1,1,27,1,177,1,177,1,160,1,1,1,254,1,0,1,200,1,7,1,0,1,0,1,1,1,101,1,27,1,98,1,203,1,2,1,1,1,3,1,200,1,7,1,0,1,2,1,0,1,198,1,98,1,192,1,203,1,1,1,0,1,3,1,8,1,56,1,64,1,161,1,159,1,31,1,244,1,200,1,128,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,8,1,88,1,64,1,161,1,159,1,31,1,244,1,200,1,0,1,0,1,64,1,0,1,200,135,0,0,1,2,131,0,0,1,16,1,24,1,80,1,161,1,31,1,31,1,246,1,136,1,0,1,0,1,64,1,0,1,200,1,7,131,0,0,1,102,1,109,1,108,1,76,1,255,1,1,1,4,1,200,1,15,1,0,1,1,1,0,1,198,1,0,1,0,1,225,1,3,1,5,1,0,1,200,1,15,1,0,1,1,1,0,1,177,1,208,1,0,1,235,1,3,1,4,1,1,1,200,1,15,1,0,1,1,1,0,1,108,1,158,1,143,1,235,1,3,1,6,1,1,1,200,1,8,1,0,1,2,1,0,1,52,1,52,1,0,1,239,1,1,1,1,1,0,1,88,1,16,1,1,132,0,0,1,27,1,226,1,0,1,0,1,130,1,200,1,7,1,0,1,1,1,0,1,201,1,108,1,0,1,225,1,1,1,1,1,0,1,200,1,8,1,0,1,1,1,0,1,108,1,27,1,0,1,225,1,1,1,0,1,0,1,200,1,1,131,0,0,1,18,1,192,1,0,1,240,1,1,1,0,1,0,1,200,1,1,131,0,0,1,108,1,198,1,0,1,162,1,0,1,255,1,0,1,168,1,128,133,0,0,1,192,1,194,1,0,1,0,1,254,1,200,1,7,131,0,0,1,27,1,192,1,0,1,225,1,0,1,2,1,0,1,200,1,15,1,128,133,0,0,1,226,151,0,0,132,255,0,138,0,0,1,3,1,164,1,16,1,42,1,17,1,1,1,0,1,0,1,1,1,132,1,0,1,0,1,2,1,32,135,0,0,1,36,131,0,0,1,228,1,0,1,0,1,1,1,12,139,0,0,1,188,131,0,0,1,28,131,0,0,1,175,1,255,1,254,1,3,132,0,0,1,1,131,0,0,1,28,135,0,0,1,168,131,0,0,1,48,1,0,1,2,131,0,0,1,6,133,0,0,1,56,131,0,0,1,72,1,95,1,118,1,115,1,95,1,99,1,0,1,171,1,171,1,0,1,1,1,0,1,3,1,0,1,1,1,0,1,4,1,0,1,6,229,0,0,1,0,1,118,1,115,1,95,1,51,1,95,1,48,1,0,1,50,1,46,1,48,1,46,1,49,1,49,1,54,1,50,1,54,1,46,1,48,1,0,1,171,135,0,0,1,1,139,0,0,1,20,1,0,1,252,1,0,1,16,147,0,0,1,64,1,0,1,0,1,1,1,224,1,0,1,113,1,0,1,7,138,0,0,1,81,1,8,131,0,0,1,1,131,0,0,1,2,131,0,0,1,10,1,0,1,0,1,2,1,144,1,0,1,16,1,0,1,5,1,0,1,48,1,48,1,6,1,0,1,0,1,112,1,80,1,0,1,1,1,113,1,81,1,0,1,2,1,18,1,82,1,0,1,3,1,115,1,83,1,0,1,5,1,52,1,84,1,0,1,6,1,117,1,85,1,0,1,7,1,54,1,86,1,0,1,9,1,119,1,87,1,0,1,0,1,16,1,22,1,0,1,0,1,16,1,23,1,0,1,0,1,16,1,20,131,0,0,1,24,1,0,1,0,1,16,1,36,1,0,1,0,1,16,1,21,1,0,1,0,1,16,1,38,131,0,0,1,30,1,0,1,0,1,16,1,34,1,0,1,0,1,16,1,26,176,0,0,1,61,143,0,0,1,48,1,5,1,32,1,5,1,0,1,0,1,18,1,0,1,194,133,0,0,1,80,1,7,1,0,1,0,1,18,1,0,1,196,133,0,0,1,96,1,12,1,96,1,18,1,18,1,0,1,18,133,0,0,1,96,1,24,1,96,1,30,1,18,1,0,1,18,133,0,0,1,48,1,36,1,0,1,0,1,34,133,0,0,1,5,1,248,1,80,131,0,0,1,6,1,136,132,0,0,1,5,1,248,132,0,0,1,14,1,136,132,0,0,1,200,1,8,1,0,1,7,1,0,1,167,1,167,1,0,1,175,1,5,1,3,1,0,1,200,1,4,1,0,1,7,1,0,1,167,1,167,1,0,1,175,1,5,1,2,1,0,1,200,1,2,1,0,1,7,1,0,1,167,1,167,1,0,1,175,1,5,1,1,1,0,1,200,1,1,1,0,1,7,1,0,1,167,1,167,1,0,1,175,1,5,1,0,1,0,1,200,1,15,1,128,1,62,132,0,0,1,226,1,7,1,7,1,0,1,200,1,8,131,0,0,1,176,1,176,1,177,1,209,1,0,1,0,1,255,1,168,1,40,1,2,1,4,1,0,1,190,1,190,1,192,1,208,1,0,1,0,1,4,1,168,1,79,1,2,1,1,1,0,1,229,1,254,1,130,1,129,1,0,1,4,1,4,1,168,1,136,1,2,1,0,1,0,1,27,1,108,1,65,1,130,1,0,1,255,1,4,1,76,1,135,1,3,1,4,1,2,1,186,1,180,1,27,1,224,1,2,1,1,1,5,1,200,1,7,1,0,1,3,1,4,1,27,1,192,1,192,1,203,1,3,1,5,1,5,1,88,1,17,1,6,1,2,1,0,1,190,1,190,1,27,1,240,1,3,1,3,1,132,1,88,1,143,1,0,1,4,1,0,1,252,1,98,1,27,1,225,1,4,1,0,1,128,1,20,1,16,1,128,1,2,131,0,0,1,198,1,226,1,0,1,0,1,7,1,100,1,33,1,128,1,4,1,2,1,27,1,177,1,102,1,224,1,1,1,2,1,4,1,200,1,7,1,128,1,0,1,0,1,108,1,192,1,0,1,225,1,6,1,0,1,0,1,200,1,7,1,128,1,1,1,0,1,27,1,192,1,0,1,225,1,3,1,5,1,0,1,200,1,4,1,128,1,3,1,0,1,190,1,190,1,0,1,176,1,0,1,4,1,0,1,88,1,18,1,2,1,1,1,2,1,27,1,177,1,108,1,224,1,4,1,4,1,130,1,200,1,7,1,128,1,7,1,0,1,192,1,108,1,0,1,225,1,3,1,2,1,0,1,200,1,7,1,0,1,4,1,0,1,192,1,108,1,0,1,225,1,3,1,2,1,0,1,200,1,1,1,0,1,1,1,0,1,190,1,190,1,0,1,240,1,4,1,0,1,0,1,20,1,7,1,0,1,3,1,0,1,98,1,180,1,198,1,225,1,4,1,0,1,1,1,200,1,1,1,128,1,6,1,1,1,198,1,198,1,108,1,235,1,4,1,0,1,3,1,200,1,1,1,0,1,2,1,1,1,177,1,108,1,198,1,235,1,4,1,0,1,3,1,200,1,7,1,0,1,3,1,4,1,98,1,205,1,101,1,235,1,4,1,0,1,3,1,4,1,143,1,2,1,3,1,1,1,116,1,174,1,27,1,225,1,3,1,0,1,2,1,100,1,32,1,128,1,6,131,0,0,1,102,1,226,1,0,1,0,1,3,1,20,1,6,1,0,1,2,1,2,1,188,1,22,1,177,1,224,1,3,1,3,1,1,1,12,1,33,1,128,1,3,1,0,131,27,0,1,225,1,2,1,0,1,0,1,200,1,14,1,0,1,1,1,0,1,12,1,27,1,0,1,225,1,2,1,0,1,0,1,200,1,7,1,128,1,5,1,0,1,101,1,101,1,0,1,226,1,1,1,1,140,0,0,1,0};
 			}
 		}
 #else
@@ -364,7 +494,7 @@ readonly
 		{
 			get
 			{
-				return new byte[] {232,50,0,0,236,189,7,96,28,73,150,37,38,47,109,202,123,127,74,245,74,215,224,116,161,8,128,96,19,36,216,144,64,16,236,193,136,205,230,146,236,29,105,71,35,41,171,42,129,202,101,86,101,93,102,22,64,204,237,157,188,247,222,123,239,189,247,222,123,239,189,247,186,59,157,78,39,247,223,255,63,92,102,100,1,108,246,206,74,218,201,158,33,128,170,200,31,63,126,124,31,63,34,254,197,223,240,127,250,251,210,95,99,248,249,53,127,236,255,254,191,222,252,102,242,251,175,141,191,233,255,127,146,126,247,235,211,255,127,29,253,236,135,253,252,122,244,255,223,255,178,249,253,167,191,134,195,235,55,80,68,126,221,95,227,103,15,47,238,119,197,253,254,65,166,223,191,233,55,145,239,254,173,95,227,103,175,223,31,61,63,122,126,244,252,232,249,209,243,163,231,71,207,143,158,31,61,63,122,126,244,252,232,249,209,19,127,16,155,82,124,56,65,160,102,226,180,223,238,55,149,239,126,29,253,255,55,17,167,105,63,5,250,249,141,126,13,129,251,88,251,9,218,80,204,216,236,252,26,191,189,105,243,7,12,181,217,253,53,126,103,211,230,15,27,106,179,247,107,252,246,192,253,55,211,118,254,243,107,209,255,241,90,247,115,51,86,208,226,55,139,124,143,191,99,239,253,24,253,255,73,153,47,103,197,242,226,215,216,147,216,58,246,62,226,226,216,251,191,33,253,255,108,217,180,217,114,10,8,95,98,12,175,231,217,44,175,101,60,192,11,227,53,185,132,212,123,247,207,163,255,255,93,222,223,191,21,53,222,241,38,237,239,163,184,251,223,210,216,27,207,239,70,8,28,120,52,251,54,253,254,251,122,127,151,244,251,31,228,127,255,155,201,79,208,228,31,210,207,65,191,63,69,191,255,211,232,179,63,137,254,255,167,234,223,127,29,253,254,87,209,255,255,183,72,219,127,142,62,251,167,188,182,255,25,253,254,31,1,159,223,172,223,246,55,162,207,126,131,223,204,181,253,221,232,247,84,219,253,122,242,131,219,255,223,244,152,225,254,85,64,242,215,254,191,255,239,255,235,255,254,201,95,227,228,205,241,147,223,137,254,252,241,95,83,62,3,221,126,39,105,150,254,78,244,89,169,239,255,186,244,111,75,63,255,48,250,255,191,246,107,24,57,248,181,126,141,127,79,97,254,119,252,217,175,73,255,253,122,191,198,47,215,207,126,157,95,19,159,253,90,244,89,242,107,252,70,218,185,228,59,254,218,191,246,215,228,214,191,14,243,192,207,198,163,50,242,215,254,58,196,17,191,38,255,231,125,190,59,240,249,94,255,115,250,248,222,239,191,243,107,124,81,76,235,170,169,206,219,116,235,213,157,244,219,207,95,63,79,133,243,210,147,106,177,42,74,250,229,225,120,239,211,241,195,251,123,227,189,131,253,253,95,227,39,136,100,191,238,175,241,155,254,69,127,206,159,253,219,255,131,191,237,223,249,47,31,252,243,255,220,63,119,68,255,255,236,119,33,114,210,152,255,32,226,210,63,73,126,255,53,255,160,95,211,254,254,107,253,65,68,45,254,253,215,64,106,236,55,248,77,255,34,243,251,175,233,253,254,107,209,239,191,46,79,193,175,77,112,126,141,191,232,215,252,53,254,147,63,233,9,253,241,107,254,26,191,41,253,253,159,253,65,191,230,111,240,159,253,69,79,248,123,249,251,215,162,191,127,111,22,137,95,159,254,254,234,79,226,54,248,156,223,249,245,255,32,130,245,23,209,103,127,46,201,215,175,253,107,241,223,95,253,69,230,123,226,46,250,249,21,126,247,254,254,107,8,206,255,253,7,253,122,140,207,111,192,191,255,186,10,235,215,162,247,204,223,210,31,250,250,74,191,79,20,223,191,140,241,253,181,8,191,95,243,215,248,239,255,160,95,131,240,251,117,20,191,95,139,219,255,26,252,158,188,99,198,248,159,121,239,252,103,145,119,254,26,126,231,119,35,156,128,199,175,243,107,252,103,127,209,111,160,248,82,251,63,152,190,251,147,100,188,191,166,226,247,215,40,77,4,127,244,137,207,12,204,95,67,199,241,107,255,26,255,217,95,252,107,50,76,204,211,175,241,23,25,26,252,154,66,143,191,216,167,129,129,79,223,253,197,244,251,159,36,52,248,237,44,124,7,251,255,102,248,4,91,230,241,55,144,254,126,221,95,227,255,254,139,208,215,175,241,27,252,6,252,251,255,253,127,255,26,252,24,249,253,53,244,249,189,241,193,175,253,127,145,252,238,90,249,253,19,127,13,249,12,124,107,228,247,143,162,127,118,248,253,95,159,245,225,1,253,255,219,191,134,181,49,86,6,241,221,55,241,92,126,77,89,17,190,254,141,254,32,226,87,229,253,223,152,232,101,126,255,77,136,174,230,247,223,148,104,102,126,7,61,229,247,95,155,231,206,125,78,237,254,35,35,103,196,11,250,251,175,73,112,204,239,191,22,193,249,53,255,163,95,83,97,18,175,252,73,194,107,144,151,175,192,47,127,18,230,74,254,6,188,255,236,79,2,207,185,207,254,26,240,156,253,76,228,140,121,133,63,251,49,158,247,95,243,63,194,156,254,250,52,199,242,247,175,197,127,255,6,246,239,223,128,255,78,236,223,224,75,188,251,159,253,69,194,83,191,22,193,254,191,25,47,224,13,188,126,29,134,47,252,253,235,42,206,160,207,175,201,56,255,73,127,146,224,130,191,129,243,159,244,39,253,26,22,231,95,255,63,130,124,0,231,95,227,215,248,85,248,158,224,255,58,255,17,198,134,223,127,109,198,245,215,248,131,12,135,129,135,124,123,241,15,65,217,255,90,17,123,241,107,253,200,94,68,236,197,222,215,145,129,159,216,96,47,126,13,177,23,127,147,249,253,215,244,126,39,106,153,223,111,101,47,126,205,95,227,95,249,155,232,179,191,72,248,29,127,255,211,246,239,95,139,255,254,207,248,239,39,244,247,175,189,193,158,60,225,247,157,46,126,194,239,255,166,127,16,235,255,208,222,252,77,170,235,254,160,31,103,94,99,93,247,55,253,90,12,255,215,231,207,97,127,96,123,126,29,181,61,248,236,215,226,254,126,3,226,95,240,253,175,225,253,253,215,252,65,49,219,3,88,191,78,196,246,252,218,242,62,227,242,107,242,223,191,6,127,110,62,251,181,248,179,191,134,63,251,221,84,182,34,182,131,241,253,186,182,67,237,197,95,100,198,160,182,34,106,59,232,231,223,68,109,255,226,91,219,14,237,207,218,142,95,67,108,7,255,254,27,200,124,117,229,250,215,208,231,143,250,205,233,179,95,19,118,228,175,250,181,141,92,191,253,77,228,51,48,142,145,235,25,125,246,244,215,16,102,250,245,233,223,231,244,243,247,165,255,255,115,252,217,175,207,107,85,144,241,255,236,215,48,235,104,78,94,127,125,211,217,15,249,209,120,205,226,241,111,221,248,198,143,158,31,61,63,122,62,228,249,209,187,63,122,126,244,252,232,249,209,243,163,231,71,207,143,158,31,61,63,122,186,15,133,135,187,191,255,238,215,202,143,252,26,255,33,229,71,126,141,95,227,247,252,61,125,120,191,139,252,248,131,52,119,136,128,248,15,210,220,33,226,221,63,72,115,135,136,93,255,32,228,14,37,127,132,60,226,127,246,39,253,135,156,87,198,243,107,254,77,191,134,228,168,127,13,228,52,40,223,253,39,253,250,233,127,230,125,199,241,55,127,135,207,127,45,228,87,126,13,206,83,235,247,127,77,231,251,191,166,243,253,255,221,249,254,255,254,147,52,79,72,120,33,167,32,121,195,223,128,219,32,127,252,159,117,222,23,220,126,109,197,237,55,136,224,134,239,126,3,197,237,215,142,224,230,190,255,107,58,223,255,223,157,239,255,111,254,94,112,251,181,24,183,95,219,226,246,107,49,110,225,251,33,110,63,54,128,219,143,221,128,219,143,109,192,237,215,176,223,251,184,253,58,140,219,175,97,113,251,117,24,183,95,67,223,167,228,7,125,255,127,255,73,104,75,223,254,67,178,46,193,185,86,124,203,127,255,154,246,239,223,224,31,146,60,144,249,27,121,24,228,160,56,23,139,246,12,75,248,227,215,255,143,48,102,244,253,27,240,119,200,35,35,159,196,57,35,180,229,191,127,93,251,247,175,195,127,255,122,191,134,161,203,175,243,15,253,26,146,119,197,220,255,71,248,221,101,100,126,148,119,53,99,255,81,222,245,71,121,215,255,191,228,93,241,248,121,215,191,239,215,148,28,235,255,245,127,127,102,229,250,31,252,53,228,51,240,179,145,235,191,139,254,217,249,53,92,222,245,224,215,176,235,119,255,175,200,177,126,93,91,62,100,179,141,174,86,189,110,117,181,218,71,171,171,213,38,169,110,102,222,240,116,51,224,6,186,249,79,234,232,230,63,169,163,155,255,164,95,207,194,6,44,172,19,111,214,213,255,79,0,0,0,255,255};
+				return new byte[] {156,61,0,0,236,189,7,96,28,73,150,37,38,47,109,202,123,127,74,245,74,215,224,116,161,8,128,96,19,36,216,144,64,16,236,193,136,205,230,146,236,29,105,71,35,41,171,42,129,202,101,86,101,93,102,22,64,204,237,157,188,247,222,123,239,189,247,222,123,239,189,247,186,59,157,78,39,247,223,255,63,92,102,100,1,108,246,206,74,218,201,158,33,128,170,200,31,63,126,124,31,63,34,254,197,223,240,127,250,251,210,95,99,248,249,53,127,236,255,254,191,254,166,223,76,126,255,181,241,55,253,255,15,210,239,126,61,250,255,175,163,159,253,108,63,232,235,247,191,108,126,255,233,175,225,240,248,223,244,187,95,247,215,248,217,195,131,251,93,113,191,127,144,233,247,47,250,77,228,187,127,235,215,248,217,235,247,71,207,143,158,31,61,63,122,126,244,252,232,249,209,243,163,231,71,207,143,158,31,61,63,122,126,244,196,159,95,255,215,224,248,112,130,64,205,196,105,191,193,111,42,223,253,58,250,255,111,34,78,211,126,10,244,243,27,253,26,2,119,164,253,4,109,40,102,108,118,126,141,212,180,121,57,212,102,215,193,105,135,218,236,253,26,127,144,105,243,103,13,181,185,231,224,252,125,67,109,246,93,155,255,104,168,205,125,161,211,111,166,237,252,231,215,162,255,227,181,238,231,76,215,255,251,255,254,191,65,247,223,44,242,61,254,142,189,247,99,244,255,39,101,190,156,21,203,11,4,241,136,227,99,239,35,6,143,189,255,27,210,255,207,150,77,155,45,167,128,192,99,120,61,207,102,121,253,107,252,26,201,175,33,120,225,61,124,142,119,83,239,221,63,142,254,255,87,121,127,255,58,212,56,245,24,228,175,163,24,255,159,210,56,31,207,111,69,128,182,60,154,29,208,239,207,189,191,127,95,250,125,229,253,253,7,209,239,127,154,247,247,95,70,191,255,93,222,223,255,20,253,254,239,249,223,255,102,242,19,52,252,157,244,119,208,251,79,209,239,255,39,106,251,223,209,255,255,84,253,251,55,160,54,191,14,253,255,77,164,237,22,125,246,187,253,102,174,237,239,73,191,63,166,255,255,105,145,182,115,250,108,230,181,253,131,232,247,159,209,118,191,158,252,224,246,52,189,255,183,33,207,83,76,212,175,253,127,255,223,255,215,255,125,245,107,156,188,57,126,242,59,209,159,127,229,175,41,159,129,214,191,147,52,75,255,162,95,83,104,140,247,127,93,250,247,111,162,159,255,16,253,255,55,251,53,141,140,254,90,191,198,111,167,64,183,248,179,95,147,254,251,245,126,141,29,253,236,247,228,207,126,45,250,44,249,53,190,173,159,253,222,252,25,90,254,38,191,198,31,160,159,173,248,179,95,135,62,251,45,126,141,119,250,217,31,197,159,253,186,244,217,111,243,107,252,73,250,153,228,113,254,218,191,246,215,228,247,127,29,230,183,159,141,71,101,255,175,253,117,72,218,126,77,254,207,251,124,119,224,243,189,129,207,239,13,124,190,63,240,249,253,254,231,244,241,189,223,127,231,215,248,162,152,214,85,83,157,183,233,214,171,59,233,183,159,191,126,158,138,180,164,39,213,98,85,148,244,203,195,241,222,167,227,135,247,247,198,123,7,251,251,191,198,79,208,180,253,186,191,198,111,250,23,253,57,127,246,111,255,15,254,182,127,231,191,124,240,207,255,115,255,220,17,224,225,243,95,79,62,63,210,46,248,249,93,104,170,127,93,78,15,254,250,127,146,252,254,107,254,65,191,166,253,253,215,250,131,104,38,249,119,106,250,39,145,114,254,139,204,239,191,166,247,251,175,229,253,254,107,123,191,255,58,222,239,191,46,253,254,107,242,239,128,255,107,252,69,191,22,179,211,175,73,253,254,26,212,199,175,241,23,255,122,250,157,254,77,223,253,90,104,247,23,255,90,120,151,255,254,205,249,187,95,227,215,248,234,15,250,221,232,75,194,241,15,250,117,126,141,255,236,47,250,13,108,219,255,236,15,254,53,126,141,255,236,79,146,119,127,29,110,247,235,254,26,127,205,95,244,123,179,26,249,181,248,239,95,227,215,248,107,248,51,129,247,27,1,30,225,244,167,253,73,79,232,239,95,235,215,248,77,233,239,255,225,15,250,53,126,131,255,236,47,194,223,191,182,254,253,107,210,223,97,251,223,141,219,255,58,250,253,175,165,237,127,93,253,251,215,161,191,209,231,175,67,248,81,159,132,251,127,6,60,121,76,191,46,125,70,176,254,34,194,243,207,37,61,248,107,255,122,252,247,87,127,17,218,224,251,95,243,215,248,13,254,160,95,143,240,252,245,148,6,242,247,95,67,99,251,191,241,217,175,133,191,241,251,175,171,176,126,61,122,207,252,253,235,8,61,0,143,126,254,26,191,206,175,69,127,255,90,252,247,175,161,159,163,205,175,173,99,248,207,120,12,196,15,252,157,25,243,175,163,127,99,204,6,198,175,199,239,254,53,12,203,135,11,122,254,218,191,198,127,246,23,155,207,100,222,254,51,124,246,23,25,216,160,199,175,173,176,127,13,253,251,215,85,250,200,223,95,253,73,68,11,237,67,218,252,186,60,79,210,23,254,254,181,117,12,254,103,50,158,191,134,63,251,49,126,239,55,224,223,241,255,95,159,249,8,127,255,223,10,243,215,215,239,254,239,63,232,55,176,60,7,186,253,103,127,16,230,224,215,228,182,191,6,181,253,191,121,158,127,77,29,159,161,43,241,60,183,37,250,255,69,255,247,255,253,107,240,3,134,134,110,253,53,244,249,203,96,168,126,237,255,139,116,235,27,171,91,127,199,95,83,62,67,91,163,91,127,43,250,236,169,190,255,235,145,222,123,78,63,127,95,250,255,223,199,159,253,122,108,239,254,49,250,255,191,246,107,152,188,185,211,123,70,175,255,108,63,234,39,217,126,127,29,247,213,7,61,151,31,160,207,104,206,255,34,2,241,153,15,79,244,10,100,242,55,85,253,244,27,211,60,153,223,127,19,154,67,243,59,120,200,252,14,89,144,223,127,109,158,115,247,57,181,251,143,140,46,36,30,208,223,127,77,130,99,126,255,181,8,206,175,169,191,255,218,4,199,124,254,235,16,156,95,91,127,255,117,137,79,204,231,191,30,241,162,249,252,215,39,222,251,245,255,35,209,127,204,191,127,146,240,26,203,0,248,235,79,2,111,203,223,192,229,63,251,147,192,115,238,51,150,63,251,153,200,206,255,13,217,224,207,68,6,126,205,255,72,101,233,47,146,191,127,173,255,72,228,193,252,253,27,252,71,34,47,230,111,145,131,223,192,211,161,191,46,227,245,159,253,73,34,67,162,51,85,38,254,35,249,93,240,38,238,165,223,255,165,63,9,255,255,181,244,221,95,131,229,241,43,150,41,167,111,127,141,191,168,15,11,227,255,109,72,214,230,60,230,95,139,255,158,211,223,191,205,159,236,198,252,107,83,219,255,138,190,255,175,73,87,253,167,127,176,209,191,162,207,126,43,165,213,111,68,191,255,97,212,255,83,140,131,219,144,126,251,143,132,158,255,21,108,7,230,137,104,254,223,179,220,19,39,255,71,191,46,211,249,63,251,139,196,214,252,58,212,215,255,173,176,88,119,254,73,52,6,130,35,250,94,116,218,95,195,159,3,22,248,0,253,255,110,242,59,235,4,51,158,95,235,215,248,109,254,32,51,158,95,155,255,158,255,65,177,241,252,90,191,198,127,253,7,249,227,249,181,35,227,249,181,189,241,252,122,157,241,252,250,222,120,126,61,29,143,232,170,95,227,215,250,13,20,63,225,177,95,231,63,2,31,225,247,95,155,249,226,215,248,131,140,182,130,90,242,253,194,223,151,58,250,53,126,173,136,95,248,107,253,200,47,196,243,255,66,191,112,239,235,234,209,247,245,11,127,13,241,11,255,38,243,251,175,233,253,78,51,105,126,255,134,252,66,248,54,190,95,248,127,83,31,113,191,144,126,254,77,212,246,47,22,57,250,205,249,187,152,95,40,254,18,251,133,127,147,121,87,236,186,248,133,198,159,50,190,162,200,253,175,77,159,253,43,127,19,193,228,191,127,109,254,251,159,182,127,255,58,252,247,127,198,127,63,249,53,196,239,131,220,25,63,240,215,211,191,127,29,253,251,215,87,31,198,247,43,241,247,175,169,127,255,6,27,124,48,252,253,99,10,207,248,81,240,83,89,15,90,63,234,55,1,254,127,211,175,247,107,252,142,52,134,223,241,15,250,241,95,67,236,141,25,179,248,156,172,171,254,162,152,207,249,235,253,26,161,207,41,127,255,53,244,127,241,57,229,239,208,231,52,127,75,223,206,231,196,223,191,62,227,241,107,240,231,230,179,223,128,63,251,107,130,207,196,7,131,13,251,29,255,98,249,12,56,227,189,223,17,244,225,177,137,79,254,213,223,132,241,254,152,234,91,124,134,254,156,63,234,124,68,255,51,227,35,202,187,108,255,100,158,126,141,190,143,232,124,90,227,35,74,219,208,71,68,91,231,35,26,252,133,14,206,71,100,94,254,13,126,83,254,190,171,115,127,13,125,254,171,223,130,62,251,53,225,47,254,101,191,182,209,185,223,251,77,228,51,8,133,209,185,111,126,19,223,95,252,181,122,254,226,191,245,107,252,191,194,95,156,248,254,226,191,117,227,27,63,122,126,244,252,232,249,209,243,163,231,71,207,143,158,31,61,63,122,126,244,252,232,249,209,243,163,231,155,124,40,28,220,253,253,119,191,86,158,232,215,248,15,126,13,228,219,127,207,223,243,215,240,114,238,191,139,252,248,131,52,223,142,160,247,15,210,124,59,226,219,63,72,243,237,136,85,255,32,228,219,37,31,199,177,249,159,244,31,72,92,140,150,127,147,230,129,127,13,201,155,126,245,39,253,122,233,127,230,125,135,252,188,124,135,207,127,45,228,147,36,167,169,223,255,53,157,239,255,154,206,247,255,119,231,251,255,155,191,255,49,254,12,57,164,255,172,211,94,112,249,181,20,151,95,63,130,11,190,251,245,21,23,205,175,6,184,184,239,255,154,206,247,255,119,231,251,255,251,79,210,92,4,225,242,107,49,46,97,251,16,151,223,96,0,151,223,224,6,92,126,131,13,184,252,26,246,123,31,151,95,135,113,249,53,180,189,230,58,254,36,124,71,127,253,67,160,215,175,33,107,6,232,225,31,18,250,153,191,127,3,254,251,215,182,127,99,109,151,115,44,200,191,161,61,254,6,205,255,164,95,95,255,54,227,252,53,116,77,1,223,201,223,191,30,253,254,47,253,73,248,255,175,197,127,163,45,114,70,188,166,96,223,253,15,40,119,213,133,133,249,254,53,57,255,254,219,252,69,134,14,88,83,248,53,93,14,254,215,64,14,254,215,12,215,20,126,13,179,166,240,107,74,14,254,215,64,14,254,215,12,215,20,144,159,86,60,255,43,166,207,175,227,114,240,200,83,255,71,178,118,195,107,10,248,246,15,2,237,4,22,231,136,254,36,111,77,225,215,48,107,10,194,135,220,230,63,66,255,128,133,119,149,182,127,144,140,15,176,254,26,29,159,172,55,152,191,127,45,30,239,111,163,99,6,30,60,126,124,246,39,107,14,236,215,144,60,230,127,69,253,252,215,52,70,55,222,95,219,27,239,175,165,227,245,214,28,126,141,95,87,199,251,107,233,120,177,6,241,107,233,120,127,93,29,175,145,161,95,255,215,192,154,150,225,179,95,231,31,250,53,100,205,129,224,134,107,14,120,126,180,230,112,251,231,71,107,14,63,90,115,248,209,154,195,143,214,28,62,100,205,1,143,191,230,48,3,135,243,154,195,67,171,115,255,198,95,67,62,131,156,27,157,251,87,209,63,59,191,134,8,10,214,28,14,232,231,183,127,141,159,187,245,133,15,241,99,161,99,126,13,207,135,197,51,228,199,254,24,127,252,107,254,67,234,11,89,127,71,125,70,235,239,224,111,240,202,111,32,237,49,7,248,94,253,27,209,25,206,191,249,53,248,123,249,251,215,182,109,127,45,254,27,109,191,226,246,191,161,253,251,215,224,249,236,194,250,250,254,205,175,71,60,245,191,209,231,255,152,250,36,190,127,243,167,121,254,13,240,188,141,127,243,107,253,65,125,255,230,43,235,223,168,94,160,255,255,73,127,18,96,253,154,76,131,95,165,254,13,251,130,252,255,95,95,255,118,254,155,241,111,156,15,252,245,252,155,95,143,228,210,141,55,244,111,254,52,207,191,129,220,222,222,191,81,222,248,131,212,103,255,139,196,46,254,58,255,208,175,193,116,67,63,206,223,249,127,2,0,0,255,255};
 			}
 		}
 #endif
@@ -375,17 +505,17 @@ readonly
 			{
 				this.WarmShader(state);
 			}
-			if ((id == Triplanar.cid1))
+			if ((id == Triplanar.cid3))
 			{
 				this.FogEnd = value;
 				return true;
 			}
-			if ((id == Triplanar.cid2))
+			if ((id == Triplanar.cid4))
 			{
 				this.FogStart = value;
 				return true;
 			}
-			if ((id == Triplanar.cid4))
+			if ((id == Triplanar.cid5))
 			{
 				this.TextureScale = value;
 				return true;
@@ -401,12 +531,17 @@ readonly
 			}
 			if ((id == Triplanar.cid0))
 			{
-				this.SetFogColor(ref value);
+				this.SetCameraPosition(ref value);
 				return true;
 			}
-			if ((id == Triplanar.cid3))
+			if ((id == Triplanar.cid1))
 			{
 				this.SetLightDirection(ref value);
+				return true;
+			}
+			if ((id == Triplanar.cid2))
+			{
+				this.SetFogColor(ref value);
 				return true;
 			}
 			return false;
@@ -420,17 +555,32 @@ readonly
 			}
 			if ((id == Triplanar.sid0))
 			{
-				this.BottomTextureSampler = value;
+				this.BottomColorSampler = value;
 				return true;
 			}
 			if ((id == Triplanar.sid1))
 			{
-				this.SideTextureSampler = value;
+				this.BottomNormalSampler = value;
 				return true;
 			}
 			if ((id == Triplanar.sid2))
 			{
-				this.TopTextureSampler = value;
+				this.SideColorSampler = value;
+				return true;
+			}
+			if ((id == Triplanar.sid3))
+			{
+				this.SideNormalSampler = value;
+				return true;
+			}
+			if ((id == Triplanar.sid4))
+			{
+				this.TopColorSampler = value;
+				return true;
+			}
+			if ((id == Triplanar.sid5))
+			{
+				this.TopNormalSampler = value;
 				return true;
 			}
 			return false;
@@ -444,17 +594,32 @@ readonly
 			}
 			if ((id == Triplanar.tid0))
 			{
-				this.SideTexture = value;
+				this.SideColor = value;
 				return true;
 			}
 			if ((id == Triplanar.tid1))
 			{
-				this.BottomTexture = value;
+				this.SideNormal = value;
 				return true;
 			}
 			if ((id == Triplanar.tid2))
 			{
-				this.TopTexture = value;
+				this.BottomColor = value;
+				return true;
+			}
+			if ((id == Triplanar.tid3))
+			{
+				this.BottomNormal = value;
+				return true;
+			}
+			if ((id == Triplanar.tid4))
+			{
+				this.TopColor = value;
+				return true;
+			}
+			if ((id == Triplanar.tid5))
+			{
+				this.TopNormal = value;
 				return true;
 			}
 			return false;

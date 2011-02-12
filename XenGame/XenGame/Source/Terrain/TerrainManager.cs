@@ -37,9 +37,12 @@ namespace GameClient.Terrain
         public Triplanar terrainShader { get; set; }
         public MaterialShader boundingBoxShader { get; set; }
 
-        public Texture2D SideTexture { get; set; }
-        public Texture2D BottomTexture { get; set; }
-        public Texture2D TopTexture { get; set; }
+        public Texture2D SideColor { get; set; }
+        public Texture2D SideNormal { get; set; }
+        public Texture2D BottomColor { get; set; }
+        public Texture2D BottomNormal { get; set; }
+        public Texture2D TopColor { get; set; }
+        public Texture2D TopNormal { get; set; }
 
         public bool WireFrame { get; set; }
         public bool ShowBoundingBoxes { get; set; }
