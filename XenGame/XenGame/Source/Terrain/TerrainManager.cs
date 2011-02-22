@@ -178,7 +178,7 @@ namespace GameClient.Terrain
 
         public void InitializeCell(int X, int Y, int Z)
         {
-            terrainCells[X, Y, Z] = PolyVoxExtensions.VolumeDensity8FromVector3(cellDimensions);
+            terrainCells[X, Y, Z] = Extensions.VolumeDensity8FromVector3(cellDimensions);
         }
 
         public void SetCell(Vector3 cell, VolumeDensity8 volume)

@@ -11,6 +11,9 @@ using PolyVoxCore;
 using Xen;
 using Xen.Graphics;
 using Xen.Ex.Material;
+using Jitter.LinearMath;
+using Jitter.Collision.Shapes;
+using Jitter.Dynamics;
 
 namespace GameClient.Terrain
 {
@@ -24,6 +27,10 @@ namespace GameClient.Terrain
 
         public Vertices<VertexPositionNormalTexture> Vertices { get; set; }
         public Indices<short> Indices { get; set; }
+
+        // physics rigid body
+        //public ConvexHullShape ConvexHullShape { get; set; }
+        public RigidBody RigidBody { get; set; }
 
         public bool isEmpty { get; set; }
 
@@ -72,10 +79,7 @@ namespace GameClient.Terrain
             {
                 // TODO: redo polyvox wrapper to generate these instead of using LINQ hilarity
 
-                VertexPositionNormalTexture[] vertsConverted = verts.Select<PositionMaterialNormal, VertexPositionNormalTexture>(v =>
-                    {
-                        return new VertexPositionNormalTexture(v.position.ToVector3(), v.getNormal().ToVector3(), new Vector2(0, 0));
-                    }).ToArray();
+                VertexPositionNormalTexture[] vertsConverted = verts.ToVertexPositionNormalTextureArray();
                 Vertices = new Vertices<VertexPositionNormalTexture>(vertsConverted);
 
                 // convert indices to xna format
@@ -86,6 +90,24 @@ namespace GameClient.Terrain
 
                 isEmpty = (Indices.Count == 0);
             }
+        }
+
+        public void CalculatePhysicsHull()
+        {
+            List<JOctree.TriangleVertexIndices> collisionIndices = new List<JOctree.TriangleVertexIndices>();
+            var indices = surface.getIndices();
+            for (int i = 0; i < indices.Count / 3; i++)
+            {
+                collisionIndices.Add(new JOctree.TriangleVertexIndices((int)indices[i*3], (int)indices[i*3 + 1], (int)indices[i*3 + 2]));
+            }
+
+            PositionMaterialNormalVector verts = surface.getVertices();
+            List<JVector> collisionVertPositions = verts.Select<PositionMaterialNormal, JVector>(v => v.position.ToJVector()).ToList();
+
+            JOctree collisionVerts = new JOctree(collisionVertPositions, collisionIndices);
+            TriangleMeshShape shape = new TriangleMeshShape(collisionVerts);            
+            RigidBody = new RigidBody(shape);
+            RigidBody.IsStatic = true; // terrain is immovable
         }
 
         public void Draw(DrawState state)

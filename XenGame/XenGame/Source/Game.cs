@@ -104,7 +104,7 @@ namespace GameClient
         //display model
         private ModelInstance model;
         private AnimationInstance modelAnimation;
-        private DrawRotated modelRotation;							//draws the model, but rotating.
+        private DrawRotated modelRotation;							// draws the model, but rotating.
         private DrawCharacter modelPhysics;                         // draws the model at its physically simulated position
 
         //Draw statistics
@@ -114,6 +114,9 @@ namespace GameClient
         private TerrainManager terrainManager;
         private float terrainNoiseDensity = 50.0f;
         private Stopwatch terrainGenerationTimer;
+
+        // simple terrain
+        SimpleTerrain simpleTerrain;
 
         // xpf gui
         //private SpriteBatchAdapter spriteBatchAdapter;
@@ -199,6 +202,10 @@ namespace GameClient
             //drawToRenderTarget.Add(modelRotation);
             //drawToRenderTarget.Add(model);
             drawToRenderTarget.Add(modelPhysics);
+
+            // setup simple terrain
+            simpleTerrain = new SimpleTerrain(this.Content, Vector3.Zero, @"TerrainTest/terrain_desert");
+            drawToRenderTarget.Add(simpleTerrain);
 
             //setup the shaders
             this.characterRenderShader = new Shaders.Character();
@@ -349,7 +356,7 @@ namespace GameClient
 
             // update physics
             world.Step(state.DeltaTimeSeconds,
-                true); // multithreaded
+                false); // multithreaded
             modelPhysics.Position = new Vector3(
                 world.RigidBodies[0].Position.X,
                 world.RigidBodies[0].Position.Y,
@@ -509,6 +516,10 @@ namespace GameClient
                                 throw new Exception("Problem generating mesh from volume!");
                             }
                             
+                            // calculate convex hull
+                            mesh.CalculatePhysicsHull();
+                            // add mesh's convex hull to the physics sim
+                            world.AddBody(mesh.RigidBody);
 
                             lock (terrainLock)
                             {
@@ -718,6 +729,7 @@ namespace GameClient
             localManager = new ContentManager(this.Services, state.ContentRegister.RootDirectory);
 
             // Generate terrain
+            /*
             const int terrainSeed = 70;
             GenerateTerrain(terrainSeed);
 
@@ -738,7 +750,7 @@ namespace GameClient
             terrainManager.terrainShader.TextureScale = 0.1f + ((1 / terrainManager.cellDimensions.X) / 2.5f);
 
             SetupTerrainShader();
-
+            */
             // xpf gui initialisation
             /*
             Microsoft.Xna.Framework.Game g = (Microsoft.Xna.Framework.Game)this;
@@ -761,6 +773,9 @@ namespace GameClient
 
             this.rootElement.Content = textBlock;*/
 
+            // calculate physics for terrain and add it
+            simpleTerrain.CalculatePhysicsHull();
+            world.AddBody(simpleTerrain.RigidBody);
 
             // add player model to physics sim
             float length = model.ModelData.StaticBounds.Maximum.X - model.ModelData.StaticBounds.Minimum.X;
@@ -768,7 +783,7 @@ namespace GameClient
             float width = model.ModelData.StaticBounds.Maximum.Z - model.ModelData.StaticBounds.Minimum.Z;
             Shape playerShape = new BoxShape(length, height, width);
             RigidBody playerBody = new RigidBody(playerShape);
-            playerBody.Position = new JVector(0, 50, 0);
+            playerBody.Position = new JVector(0, 100, 0);
 
             world.AddBody(playerBody);
         }

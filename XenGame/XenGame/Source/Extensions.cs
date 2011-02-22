@@ -7,10 +7,13 @@ using Microsoft.Xna.Framework;
 using GameClient.Util;
 using GameClient.Terrain;
 using Microsoft.Xna.Framework.Graphics;
+using Jitter.LinearMath;
+using Xen.Graphics;
+using Xen.Ex.Graphics.Content;
 
 namespace GameClient
 {
-    public static class PolyVoxExtensions
+    public static class Extensions
     {
         /// <summary>
         /// Apply an action to each voxel in the volume
@@ -215,6 +218,95 @@ namespace GameClient
         public static Vector3 ToVector3(this Vector3DFloat v)
         {
             return new Vector3(v.getX(), v.getY(), v.getZ());
+        }
+
+        public static JVector ToJVector(this Vector3DFloat v)
+        {
+            return new JVector(v.getX(), v.getY(), v.getZ());
+        }
+
+        public static JVector ToJVector(this Vector3 v)
+        {
+            return new JVector(v.X, v.Y, v.Z);
+        }
+
+        public static IEnumerable<JVector> ToJVector(this Vector3[] v)
+        {
+            return v.Select<Vector3, JVector>(q => q.ToJVector());
+        }
+
+        public static Matrix ToXNAMatrix(this JMatrix matrix)
+        {
+            return new Matrix(matrix.M11,
+                            matrix.M12,
+                            matrix.M13,
+                            0.0f,
+                            matrix.M21,
+                            matrix.M22,
+                            matrix.M23,
+                            0.0f,
+                            matrix.M31,
+                            matrix.M32,
+                            matrix.M33,
+                            0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+        }
+
+        public static JMatrix ToJitterMatrix(this Matrix matrix)
+        {
+            JMatrix result;
+            result.M11 = matrix.M11;
+            result.M12 = matrix.M12;
+            result.M13 = matrix.M13;
+            result.M21 = matrix.M21;
+            result.M22 = matrix.M22;
+            result.M23 = matrix.M23;
+            result.M31 = matrix.M31;
+            result.M32 = matrix.M32;
+            result.M33 = matrix.M33;
+            return result;
+
+        }
+
+        public static JMeshData ExtractData(this ModelData model)
+        {
+            JMeshData jMeshData = new JMeshData();
+            jMeshData.Vertices = new List<JVector>();
+            jMeshData.Indices = new List<JOctree.TriangleVertexIndices>();
+
+            foreach (MeshData m in model.Meshes)
+            {
+                foreach (var g in m.Geometry)
+                {
+                    Vector3[] verts = new Vector3[g.Vertices.Count];
+                    g.Vertices.TryExtractVertexData<Vector3>(VertexElementUsage.Position, 0, verts);
+
+                    int[] indices = new int[g.Indices.Count];
+                    g.Indices.ExtractIndexData(indices);
+
+                    jMeshData.Vertices.AddRange(verts.ToJVector());
+
+                    for (int i = 0; i < g.Indices.Count / 3; i++)
+                    {
+                        jMeshData.Indices.Add(new JOctree.TriangleVertexIndices((int)indices[i * 3], (int)indices[i * 3 + 1], (int)indices[i * 3 + 2]));
+                    }
+                }
+            }
+
+            return jMeshData;
+        }
+
+        public static VertexPositionNormalTexture[] ToVertexPositionNormalTextureArray(this PositionMaterialNormalVector verts)
+        {
+            return verts.Select<PositionMaterialNormal, VertexPositionNormalTexture>(v =>
+            {
+                return new VertexPositionNormalTexture(v.position.ToVector3(), v.getNormal().ToVector3(), new Vector2(0, 0));
+            }).ToArray();
+        }
+
+        public static Vertices<VertexPositionNormalTexture> ToVertices(this PositionMaterialNormalVector verts)
+        {
+            VertexPositionNormalTexture[] vertsConverted = verts.ToVertexPositionNormalTextureArray();
+            return new Vertices<VertexPositionNormalTexture>(vertsConverted);
         }
     }
 }
