@@ -63,6 +63,27 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TerrainTest\terrain_desert.fbx">
+      <Name>terrain_desert</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelImporter</Processor>
+      <ProcessorParameters_ManualTextureImport>True</ProcessorParameters_ManualTextureImport>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+    <Compile Include="TerrainTest\terrain_desert_diffuse.png">
+      <Name>terrain_desert_diffuse</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_TextureFormat>DxtCompressed</ProcessorParameters_TextureFormat>
+    </Compile>
+    <Compile Include="TerrainTest\terrain_desert_normal.png">
+      <Name>terrain_desert_normal</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_TextureFormat>DxtCompressed</ProcessorParameters_TextureFormat>
+    </Compile>
     <Compile Include="tiny_4anim.x">
       <Name>tiny_4anim</Name>
       <Importer>XImporter</Importer>
@@ -360,25 +381,6 @@
       <Name>cliffs2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="TerrainTest\terrain_desert_diffuse.png">
-      <Name>terrain_desert_diffuse</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="TerrainTest\terrain_desert_normal.png">
-      <Name>terrain_desert_normal</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="TerrainTest\terrain_desert.fbx">
-      <Name>terrain_desert</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelImporter</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

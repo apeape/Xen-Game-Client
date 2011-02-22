@@ -29,6 +29,7 @@ using Jitter.Collision;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
+using Xen.Ex.Material;
 
 
 /*
@@ -117,6 +118,7 @@ namespace GameClient
 
         // simple terrain
         SimpleTerrain simpleTerrain;
+        MaterialLightCollection simpleTerrainLights;
 
         // xpf gui
         //private SpriteBatchAdapter spriteBatchAdapter;
@@ -203,8 +205,53 @@ namespace GameClient
             //drawToRenderTarget.Add(model);
             drawToRenderTarget.Add(modelPhysics);
 
+            // setup simple terrain lighting
+            //create the light collection
+            simpleTerrainLights = new MaterialLightCollection();
+            //set a dark blue ambient colour
+            simpleTerrainLights.AmbientLightColour = new Color(40, 40, 80).ToVector3();
+
+            //positions for two lights
+            Vector3[] lightPositions = new Vector3[] 
+			{ 
+				new Vector3(0, 30, 4), 
+				new Vector3(0, -30, 4) 
+			};
+
+            //geometry for a light (shared for each light)
+            IDraw lightGeometry = null;
+
+            for (int i = 0; i < lightPositions.Length; i++)
+            {
+                float intensity = 2;
+                Color lightColor = Color.LightYellow;
+                Color lightSpecularColour = Color.WhiteSmoke;
+
+                //interface to the light about to be created
+                IMaterialPointLight light = null;
+
+                //create the point light
+                light = simpleTerrainLights.CreatePointLight(lightPositions[i], intensity, lightColor, lightSpecularColour);
+
+                //Adjusting this value controls how quickly the light falloff occurs.
+                //A larger value will produce a slower falloff, and result in a softer, brighter light.
+                //A smaller value will produce a darker, but sharper light source.
+                //Generally, if you reduce this value, increase the intensity to compensate.
+                light.SourceRadius = 4;
+
+                //create the light geometry (a sphere)
+                if (lightGeometry == null)
+                    lightGeometry = new Xen.Ex.Geometry.Sphere(Vector3.One, 8, true, false, false);
+
+                //visually show the light with a light drawer
+                IDraw lightSourceDrawer = new LightSourceDrawer(lightPositions[i], lightGeometry, lightColor);
+
+                //add the light geometry to the screen
+                drawToScreen.Add(lightSourceDrawer);
+            }
+
             // setup simple terrain
-            simpleTerrain = new SimpleTerrain(this.Content, Vector3.Zero, @"TerrainTest/terrain_desert");
+            simpleTerrain = new SimpleTerrain(this.Content, Vector3.Zero, @"TerrainTest/terrain_desert", simpleTerrainLights);
             drawToRenderTarget.Add(simpleTerrain);
 
             //setup the shaders
@@ -449,10 +496,11 @@ namespace GameClient
 
         public void SetupTerrainShader()
         {
+            /*
             this.terrainManager.terrainShader.LightDirection = this.sceneConfig.SunDirection;
             this.terrainManager.terrainShader.FogColor = new Color(171, 229, 255).ToVector3();
             this.terrainManager.terrainShader.FogStart = 190;
-            this.terrainManager.terrainShader.FogEnd = 310;
+            this.terrainManager.terrainShader.FogEnd = 310;*/
         }
 
         //callback from the render config
@@ -932,6 +980,51 @@ namespace GameClient
             shader.NormalTexture = geometry.MaterialData.NormalMap;
             shader.SofTexture = this.SofTextures[geometry.Index];
             return shader;
+        }
+    }
+
+
+    //this class simply draws the sphere representing the lights
+    class LightSourceDrawer : IDraw
+    {
+        private IDraw geometry;
+        private Vector3 position;
+        private Color lightColour;
+
+        public LightSourceDrawer(Vector3 position, IDraw geometry, Color lightColour)
+        {
+            this.position = position;
+            this.geometry = geometry;
+            this.lightColour = lightColour;
+        }
+
+        public void Draw(DrawState state)
+        {
+            using (state.WorldMatrix.PushTranslateMultiply(ref position))
+            {
+                DrawSphere(state);
+            }
+        }
+
+        private void DrawSphere(DrawState state)
+        {
+            //draw the geometry with a solid colour shader
+            if (geometry.CullTest(state))
+            {
+                Xen.Ex.Shaders.FillSolidColour shader = state.GetShader<Xen.Ex.Shaders.FillSolidColour>();
+
+                shader.FillColour = lightColour.ToVector4();
+
+                using (state.Shader.Push(shader))
+                {
+                    geometry.Draw(state);
+                }
+            }
+        }
+
+        public bool CullTest(ICuller culler)
+        {
+            return true;
         }
     }
 }
