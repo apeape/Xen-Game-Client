@@ -75,7 +75,7 @@ namespace GameClient
             deltaVelocity.Y = 0.0f;
 
             // determine how 'stiff' the character follows the target velocity
-            deltaVelocity *= 0.02f;
+            deltaVelocity *= 0.005f;
 
             if (deltaVelocity.LengthSquared() != 0.0f)
             {

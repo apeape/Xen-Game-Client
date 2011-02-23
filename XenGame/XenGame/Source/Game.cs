@@ -293,8 +293,8 @@ namespace GameClient
             state.ShaderGlobals.SetShaderGlobal("UseAlbedoOcclusionShadow", new Vector3(this.renderConfig.AlbedoTextureScale, this.renderConfig.AmbientOcclusionTextureScale, this.renderConfig.ShadowMapTermScale));
 
             // simple terrain override to disable shadow mapping (temporarily)
-            //state.ShaderGlobals.SetShaderGlobal("UseAlbedoOcclusionShadow_SimpleTerrain", new Vector3(this.renderConfig.AlbedoTextureScale, this.renderConfig.AmbientOcclusionTextureScale, 0.0f));
-            state.ShaderGlobals.SetShaderGlobal("UseAlbedoOcclusionShadow_SimpleTerrain", new Vector3(this.renderConfig.AlbedoTextureScale, this.renderConfig.AmbientOcclusionTextureScale, this.renderConfig.ShadowMapTermScale));
+            state.ShaderGlobals.SetShaderGlobal("UseAlbedoOcclusionShadow_SimpleTerrain", new Vector3(this.renderConfig.AlbedoTextureScale, this.renderConfig.AmbientOcclusionTextureScale, 0.0f));
+            //state.ShaderGlobals.SetShaderGlobal("UseAlbedoOcclusionShadow_SimpleTerrain", new Vector3(this.renderConfig.AlbedoTextureScale, this.renderConfig.AmbientOcclusionTextureScale, this.renderConfig.ShadowMapTermScale));
 
             //Ok, now get on with drawing.
 
@@ -802,7 +802,7 @@ namespace GameClient
             // add player model to physics sim
             float height = model.ModelData.StaticBounds.Maximum.Y - model.ModelData.StaticBounds.Minimum.Y;
             float width = model.ModelData.StaticBounds.Maximum.X - model.ModelData.StaticBounds.Minimum.X;
-            RigidBody playerBody = new RigidBody(new CapsuleShape(1.0f, 0.5f));
+            RigidBody playerBody = new RigidBody(new CapsuleShape(0.16f, 0.08f));
             playerBody.Position = new JVector(0, 100, 0);
             playerBody.UseUserMassProperties(JMatrix.Zero, 1.0f, true);
             playerBody.Restitution = 0.0f;

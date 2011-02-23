@@ -42,7 +42,8 @@ namespace GameClient
 		{
             this.modelDataName = modelDataName;
 
-			Matrix.CreateTranslation(ref position, out this.worldMatrix);
+			//Matrix.CreateTranslation(ref position, out this.worldMatrix);
+            this.worldMatrix = Matrix.CreateTranslation(position) * Matrix.CreateScale(2.0f); // needed for physics
 
 			//A ModelInstance can be created without any content...
 			//However it cannot be used until the content is set

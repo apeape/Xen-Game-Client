@@ -69,7 +69,7 @@
       <Processor>ModelImporter</Processor>
       <ProcessorParameters_ManualTextureImport>True</ProcessorParameters_ManualTextureImport>
       <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
-      <ProcessorParameters_RotationY>0</ProcessorParameters_RotationY>
+      <ProcessorParameters_Scale>0.25</ProcessorParameters_Scale>
     </Compile>
     <Compile Include="TerrainTest\terrain_desert_diffuse.png">
       <Name>terrain_desert_diffuse</Name>
