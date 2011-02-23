@@ -107,6 +107,7 @@ namespace GameClient
         private AnimationInstance modelAnimation;
         private DrawRotated modelRotation;							// draws the model, but rotating.
         private DrawCharacter modelPhysics;                         // draws the model at its physically simulated position
+        CharacterController characterController; // model physics controller
 
         //Draw statistics
         private Xen.Ex.Graphics2D.Statistics.DrawStatisticsDisplay drawStats;
@@ -133,9 +134,9 @@ namespace GameClient
             //--------------------------------------
 
             viewCamera = new Xen.Camera.FirstPersonControlledCamera3D(this.UpdateManager);
-            viewCamera.Projection.FieldOfView *= 0.90f;
+            viewCamera.Projection.FieldOfView *= 0.80f;
             viewCamera.MovementSensitivity *= 0.05f;
-            viewCamera.LookAt(new Vector3(-3, 4, 2), new Vector3(6, 6, 2), new Vector3(0, 1, 0));
+            viewCamera.LookAt(new Vector3(-3, 4, 2), new Vector3(6, 40, 2), new Vector3(0, 1, 0));
             viewCamera.Projection.NearClip = 0.1f;
 
             //shadow map setup:
@@ -204,51 +205,6 @@ namespace GameClient
             //drawToRenderTarget.Add(modelRotation);
             //drawToRenderTarget.Add(model);
             drawToRenderTarget.Add(modelPhysics);
-
-            // setup simple terrain lighting
-            //create the light collection
-            simpleTerrainLights = new MaterialLightCollection();
-            //set a dark blue ambient colour
-            simpleTerrainLights.AmbientLightColour = new Color(40, 40, 80).ToVector3();
-
-            //positions for two lights
-            Vector3[] lightPositions = new Vector3[] 
-			{ 
-				new Vector3(0, 30, 4), 
-				new Vector3(0, -30, 4) 
-			};
-
-            //geometry for a light (shared for each light)
-            IDraw lightGeometry = null;
-
-            for (int i = 0; i < lightPositions.Length; i++)
-            {
-                float intensity = 2;
-                Color lightColor = Color.LightYellow;
-                Color lightSpecularColour = Color.WhiteSmoke;
-
-                //interface to the light about to be created
-                IMaterialPointLight light = null;
-
-                //create the point light
-                light = simpleTerrainLights.CreatePointLight(lightPositions[i], intensity, lightColor, lightSpecularColour);
-
-                //Adjusting this value controls how quickly the light falloff occurs.
-                //A larger value will produce a slower falloff, and result in a softer, brighter light.
-                //A smaller value will produce a darker, but sharper light source.
-                //Generally, if you reduce this value, increase the intensity to compensate.
-                light.SourceRadius = 4;
-
-                //create the light geometry (a sphere)
-                if (lightGeometry == null)
-                    lightGeometry = new Xen.Ex.Geometry.Sphere(Vector3.One, 8, true, false, false);
-
-                //visually show the light with a light drawer
-                IDraw lightSourceDrawer = new LightSourceDrawer(lightPositions[i], lightGeometry, lightColor);
-
-                //add the light geometry to the screen
-                drawToScreen.Add(lightSourceDrawer);
-            }
 
             // setup simple terrain
             simpleTerrain = new SimpleTerrain(this.Content, Vector3.Zero, @"TerrainTest/terrain_desert", simpleTerrainLights);
@@ -336,6 +292,9 @@ namespace GameClient
             state.ShaderGlobals.SetShaderGlobal("AmbientDiffuseSpecularScale", new Vector3(this.renderConfig.AmbientSphericalHarmonicScale, this.renderConfig.DiffuseLightingScale, this.renderConfig.SpecularLightingScale));
             state.ShaderGlobals.SetShaderGlobal("UseAlbedoOcclusionShadow", new Vector3(this.renderConfig.AlbedoTextureScale, this.renderConfig.AmbientOcclusionTextureScale, this.renderConfig.ShadowMapTermScale));
 
+            // simple terrain override to disable shadow mapping (temporarily)
+            //state.ShaderGlobals.SetShaderGlobal("UseAlbedoOcclusionShadow_SimpleTerrain", new Vector3(this.renderConfig.AlbedoTextureScale, this.renderConfig.AmbientOcclusionTextureScale, 0.0f));
+            state.ShaderGlobals.SetShaderGlobal("UseAlbedoOcclusionShadow_SimpleTerrain", new Vector3(this.renderConfig.AlbedoTextureScale, this.renderConfig.AmbientOcclusionTextureScale, this.renderConfig.ShadowMapTermScale));
 
             //Ok, now get on with drawing.
 
@@ -343,6 +302,7 @@ namespace GameClient
             //set the shadow scene
             //shadowDrawer.Scene = this.modelRotation;
             shadowDrawer.Scene = this.modelPhysics;
+            //shadowDrawer.Scene = this.simpleTerrain;
 
             //draw the shadow map first
             if (this.renderConfig.ShadowMapTermScale > 0)
@@ -400,6 +360,18 @@ namespace GameClient
         protected override void Update(UpdateState state)
         {
             //this.rootElement.Update();
+
+            JVector targetVelocity = JVector.Zero;
+            if (state.KeyboardState.IsKeyDown(Keys.Down)) targetVelocity += JVector.Left;
+            if (state.KeyboardState.IsKeyDown(Keys.Up)) targetVelocity += JVector.Right;
+            if (state.KeyboardState.IsKeyDown(Keys.Left)) targetVelocity += JVector.Backward;
+            if (state.KeyboardState.IsKeyDown(Keys.Right)) targetVelocity += JVector.Forward;
+
+            if (targetVelocity.LengthSquared() > 0.0f) targetVelocity.Normalize();
+            targetVelocity *= 10.0f;
+
+            characterController.TryJump = state.KeyboardState.IsKeyDown(Keys.Space);
+            characterController.TargetVelocity = targetVelocity;
 
             // update physics
             world.Step(state.DeltaTimeSeconds,
@@ -671,6 +643,7 @@ namespace GameClient
 
             //load the character model
             model.ModelData = state.Load<Xen.Ex.Graphics.Content.ModelData>(@"xna_dude/dude");
+            
 
             //set the shader on the model
             model.ShaderProvider = new CharacterShaderProvider(characterRenderShader, model.ModelData, state.ContentRegister, "xna_dude");
@@ -733,8 +706,8 @@ namespace GameClient
             this.DirtRoadConfig.SunDirection = Vector3.Normalize(new Vector3(0, 0.1f, 1));
             this.DirtRoadConfig.SunIntensity = 20.0f;
             this.DirtRoadConfig.DefaultLensExposure = 0.15f;
-            this.DirtRoadConfig.DefaultCamPos = new Vector3(6.062489f, 4.9959f, -0.6131198f);
-            this.DirtRoadConfig.DefaultCamViewPos = new Vector3(5.147717f, 5.02338f, -0.2100832f);
+            this.DirtRoadConfig.DefaultCamPos = new Vector3(6.062489f, 105.9959f, -0.6131198f);
+            this.DirtRoadConfig.DefaultCamViewPos = new Vector3(5.147717f, 105.02338f, -0.2100832f);
 
             //setup Arches specifics
             this.ArchesConfig = defaultSC.Clone();
@@ -743,8 +716,8 @@ namespace GameClient
             this.ArchesConfig.SunDirection = Vector3.Normalize(new Vector3(-0.4f, 0.4f, 0.5f));
             this.ArchesConfig.SunIntensity = 15.0f;
             this.ArchesConfig.DefaultLensExposure = 0.15f;
-            this.ArchesConfig.DefaultCamPos = new Vector3(-2.667145f, 6.280345f, 4.98485f);
-            this.ArchesConfig.DefaultCamViewPos = new Vector3(-2.470318f, 6.176862f, 4.009888f);
+            this.ArchesConfig.DefaultCamPos = new Vector3(-2.667145f, 105.280345f, 4.98485f);
+            this.ArchesConfig.DefaultCamViewPos = new Vector3(-2.470318f, 105.176862f, 4.009888f);
             //this.ArchesConfig.BloomScale = 0f; // temporary bloom disable for wireframe
 
             //setup WaterfrontHDR specifics
@@ -754,8 +727,8 @@ namespace GameClient
             this.WaterfrontConfig.SunDirection = Vector3.Normalize(new Vector3(-0.2f, 1, 0));
             this.WaterfrontConfig.SunIntensity = 15.0f;
             this.WaterfrontConfig.DefaultLensExposure = 0.35f;
-            this.WaterfrontConfig.DefaultCamPos = new Vector3(5.251021f, 5.877438f, -2.74239f);
-            this.WaterfrontConfig.DefaultCamViewPos = new Vector3(4.579107f, 5.783906f, -2.007691f);
+            this.WaterfrontConfig.DefaultCamPos = new Vector3(5.251021f, 105.877438f, -2.74239f);
+            this.WaterfrontConfig.DefaultCamViewPos = new Vector3(4.579107f, 105.783906f, -2.007691f);
 
             //setup MillHDR specifics
             this.MillConfig = defaultSC.Clone();
@@ -766,11 +739,12 @@ namespace GameClient
             this.MillConfig.DefaultLensExposure = 0.5f;
             this.MillConfig.BloomScale = 0.5f;
             this.MillConfig.BloomThreshold = 1.0f;
-            this.MillConfig.DefaultCamPos = new Vector3(6.087461f, 6.132507f, -0.8147218f);
-            this.MillConfig.DefaultCamViewPos = new Vector3(5.203656f, 5.989332f, -0.3693113f);
+            this.MillConfig.DefaultCamPos = new Vector3(6.087461f, 105.132507f, -0.8147218f);
+            this.MillConfig.DefaultCamViewPos = new Vector3(5.203656f, 104.989332f, -0.3693113f);
 
 
             this.sceneConfig = this.ArchesConfig;
+            this.viewCamera.LookAt(this.sceneConfig.DefaultCamViewPos, this.sceneConfig.DefaultCamPos, new Vector3(0, 1, 0));
 
             //Textures are no longer needed. 
             localManager.Dispose();
@@ -826,14 +800,16 @@ namespace GameClient
             world.AddBody(simpleTerrain.RigidBody);
 
             // add player model to physics sim
-            float length = model.ModelData.StaticBounds.Maximum.X - model.ModelData.StaticBounds.Minimum.X;
             float height = model.ModelData.StaticBounds.Maximum.Y - model.ModelData.StaticBounds.Minimum.Y;
-            float width = model.ModelData.StaticBounds.Maximum.Z - model.ModelData.StaticBounds.Minimum.Z;
-            Shape playerShape = new BoxShape(length, height, width);
-            RigidBody playerBody = new RigidBody(playerShape);
+            float width = model.ModelData.StaticBounds.Maximum.X - model.ModelData.StaticBounds.Minimum.X;
+            RigidBody playerBody = new RigidBody(new CapsuleShape(1.0f, 0.5f));
             playerBody.Position = new JVector(0, 100, 0);
-
+            playerBody.UseUserMassProperties(JMatrix.Zero, 1.0f, true);
+            playerBody.Restitution = 0.0f;
+            //playerBody.Orientation = Matrix.CreateRotationZ(MathHelper.Pi).ToJitterMatrix();
+            characterController = new CharacterController(world, playerBody);
             world.AddBody(playerBody);
+            world.AddConstraint(characterController);
         }
     }
 
@@ -858,10 +834,12 @@ namespace GameClient
         {
             //generate the rotation matrix for the object.
             //Matrix basis = new Matrix(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1); //xna_dude model is on his side
-            Matrix basis = new Matrix(Orientation.M11, Orientation.M12, Orientation.M13, 0.0f,
+            //Matrix basis = Orientation.ToXNAMatrix() * Matrix.CreateRotationX(-MathHelper.Pi / 4) * Matrix.CreateTranslation(Position);
+            Matrix basis = Orientation.ToXNAMatrix() * Matrix.CreateTranslation(Position);
+            /*Matrix basis = new Matrix(Orientation.M11, Orientation.M12, Orientation.M13, 0.0f,
                         Orientation.M21, Orientation.M22, Orientation.M23, 0.0f,
                         Orientation.M31, Orientation.M32, Orientation.M33, 0.0f,
-                        0, 0, 0, 1) * Matrix.CreateTranslation(Position);
+                        0, 0, 0, 1) * Matrix.CreateTranslation(Position);*/
                         //* Matrix.CreateRotationY(-MathHelper.Pi);
             //basis.Translation = Position;
             using (state.WorldMatrix.PushMultiply(ref basis))

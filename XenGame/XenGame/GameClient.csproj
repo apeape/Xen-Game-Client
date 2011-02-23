@@ -152,11 +152,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ShadowShader.fx</DependentUpon>
     </Compile>
+    <Compile Include="Shaders\SimpleTerrain.fx.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SimpleTerrain.fx</DependentUpon>
+    </Compile>
     <Compile Include="Shaders\Triplanar.fx.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Triplanar.fx</DependentUpon>
     </Compile>
+    <Compile Include="Source\CharacterController.cs" />
     <Compile Include="Source\Config.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Extensions.cs" />
@@ -223,6 +229,10 @@
     <None Include="Shaders\ShadowShader.fx">
       <Generator>XenFX</Generator>
       <LastGenOutput>ShadowShader.fx.cs</LastGenOutput>
+    </None>
+    <None Include="Shaders\SimpleTerrain.fx">
+      <Generator>XenFX</Generator>
+      <LastGenOutput>SimpleTerrain.fx.cs</LastGenOutput>
     </None>
     <None Include="Shaders\Triplanar.fx">
       <Generator>XenFX</Generator>

@@ -36,7 +36,7 @@ namespace GameClient
         //public ConvexHullShape ConvexHullShape { get; set; }
         public RigidBody RigidBody { get; set; }
 
-        private readonly MaterialShader Material;
+        private Shaders.SimpleTerrain terrainShader;
 
         public SimpleTerrain(ContentRegister content, Vector3 position, string modelDataName, MaterialLightCollection lights)
 		{
@@ -46,23 +46,9 @@ namespace GameClient
 
 			//A ModelInstance can be created without any content...
 			//However it cannot be used until the content is set
-			model = new ModelInstance();
+			this.model = new ModelInstance();
 
-            //create the custom material for this geometry
-            //the light collection has been passed into the constructor, although it
-            //could easily be changed later (by changing material.Lights)
-            this.Material = new MaterialShader(lights);
-
-            //give the disk really bright specular for effect
-            Material.SpecularColour = new Vector3(1, 1, 1);
-            Material.DiffuseColour = new Vector3(0.6f, 0.6f, 0.6f);
-            Material.SpecularPower = 64;
-
-            //setup the texture samples to use high quality anisotropic filtering
-            //the textures are assigned in LoadContent
-            Material.Textures = new MaterialTextures();
-            Material.Textures.TextureMapSampler = TextureSamplerState.AnisotropicHighFiltering;
-            Material.Textures.NormalMapSampler = TextureSamplerState.AnisotropicLowFiltering;
+            this.terrainShader = new Shaders.SimpleTerrain();
 
             //add to the content register and load textures/etc
             content.Add(this);
@@ -80,7 +66,7 @@ namespace GameClient
 
                 if (model.CullTest(state))
                 {
-                    using (state.Shader.Push(Material))
+                    //using (state.Shader.Push(Material))
                     {
                         //state.RenderState.CurrentRasterState.FillMode = FillMode.WireFrame;
                         model.Draw(state);
@@ -95,10 +81,7 @@ namespace GameClient
 			//load the model data into the model instance
 			model.ModelData = state.Load<Xen.Ex.Graphics.Content.ModelData>(this.modelDataName);
 
-            //load the box texture, and it's normal map.
-            Material.Textures.TextureMap = state.Load<Texture2D>(@"TerrainTest\terrain_desert_diffuse");
-            Material.Textures.NormalMap = state.Load<Texture2D>(@"TerrainTest\terrain_desert_normal");
-            //model.ShaderProvider = new Xen.Graphics.ShaderSystem.
+            model.ShaderProvider = new SimpleTerrainShaderProvider(terrainShader, model.ModelData, state.ContentRegister, "TerrainTest");
 		}
 
 		public bool CullTest(ICuller culler)
@@ -110,10 +93,84 @@ namespace GameClient
         {
             JMeshData meshData = model.ModelData.ExtractData();
             JOctree collisionVerts = new JOctree(meshData.Vertices, meshData.Indices);
-            TriangleMeshShape shape = new TriangleMeshShape(collisionVerts);          
+            TriangleMeshShape shape = new TriangleMeshShape(collisionVerts);
             RigidBody = new RigidBody(shape);
             RigidBody.IsStatic = true; // terrain is immovable
         }
 
     }
+
+
+    //This class provides the shaders for the character, and also loads extra textures for the character model
+    class SimpleTerrainShaderProvider : IModelShaderProvider
+    {
+        //The character model also has a set of 'SOF' textures. These textures encode three values,
+        //S: Specular Intensity (Red)
+        //O: Ambient Occlusion (Green)
+        //F: Skin / Face regions (Blue)
+        private readonly Texture2D[] SofTextures;
+
+        //the shader that is used to display the character
+        private readonly Shaders.SimpleTerrain shader;
+
+        //constructor, including shaders
+        //This constructor is called from the LoadContent method, the ContentManager is passed in.
+        public SimpleTerrainShaderProvider(Shaders.SimpleTerrain shader, Xen.Ex.Graphics.Content.ModelData model, ContentManager manager, string assetLocation)
+        {
+            //Generate a list of SOF textures for this model
+            List<Texture2D> textures = new List<Texture2D>();
+
+            assetLocation = assetLocation ?? "";
+            if (assetLocation.Length > 0)
+                assetLocation += "/";
+
+            //loop through all the geometries in the model
+            foreach (Xen.Ex.Graphics.Content.MeshData mesh in model.Meshes)
+            {
+                foreach (Xen.Ex.Graphics.Content.GeometryData geom in mesh.Geometry)
+                {
+                    //take the existing texture file name and add 'SOF' on the end, to find the skin/occlusion/face+skin texture
+
+                    //Normally, XNA would add '_0' to the end of every texture asset, so each model has a unique copy of the
+                    //asset (incase a model sets up different processing options for the asset).
+
+                    //Xen supports the ability to set 'Manual Texture Import' property to true.
+                    //When this is set to true, the model will not directly process the textures, it
+                    //will simply assume they are processed. This requires each texture is manually added to the project.
+                    //When this is true, the textures are not renamed.
+
+                    //Try and load a texture with 'SOF' on the end.
+                    Texture2D texture = manager.Load<Texture2D>(assetLocation + geom.MaterialData.TextureFileName + "SOF");
+                    textures.Add(texture);
+                }
+            }
+
+            //store the textures
+            this.SofTextures = textures.ToArray();
+
+            this.shader = shader;
+        }
+
+        //IModelShaderProvider implementation:
+
+        public IShader BeginModel(DrawState state, Xen.Ex.Material.MaterialLightCollection lights)
+        {
+            return null;
+        }
+        public void EndModel(DrawState state)
+        {
+        }
+
+        //get the shader specific to this geometry.
+        public IShader BeginGeometry(DrawState state, Xen.Ex.Graphics.Content.GeometryData geometry)
+        {
+            //setup the shader specifics, including texture, normal map and SOF texture
+            shader.AlbedoTexture = geometry.MaterialData.Texture;
+            shader.NormalTexture = geometry.MaterialData.NormalMap;
+            shader.SofTexture = this.SofTextures[geometry.Index];
+            return shader;
+        }
+    }
+
+
 }

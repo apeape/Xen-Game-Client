@@ -69,6 +69,7 @@
       <Processor>ModelImporter</Processor>
       <ProcessorParameters_ManualTextureImport>True</ProcessorParameters_ManualTextureImport>
       <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_RotationY>0</ProcessorParameters_RotationY>
     </Compile>
     <Compile Include="TerrainTest\terrain_desert_diffuse.png">
       <Name>terrain_desert_diffuse</Name>
@@ -140,10 +141,10 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelImporter</Processor>
       <ProcessorParameters_GenerateTangentFrames>True</ProcessorParameters_GenerateTangentFrames>
-      <ProcessorParameters_RotationX>270</ProcessorParameters_RotationX>
+      <ProcessorParameters_RotationX>0</ProcessorParameters_RotationX>
       <ProcessorParameters_Scale>0.1</ProcessorParameters_Scale>
       <ProcessorParameters_RotationZ>0</ProcessorParameters_RotationZ>
-      <ProcessorParameters_RotationY>180</ProcessorParameters_RotationY>
+      <ProcessorParameters_RotationY>90</ProcessorParameters_RotationY>
       <ProcessorParameters_TextureFormat>Color</ProcessorParameters_TextureFormat>
       <ProcessorParameters_AnimationCompressionTolerancePercent>0.25</ProcessorParameters_AnimationCompressionTolerancePercent>
       <ProcessorParameters_ManualTextureImport>True</ProcessorParameters_ManualTextureImport>
@@ -379,6 +380,13 @@
   <ItemGroup>
     <Compile Include="TerrainTextures\cliffs2.png">
       <Name>cliffs2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="TerrainTest\terrain_desert_diffuseSOF.png">
+      <Name>terrain_desert_diffuseSOF</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
