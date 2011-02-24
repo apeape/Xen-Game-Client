@@ -27,10 +27,10 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.XImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Xen.Ex.ModelImporter">
-      <HintPath>..\..\..\..\xen_2.0_b2\xen\bin\Xen.Ex.ModelImporter\Xen.Ex.ModelImporter.dll</HintPath>
+      <HintPath>..\XenGame\References\Xen\Xen.Ex.ModelImporter.dll</HintPath>
     </Reference>
     <Reference Include="Xen.Ex.ParticleSystemImporter">
-      <HintPath>..\..\..\..\xen_2.0_b2\xen\bin\Xen.Ex.ParticleSystemImporter\Xen.Ex.ParticleSystemImporter.dll</HintPath>
+      <HintPath>..\XenGame\References\Xen\Xen.Ex.ParticleSystemImporter\Xen.Ex.ParticleSystemImporter.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

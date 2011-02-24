@@ -1,6 +1,6 @@
 <?xml version ="1.0" encoding ="utf-8" standalone ="yes"?>
-<particlesystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:noNamespaceSchemaLocation="../../../../bin/Xen.Ex.ParticleSystemImporter/particlesystem.xsd">
+<particlesystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../XenGame/References/Xen/Xen.Ex.ParticleSystemImporter/particlesystem.xsd">
 
 	<!-- 
 		For more detailed explaination of the particle system format, see Tutorial 21, and Fireworks.particles

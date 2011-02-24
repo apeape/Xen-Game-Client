@@ -17,6 +17,8 @@ using Jitter.LinearMath;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Xen.Ex.Material;
+using Jitter;
+using Jitter.Collision;
 
 namespace GameClient
 {
@@ -36,20 +38,26 @@ namespace GameClient
         //public ConvexHullShape ConvexHullShape { get; set; }
         public RigidBody RigidBody { get; set; }
 
+        public LightSourceDrawer PickingDrawer { get; set; }
+        public Vector2 MousePosition { get; set; }
+        public Vector3 RayFromMouse { get; set; }
+
         private Shaders.SimpleTerrain terrainShader;
 
-        public SimpleTerrain(ContentRegister content, Vector3 position, string modelDataName, MaterialLightCollection lights)
+        public SimpleTerrain(ContentRegister content, Vector3 position, string modelDataName)
 		{
             this.modelDataName = modelDataName;
 
 			//Matrix.CreateTranslation(ref position, out this.worldMatrix);
-            this.worldMatrix = Matrix.CreateTranslation(position) * Matrix.CreateScale(2.0f); // needed for physics
+            this.worldMatrix = Matrix.CreateTranslation(position);// *Matrix.CreateScale(2.0f); // needed for physics
 
 			//A ModelInstance can be created without any content...
 			//However it cannot be used until the content is set
 			this.model = new ModelInstance();
 
             this.terrainShader = new Shaders.SimpleTerrain();
+
+            PickingDrawer = new LightSourceDrawer(Vector3.Zero, new Xen.Ex.Geometry.Sphere(new Vector3(3), 8, true, false, false), Color.Red);
 
             //add to the content register and load textures/etc
             content.Add(this);
@@ -69,7 +77,17 @@ namespace GameClient
                 {
                     //using (state.Shader.Push(Material))
                     {
+                        Vector2 mousePos = MousePosition;
+                        Vector3 worldPosition, cameraPosition;
+                        state.Camera.ProjectFromTarget(ref mousePos, 1000, out worldPosition);
+                        state.Camera.GetCameraPosition(out cameraPosition);
+                        RayFromMouse = worldPosition - cameraPosition;
+                        RayFromMouse.Normalize();
+                        RayFromMouse *= 100;
+                        
+                        //PickingDrawer.position = rayFromMouse;
                         //state.RenderState.CurrentRasterState.FillMode = FillMode.WireFrame;
+                        
                         model.Draw(state);
                         //state.RenderState.CurrentRasterState.FillMode = FillMode.Solid;
                     }

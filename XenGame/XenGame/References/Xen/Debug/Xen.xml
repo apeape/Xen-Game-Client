@@ -426,6 +426,11 @@
             Returns true if this application is running an XNA 4 HiDef device
             </summary>
         </member>
+        <member name="P:Xen.Application.IsDebugBuild">
+            <summary>
+            True if this is a Debug build of xen
+            </summary>
+        </member>
         <member name="T:Xen.Application.ApplicationProviderService">
             <summary>
             XNA Service that returns the <see cref="P:Xen.Application.ApplicationProviderService.Application"/>. Useful for warming resources when loading through the content pipeline.
@@ -730,6 +735,9 @@
             </summary>
             <param name="useNormalisedCoordinates">see <see cref="P:Xen.Camera.Camera2D.UseNormalisedCoordinates"/></param>
         </member>
+        <member name="M:Xen.Camera.Camera2D.AssertInUse">
+            <summary>Asserts the camera is not being used by the device</summary>
+        </member>
         <member name="M:Xen.Camera.Camera2D.GetCullingPlanes">
             <summary>
             Get the culling planes for this camera
@@ -834,19 +842,29 @@
             <summary>
             Construct a camera with the given projection, located at the given matrix
             </summary>
-            <param name="projection"></param>
-            <param name="cameraMatrix"></param>
+        </member>
+        <member name="M:Xen.Camera.Camera3D.#ctor(Microsoft.Xna.Framework.Matrix,Microsoft.Xna.Framework.Matrix)">
+            <summary>
+            Construct a camera with a fixed projection matrix, located at the given matrix
+            </summary>
         </member>
         <member name="M:Xen.Camera.Camera3D.#ctor(Xen.Camera.Projection)">
             <summary>
             Construct a camera with the given projection, using an identity matrix for it's position
             </summary>
-            <param name="projection"></param>
+        </member>
+        <member name="M:Xen.Camera.Camera3D.#ctor(Microsoft.Xna.Framework.Matrix)">
+            <summary>
+            Construct a camera with a fixed projection matrix, using an identity matrix for it's position
+            </summary>
         </member>
         <member name="M:Xen.Camera.Camera3D.#ctor">
             <summary>
             Construct a camera with a default camera projection, using an identity matrix for it's position
             </summary>
+        </member>
+        <member name="M:Xen.Camera.Camera3D.AssertInUse">
+            <summary>Asserts the camera is not being used by the device</summary>
         </member>
         <member name="M:Xen.Camera.Camera3D.LookAt(Microsoft.Xna.Framework.Vector3@,Microsoft.Xna.Framework.Vector3@,Microsoft.Xna.Framework.Vector3@)">
             <summary>
@@ -1482,7 +1500,10 @@
         <member name="M:Xen.DrawState.op_Multiply(Xen.DrawState,Microsoft.Xna.Framework.Vector3)">
             <summary>Helper method used to wrap a PushMultiply method</summary>
         </member>
-        <member name="M:Xen.DrawState.op_Explicit(Xen.DrawState)~Microsoft.Xna.Framework.Graphics.GraphicsDevice">
+        <member name="M:Xen.DrawState.op_Addition(Xen.DrawState,Xen.IBeginEndDraw)">
+            <summary>Helper method used to wrap a IBeginEndDraw begin/end draw object</summary>
+        </member>
+        <member name="M:Xen.DrawState.op_Implicit(Xen.DrawState)~Microsoft.Xna.Framework.Graphics.GraphicsDevice">
             <summary>
             Get the GraphicsDevice from the DrawState
             </summary>
@@ -1600,6 +1621,14 @@
             Total application time in seconds
             </summary>
         </member>
+        <member name="T:Xen.DrawState.UsingPopBeginEndDraw">
+            <summary>
+            Structure used for a using block with a + operator IBeginEndDraw object
+            </summary>
+        </member>
+        <member name="M:Xen.DrawState.UsingPopBeginEndDraw.Dispose">
+            <summary>Invokes the Pop metohd</summary>
+        </member>
         <member name="T:Xen.Camera.ControlledCamera3D">
             <summary>
             Base class for a camera that is controlled by <see cref="T:Xen.Input.PlayerInput"/>
@@ -1709,6 +1738,9 @@
             </summary>
             <remarks>This class may be extended to implement more complex forms of projection</remarks>
         </member>
+        <member name="M:Xen.Camera.Projection.AssertInUse">
+            <summary>Asserts the camera is not being used by the device</summary>
+        </member>
         <member name="M:Xen.Camera.Projection.GetProjectionMatrix(Microsoft.Xna.Framework.Matrix@,Microsoft.Xna.Framework.Vector2@,System.Int32@)">
             <summary>
             Get the current projection matrix, if it has changed (compared to changeIndex)
@@ -1737,6 +1769,11 @@
             <param name="nearPlane">Distance to the near clipping plane</param>
             <param name="farPlane">Distance to the far clipping plane</param>
             <param name="aspectRatio">Aspect ratio of the projection</param>
+        </member>
+        <member name="M:Xen.Camera.Projection.SetDirty">
+            <summary>
+            Marks the projection matrix as dirty
+            </summary>
         </member>
         <member name="M:Xen.Camera.Projection.CalculateProjectionMatrix(Microsoft.Xna.Framework.Matrix@)">
             <summary>
@@ -1820,6 +1857,24 @@
             <para>In short, keep the NearClip value as large as you can. (default value is 1)</para>
             </remarks>
         </member>
+        <member name="T:Xen.Camera.FixedProjection">
+            <summary>
+            Use this projection class when you wish to specifiy your own projection matrix manually
+            </summary>
+        </member>
+        <member name="M:Xen.Camera.FixedProjection.#ctor(Microsoft.Xna.Framework.Matrix)">
+            <summary>
+            Create a fixed projection, using a user specified projection matrix
+            </summary>
+        </member>
+        <member name="M:Xen.Camera.FixedProjection.SetProjectionMatrix(Microsoft.Xna.Framework.Matrix@)">
+            <summary>
+            Set the projection matrix
+            </summary>
+        </member>
+        <member name="M:Xen.Camera.FixedProjection.CalculateProjectionMatrix(Microsoft.Xna.Framework.Matrix@)">
+            <summary></summary>
+        </member>
         <member name="T:Xen.IContentRegister">
             <summary>
             Interface to a <see cref="T:Xen.ContentRegister"/>
@@ -1856,6 +1911,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Xen.ContentState.GetShaderAttributeNameUniqueID(System.String)">
+            <summary>
+            Gets the unique ID index for a non-global shader attribute. For use in a call to IShader.SetAttribute, IShader.SetTexture or IShader.SetSamplerState"/>
+            </summary>
+            <param name="name">case sensitive name of the shader attribute</param>
+            <returns>globally unique index of the attribute name</returns>
+        </member>
         <member name="M:Xen.ContentState.Load``1(System.String)">
             <summary>
             Loads an asset that has been processed by the Content Pipeline.
@@ -1868,6 +1930,17 @@
             <summary>
             <para>The the item passed in will be drawn at the start of the next frame, before the main application Draw method is called</para>
             <para>Use this method to dynamically create rendererd resources at load-time</para>
+            </summary>
+        </member>
+        <member name="P:Xen.ContentState.ShaderGlobals">
+            <summary>
+            Gets the shader system global interface
+            </summary>
+        </member>
+        <member name="P:Xen.ContentState.GraphicsDevice">
+            <summary>
+            <para>Gets the GraphicsDevice associated with this content state object</para>
+            <para>Note; This method is provided for convienience. The ContentState class implicitly casts to GraphicsDevice</para>
             </summary>
         </member>
         <member name="P:Xen.ContentState.ContentRegister">
@@ -3477,6 +3550,19 @@
             <param name="topLeft"></param>
             <param name="bottomRight"></param>
         </member>
+        <member name="M:Xen.Graphics.Modifier.ViewportModifier.SetViewport(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Set the size of the viewport rectangle
+            </summary>
+        </member>
+        <member name="M:Xen.Graphics.Modifier.ViewportModifier.Begin(Xen.DrawState)">
+            <summary>Set the viewport</summary>
+        </member>
+        <member name="M:Xen.Graphics.Modifier.ViewportModifier.Xen#IBeginEndDraw#End(Xen.DrawState)">
+            <summary>
+            Reset the viewport
+            </summary>
+        </member>
         <member name="P:Xen.Graphics.Modifier.ViewportModifier.Enabled">
             <summary>
             Gets/Sets if this modified is enabled
@@ -3562,6 +3648,21 @@
             </summary>
             <param name="bottomRight"></param>
             <param name="topLeft"></param>
+        </member>
+        <member name="M:Xen.Graphics.Modifier.ScissorModifier.SetScissorRectangle(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Set the scissor rectangle
+            </summary>
+        </member>
+        <member name="M:Xen.Graphics.Modifier.ScissorModifier.Begin(Xen.DrawState)">
+            <summary>
+            Set the scissor rectangle
+            </summary>
+        </member>
+        <member name="M:Xen.Graphics.Modifier.ScissorModifier.End(Xen.DrawState)">
+            <summary>
+            Reset the scissor rectangle
+            </summary>
         </member>
         <member name="P:Xen.Graphics.Modifier.ScissorModifier.Enabled">
             <summary>
@@ -5944,6 +6045,17 @@
             Structure storing the state of a digital (on/off) button
             </summary>
         </member>
+        <member name="M:Xen.Input.State.Button.IsPressedRepeats(Xen.UpdateState,System.Single,System.Single)">
+            <summary>
+            <para>Returns true for the single frame when a button is pressed, including repeating presses if the button is held down for more than <paramref name="repeatAfterSeconds"/>.</para>
+            <para>Repeats occur every <paramref name="repeatEverySeconds"/> seconds after the first repeat.</para>
+            <para>This function should only be used within a 60hz update loop.</para>
+            </summary>
+            <param name="state"></param>
+            <param name="repeatEverySeconds"><para>The function will return true every X seconds while the button is held down.</para><para>A sensible starting value is 0.1</para></param>
+            <param name="repeatAfterSeconds"><para>The number of seconds the button is held before the first repeat occurs.</para><para>Typically, this value should be larger than <paramref name="repeatEverySeconds"/></para><para>A sensible starting value is 0.15</para></param>
+            <returns></returns>
+        </member>
         <member name="M:Xen.Input.State.Button.op_Implicit(Xen.Input.State.Button)~System.Boolean">
             <summary>
             Implicit conversion to a boolean (equivalent of <see cref="P:Xen.Input.State.Button.IsDown"/>)
@@ -6912,52 +7024,7 @@
         <member name="F:Xen.Graphics.DrawStatistics.PointsDrawn">
             <summary></summary>
         </member>
-        <member name="F:Xen.Graphics.DrawStatistics.InstancesDrawBatchCount">
-            <summary></summary>
-        </member>
         <member name="F:Xen.Graphics.DrawStatistics.InstancesDrawn">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.VertexShaderConstantBytesSetTotalCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.PixelShaderConstantBytesSetTotalCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.VertexShaderConstantBytesSetCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.PixelShaderConstantBytesSetCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderBindCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.VertexShaderBoundWithKnownInstructionsCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.VertexShaderBoundWithPreShaderCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.VertexShaderApproximateInstructionsTotal">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.VertexShaderApproximatePreshaderInstructionsTotal">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.PixelShaderBoundWithKnownInstructionsCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.PixelShaderBoundWithPreShaderCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.PixelShaderApproximateInstructionsTotal">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.PixelShaderApproximatePreshaderInstructionsTotal">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderRebindCount">
             <summary></summary>
         </member>
         <member name="F:Xen.Graphics.DrawStatistics.DrawTargetsDrawCount">
@@ -6969,144 +7036,6 @@
         <member name="F:Xen.Graphics.DrawStatistics.BinaryShadersCreated">
             <summary></summary>
         </member>
-        <member name="F:Xen.Graphics.DrawStatistics.BinaryShadersSet">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DeferredDrawCallsMade">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DeferredDrawCallsCulled">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantMatrixValueSetCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantMatrixInverseCalculateCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantMatrixTransposeCalculateCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantMatrixMultiplyCalculateCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantMatrixViewChangedCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantMatrixProjectionChangedCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantMatrixSetWorldMatrixCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantMatrixPushWorldMatrixCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantMatrixPushTranslateWorldMatrixCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantMatrixPushMultiplyTranslateWorldMatrixCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantMatrixPushMultiplyWorldMatrixCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantMatrixGlobalAssignCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantVectorGlobalAssignCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantSingleGlobalAssignCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantArrayGlobalAssignCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantArrayGlobalAssignTotalBytes">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderConstantTextureGlobalAssignCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderMatrixGlobalSetCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderVectorGlobalSetCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderSingleGlobalSetCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderTextureGlobalSetCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderArrayGlobalSetCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderArrayGlobalSetBytesTotal">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderArrayGlobalGetCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderMatrixGlobalGetCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderVectorGlobalGetCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderSingleGlobalGetCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.ShaderTextureGlobalGetCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.SetCameraCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.BeginGetGraphicsDeviceCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DirtyRenderStateCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DirtyRenderShadersStateCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DirtyRenderVerticesAndIndicesStateCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DirtyRenderTexturesStateCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DrawXnaVerticesCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DefaultCullerTestSphereCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DefaultCullerTestSphereCulledCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DefaultCullerTestSpherePreCulledCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DefaultCullerTestSpherePostCulledCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DefaultCullerTestBoxCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DefaultCullerTestBoxCulledCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DefaultCullerTestBoxPreCulledCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.DefaultCullerTestBoxPostCulledCount">
-            <summary></summary>
-        </member>
         <member name="F:Xen.Graphics.DrawStatistics.BufferClearTargetCount">
             <summary></summary>
         </member>
@@ -7114,18 +7043,6 @@
             <summary></summary>
         </member>
         <member name="F:Xen.Graphics.DrawStatistics.BufferClearStencilCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.RenderStateAlphaBlendChangedCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.RenderStateAlphaTestChangedCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.RenderStateRasterChangedCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.RenderStateStencilTestChangedCount">
             <summary></summary>
         </member>
         <member name="F:Xen.Graphics.DrawStatistics.VertexBufferByesCopied">
@@ -7138,27 +7055,6 @@
             <summary></summary>
         </member>
         <member name="F:Xen.Graphics.DrawStatistics.DynamicIndexBufferByesCopied">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.TextureSamplerAddressStateChanged">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.TextureSamplerFilterStateChanged">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.TextureUnitTextureChanged">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.VertexTextureUnitTextureChanged">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.BoundTextureCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.BoundVertexTextureCount">
-            <summary></summary>
-        </member>
-        <member name="F:Xen.Graphics.DrawStatistics.BoundTextureCountTotalSamples">
             <summary></summary>
         </member>
         <member name="T:Xen.Threading.IAction">

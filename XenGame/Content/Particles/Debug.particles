@@ -1,6 +1,6 @@
 <?xml version ="1.0" encoding ="utf-8" standalone ="yes"?>
-<particlesystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:noNamespaceSchemaLocation="../../../../bin/Xen.Ex.ParticleSystemImporter/particlesystem.xsd">
+<particlesystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../XenGame/References/Xen/Xen.Ex.ParticleSystemImporter/particlesystem.xsd">
 
 	<system frame_rate="60hz">
 		<frame>

@@ -185,13 +185,13 @@
             Base shader class, provides empty implementations of the IShader methods, to reduce generated code
             </summary>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.Begin(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Boolean,System.Boolean,Xen.Graphics.ShaderSystem.ShaderExtension)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.BeginImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Boolean,System.Boolean,Xen.Graphics.ShaderSystem.ShaderExtension)">
             <summary>This method is called by the shader system, do not call this method directly.</summary>
         </member>
         <member name="M:Xen.Graphics.ShaderSystem.BaseShader.Xen#Graphics#IShader#Begin(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Boolean,System.Boolean,Xen.Graphics.ShaderSystem.ShaderExtension)">
             <summary>This method is called by the shader system, do not call this method directly.</summary>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.GetExtensionSupport(System.Boolean@,System.Boolean@)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.GetExtensionSupportImpl(System.Boolean@,System.Boolean@)">
             <summary>Returns value to indicate if this shader instance supports animation blending or instancing</summary>
         </member>
         <member name="M:Xen.Graphics.ShaderSystem.BaseShader.Changed">
@@ -200,7 +200,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,System.Boolean)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttributeImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,System.Boolean)">
             <summary>
             Set a shader attribute
             </summary>
@@ -209,7 +209,7 @@
             <param name="value">value to set</param>
             <returns>true if the value was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Matrix@)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttributeImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Matrix@)">
             <summary>
             Set a shader attribute
             </summary>
@@ -218,7 +218,7 @@
             <param name="value">value to set</param>
             <returns>true if the value was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector4@)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttributeImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector4@)">
             <summary>
             Set a shader attribute
             </summary>
@@ -227,7 +227,7 @@
             <param name="value">value to set</param>
             <returns>true if the value was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector3@)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttributeImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector3@)">
             <summary>
             Set a shader attribute
             </summary>
@@ -236,7 +236,7 @@
             <param name="value">value to set</param>
             <returns>true if the value was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector2@)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttributeImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector2@)">
             <summary>
             Set a shader attribute
             </summary>
@@ -245,7 +245,7 @@
             <param name="value">value to set</param>
             <returns>true if the value was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,System.Single)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttributeImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,System.Single)">
             <summary>
             Set a shader attribute
             </summary>
@@ -254,7 +254,7 @@
             <param name="value">value to set</param>
             <returns>true if the value was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Matrix[])">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttributeImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Matrix[])">
             <summary>
             Set a shader attribute
             </summary>
@@ -263,7 +263,7 @@
             <param name="value">value to set</param>
             <returns>true if the value was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector4[])">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttributeImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector4[])">
             <summary>
             Set a shader attribute
             </summary>
@@ -272,7 +272,7 @@
             <param name="value">value to set</param>
             <returns>true if the value was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector3[])">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttributeImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector3[])">
             <summary>
             Set a shader attribute
             </summary>
@@ -281,7 +281,7 @@
             <param name="value">value to set</param>
             <returns>true if the value was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector2[])">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttributeImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Vector2[])">
             <summary>
             Set a shader attribute
             </summary>
@@ -290,7 +290,7 @@
             <param name="value">value to set</param>
             <returns>true if the value was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttribute(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,System.Single[])">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetAttributeImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,System.Single[])">
             <summary>
             Set a shader attribute
             </summary>
@@ -299,7 +299,7 @@
             <param name="value">value to set</param>
             <returns>true if the value was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetTexture(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.Texture)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetTextureImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.Texture)">
             <summary>
             Set a shader texture
             </summary>
@@ -308,7 +308,7 @@
             <param name="texture">texture to set</param>
             <returns>true if the texture was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetTexture(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.Texture2D)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetTextureImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.Texture2D)">
             <summary>
             Set a shader texture
             </summary>
@@ -317,7 +317,7 @@
             <param name="texture">texture to set</param>
             <returns>true if the texture was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetTexture(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.Texture3D)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetTextureImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.Texture3D)">
             <summary>
             Set a shader texture
             </summary>
@@ -326,7 +326,7 @@
             <param name="texture">texture to set</param>
             <returns>true if the texture was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetTexture(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.TextureCube)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetTextureImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Microsoft.Xna.Framework.Graphics.TextureCube)">
             <summary>
             Set a shader texture
             </summary>
@@ -335,7 +335,7 @@
             <param name="texture">texture to set</param>
             <returns>true if the texture was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetSamplerState(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Xen.Graphics.TextureSamplerState)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.SetSamplerStateImpl(Xen.Graphics.ShaderSystem.ShaderSystemBase,System.Int32,Xen.Graphics.TextureSamplerState)">
             <summary>
             Set a shader texture sampler state
             </summary>
@@ -344,15 +344,15 @@
             <param name="sampler">sampler state to set</param>
             <returns>true if the sampler state was set</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.GetVertexInputCount">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.GetVertexInputCountImpl">
             <summary>
             Get the number of vertex inputs required by the shader
             </summary>
             <returns>Returns the number of vertex inputs required by the shader</returns>
         </member>
-        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.GetVertexInput(System.Int32,Microsoft.Xna.Framework.Graphics.VertexElementUsage@,System.Int32@)">
+        <member name="M:Xen.Graphics.ShaderSystem.BaseShader.GetVertexInputImpl(System.Int32,Microsoft.Xna.Framework.Graphics.VertexElementUsage@,System.Int32@)">
             <summary>
-            Gets a vertex input required by the shader, by index. <see cref="M:Xen.Graphics.ShaderSystem.BaseShader.GetVertexInputCount"/> to get the number of inputs required.
+            Gets a vertex input required by the shader, by index. <see cref="M:Xen.Graphics.IShader.GetVertexInputCount"/> to get the number of inputs required.
             </summary>
             <param name="index">Index of the element</param>
             <param name="elementUsage">Gets the usage type of the vertex element (eg, <see cref="F:Microsoft.Xna.Framework.Graphics.VertexElementUsage.Position"/>)</param>
@@ -366,7 +366,7 @@
         </member>
         <member name="M:Xen.Graphics.ShaderSystem.BaseShader.Xen#Graphics#IShader#GetVertexInput(System.Int32,Microsoft.Xna.Framework.Graphics.VertexElementUsage@,System.Int32@)">
             <summary>
-            Gets a vertex input required by the shader, by index. <see cref="M:Xen.Graphics.ShaderSystem.BaseShader.GetVertexInputCount"/> to get the number of inputs required.
+            Gets a vertex input required by the shader, by index. <see cref="M:Xen.Graphics.IShader.GetVertexInputCount"/> to get the number of inputs required.
             </summary>
             <param name="index">Index of the element</param>
             <param name="elementUsage">Gets the usage type of the vertex element (eg, <see cref="F:Microsoft.Xna.Framework.Graphics.VertexElementUsage.Position"/>)</param>
@@ -383,6 +383,11 @@
             Warm shader implementation
             </summary>
             <param name="state"></param>
+        </member>
+        <member name="P:Xen.Graphics.ShaderSystem.BaseShader.GraphicsID">
+            <summary>
+            Gets the graphics ID associated with this instance (debug only)
+            </summary>
         </member>
         <member name="T:Xen.Graphics.ShaderSystem.ShaderEffect">
             <summary>

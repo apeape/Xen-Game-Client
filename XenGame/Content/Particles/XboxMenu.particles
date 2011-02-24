@@ -1,0 +1,139 @@
+<?xml version ="1.0" encoding ="utf-8" standalone ="yes"?>
+<particlesystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../bin/Xen.Ex.ParticleSystemImporter/particlesystem.xsd">
+
+	<system frame_rate="60hz">
+
+		<frame>
+			<loop count="10">
+				<emit type="spark" life="20" life_variance = "0"/>
+			</loop>
+		</frame>
+	</system>
+
+	<particle name="spark" blend="additive_saturate" texture="fire.png">
+		<logic>
+			<once>
+				
+				<rand target="local0" arg0="-1" arg1="1"/>
+				<rand target="local1" arg0="-1" arg1="1"/>
+				<set target="local2" arg0="0"/>
+
+				<if_greater arg0="local1" arg1="0">
+					<set target="local2" arg0="1"/>
+				</if_greater>
+				
+				<!-- start on one of the sides -->
+				<if_greater arg0="local0" arg1="0">
+					<rand target="position.x" arg0="0" arg1="1"/>
+					<set target ="position.y" arg0="local2"/>
+				</if_greater>
+				<if_lessequal arg0="local0" arg1="0">
+					<rand target="position.y" arg0="0" arg1="1"/>
+					<set target ="position.x" arg0="local2"/>
+				</if_lessequal>
+
+				<!-- screen width/height in global2/global3-->
+				<mul target="position.x" arg0="global2"/>
+				<mul target="position.y" arg0="global3"/>
+
+				<rand_smooth target="velocity.x" arg0="-10" arg1="10"/>
+				<rand_smooth target="velocity.y" arg0="-10" arg1="10"/>
+
+				<!-- offset the points will move towards (the shape of the selection) -->
+				<rand target="user0" arg0="-60" arg1="0"/>
+				<rand target="user1" arg0="-10" arg1="10"/>
+
+				<if_less arg0="user0" arg1="-20">
+					<!-- thin out the back of the arrow a bit, by making it longer-->
+					<abs target="local0" arg0="user1"/>
+					<if_greater arg0="local0" arg1="5">
+						<rand target="user0" arg0="-100" arg1="-60"/>
+						<rand target="user1" arg0="-5" arg1="5"/>
+					</if_greater>
+				</if_less>
+				
+				<!-- make the points look like an arrow -->
+				<if_greater arg0="user0" arg1="-10">
+
+					<add target="local0" arg0="user0" arg1="user1"/>
+					<if_greater arg0="local0" arg1="0">
+						<sub target="user0" arg0="0" arg1="user0"/>
+						<sub target="user1" arg0="0" arg1="user1"/>
+						<sub target="user0" arg0="20"/>
+						<add target="user1" arg0="20"/>
+					</if_greater>
+
+					<if_less arg0="local0" arg1="0">
+
+						<sub target="local0" arg0="user0" arg1="user1"/>
+						<if_greater arg0="local0" arg1="0">
+							<sub target="user0" arg0="0" arg1="user0"/>
+							<sub target="user1" arg0="0" arg1="user1"/>
+							<sub target="user0" arg0="20"/>
+							<sub target="user1" arg0="20"/>
+						</if_greater>
+						
+					</if_less>
+					
+				</if_greater>
+				
+				<rand target="user2" arg0="-5" arg1="5"/>
+				<rand target="user3" arg0="-5" arg1="5"/>
+				
+				<set target="size" arg0="1"/>
+				<set target="alpha" arg0="0.25"/>
+			</once>
+			<frame>
+				<!-- pull to the target -->
+				<sub target="local0" arg0="global0" arg1="position.x"/>
+				<sub target="local1" arg0="global1" arg1="position.y"/>
+				<add target="local0" arg0="user0"/>
+				<add target="local1" arg0="user1"/>
+				
+				<!-- get the distance to the point -->
+				<set target="local2" arg0="0"/>
+				<madd target="local2" arg0="local0" arg1="local0"/>
+				<madd target="local2" arg0="local1" arg1="local1"/>
+
+				<div target="local2" arg0="50" arg1="local2"/>
+				<sub target="local2" arg0="0.1"/>
+				<min target="local2" arg0="1" arg1="local2"/>
+				<max target="local2" arg0="0.0005" arg1="local2"/>
+				
+				<mul target="local0" arg0="local2"/>
+				<mul target="local1" arg0="local2"/>
+
+				<set target="alpha" arg0="local2"/>
+				<mul target="alpha" arg0="alpha"/>
+				<mul target="alpha" arg0="alpha"/>
+				<mul target="alpha" arg0="0.5"/>
+				<add target="alpha" arg0="0.25"/>
+
+				<mul target="local0" arg0="10"/>
+				<mul target="local1" arg0="10"/>
+
+				<mul target="user2" arg0="0.975"/>
+				<mul target="user3" arg0="0.975"/>
+				
+				<add target="velocity.x" arg0="user2"/>
+				<add target="velocity.y" arg0="user3"/>
+				
+				<mul target="velocity.x" arg0="0.99"/>
+				<mul target="velocity.y" arg0="0.99"/>
+				
+				<add target="velocity.x" arg0="local0"/>
+				<add target="velocity.y" arg0="local1"/>
+
+				<!-- sparkle! -->
+				<rand target="local0" arg0="0" arg1="100"/>
+				<if_greater arg0="local0" arg1="99">
+					<sub target="local0" arg0="99.5"/>
+					<add target="alpha" arg0="local0"/>
+				</if_greater>
+			</frame>
+		</logic>
+	</particle>
+
+
+</particlesystem>

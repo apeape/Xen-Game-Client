@@ -119,17 +119,20 @@ namespace GameClient
 
         // simple terrain
         SimpleTerrain simpleTerrain;
-        MaterialLightCollection simpleTerrainLights;
 
         // xpf gui
         //private SpriteBatchAdapter spriteBatchAdapter;
         //private RootElement rootElement;
 
         // jitter physics simulation
-        World world;
+        private World world;
 
         protected override void Initialise()
         {
+            // initialize physics simulation
+            CollisionSystemSAP collision = new CollisionSystemSAP();
+            world = new World(collision);
+
             //setup the view camera first
             //--------------------------------------
 
@@ -207,8 +210,9 @@ namespace GameClient
             drawToRenderTarget.Add(modelPhysics);
 
             // setup simple terrain
-            simpleTerrain = new SimpleTerrain(this.Content, Vector3.Zero, @"TerrainTest/terrain_desert", simpleTerrainLights);
+            simpleTerrain = new SimpleTerrain(this.Content, Vector3.Zero, @"TerrainTest/terrain_desert");
             drawToRenderTarget.Add(simpleTerrain);
+            drawToRenderTarget.Add(simpleTerrain.PickingDrawer); // preview picking
 
             //setup the shaders
             this.characterRenderShader = new Shaders.Character();
@@ -250,10 +254,6 @@ namespace GameClient
             //add a statistics overlay.
             drawStats = new Xen.Ex.Graphics2D.Statistics.DrawStatisticsDisplay(this.UpdateManager);
             drawToScreen.Add(drawStats);
-
-            // initialize physics simulation
-            CollisionSystemSAP collision = new CollisionSystemSAP();
-            world = new World(collision);
         }
 
         protected override void Frame(FrameState state)
@@ -329,7 +329,6 @@ namespace GameClient
             state.ShaderGlobals.SetShaderGlobal("ShadowTexture", shadowMap.GetTexture());
 
 
-
             //draw the main render target
             drawToRenderTarget.Draw(state);
 
@@ -357,8 +356,17 @@ namespace GameClient
             //rootElement.Draw();
         }
 
+        private bool RaycastCallback(RigidBody body, JVector normal, float fraction)
+        {
+            return true;
+            //if (body.IsStatic) return false;
+            //else return true;
+        }
+
         protected override void Update(UpdateState state)
         {
+            // update mouse position for terrain picking
+            simpleTerrain.MousePosition = new Vector2(state.MouseState.X, state.MouseState.Y);
             //this.rootElement.Update();
 
             JVector targetVelocity = JVector.Zero;
@@ -376,11 +384,22 @@ namespace GameClient
             // update physics
             world.Step(state.DeltaTimeSeconds,
                 false); // multithreaded
-            modelPhysics.Position = new Vector3(
-                world.RigidBodies[0].Position.X,
-                world.RigidBodies[0].Position.Y,
-                world.RigidBodies[0].Position.Z);
+            modelPhysics.Position = world.RigidBodies[0].Position.ToVector3();
+            //modelPhysics.Position = simpleTerrain.PickingDrawer.position; // test
             modelPhysics.Orientation = world.RigidBodies[0].Orientation;
+
+            // mouse picking
+            float fraction;
+            JVector hitNormal;
+            Vector3 hitPoint;
+            RigidBody grabBody;
+            bool result = world.CollisionSystem.Raycast(viewCamera.Position.ToJVector(),
+                simpleTerrain.RayFromMouse.ToJVector(), RaycastCallback, out grabBody, out hitNormal, out fraction);
+            if (result && grabBody == simpleTerrain.RigidBody)
+            {
+                hitPoint = viewCamera.Position + fraction * simpleTerrain.RayFromMouse;
+                simpleTerrain.PickingDrawer.position = hitPoint;
+            }
 
             configEditor.Instance = this.renderConfig;
 
@@ -835,7 +854,7 @@ namespace GameClient
             //generate the rotation matrix for the object.
             //Matrix basis = new Matrix(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1); //xna_dude model is on his side
             //Matrix basis = Orientation.ToXNAMatrix() * Matrix.CreateRotationX(-MathHelper.Pi / 4) * Matrix.CreateTranslation(Position);
-            Matrix basis = Orientation.ToXNAMatrix() * Matrix.CreateTranslation(Position);
+            Matrix basis = Orientation.ToXNAMatrix() * Matrix.CreateTranslation(Position / 2); // scale correction for physics
             /*Matrix basis = new Matrix(Orientation.M11, Orientation.M12, Orientation.M13, 0.0f,
                         Orientation.M21, Orientation.M22, Orientation.M23, 0.0f,
                         Orientation.M31, Orientation.M32, Orientation.M33, 0.0f,
@@ -963,10 +982,10 @@ namespace GameClient
 
 
     //this class simply draws the sphere representing the lights
-    class LightSourceDrawer : IDraw
+    public class LightSourceDrawer : IDraw
     {
         private IDraw geometry;
-        private Vector3 position;
+        public Vector3 position { get; set; }
         private Color lightColour;
 
         public LightSourceDrawer(Vector3 position, IDraw geometry, Color lightColour)
@@ -978,7 +997,8 @@ namespace GameClient
 
         public void Draw(DrawState state)
         {
-            using (state.WorldMatrix.PushTranslateMultiply(ref position))
+            var pos = position;
+            using (state.WorldMatrix.PushTranslateMultiply(ref pos))
             {
                 DrawSphere(state);
             }
@@ -989,13 +1009,15 @@ namespace GameClient
             //draw the geometry with a solid colour shader
             if (geometry.CullTest(state))
             {
-                Xen.Ex.Shaders.FillSolidColour shader = state.GetShader<Xen.Ex.Shaders.FillSolidColour>();
+                var shader = state.GetShader<Xen.Ex.Shaders.FillSolidColour>();
 
                 shader.FillColour = lightColour.ToVector4();
 
                 using (state.Shader.Push(shader))
                 {
+                    //state.RenderState.CurrentRasterState.FillMode = FillMode.WireFrame;
                     geometry.Draw(state);
+                    //state.RenderState.CurrentRasterState.FillMode = FillMode.Solid;
                 }
             }
         }

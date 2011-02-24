@@ -115,15 +115,15 @@
     </Reference>
     <Reference Include="Xen, Version=1.0.2.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>References\Xen\Debug\Xen.dll</HintPath>
+      <HintPath>References\Xen\Xen.dll</HintPath>
     </Reference>
     <Reference Include="Xen.Ex, Version=1.0.2.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>References\Xen\Debug\Xen.Ex.dll</HintPath>
+      <HintPath>References\Xen\Xen.Ex.dll</HintPath>
     </Reference>
     <Reference Include="Xen.Graphics.ShaderSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ea32b475b7afa3fa, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>References\Xen\Debug\Xen.Graphics.ShaderSystem.dll</HintPath>
+      <HintPath>References\Xen\Xen.Graphics.ShaderSystem\Xen.Graphics.ShaderSystem.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

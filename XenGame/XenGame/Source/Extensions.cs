@@ -220,6 +220,11 @@ namespace GameClient
             return new Vector3(v.getX(), v.getY(), v.getZ());
         }
 
+        public static Vector3 ToVector3(this JVector v)
+        {
+            return new Vector3(v.X, v.Y, v.Z);
+        }
+
         public static JVector ToJVector(this Vector3DFloat v)
         {
             return new JVector(v.getX(), v.getY(), v.getZ());

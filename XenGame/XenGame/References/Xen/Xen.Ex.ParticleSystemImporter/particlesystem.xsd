@@ -1,0 +1,783 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:simpleType name="blend" id="blend">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="additive">
+				<xs:annotation>
+					<xs:documentation>
+						Additive blending, where colours are added together
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="additive_saturate">
+				<xs:annotation>
+					<xs:documentation>
+						Particle colour is multiplied by (1-background colour). Reduces 'whiteout'. Eg, 0.5 + 0.5 = 0.75
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="subtract">
+				<xs:annotation>
+					<xs:documentation>
+						Particle colour is subtracted from the background
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="subtract_saturate">
+				<xs:annotation>
+					<xs:documentation>
+						Particle colour * background colour is subtracted from the background colour
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="alpha">
+				<xs:annotation>
+					<xs:documentation>
+						Alpha blending, where colours are blended using interpolation
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="framerate" id="framerate">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="15hz"/>
+			<xs:enumeration value="30hz"/>
+			<xs:enumeration value="60hz"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="precision" id="precision">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="16bit"/>
+			<xs:enumeration value="32bit"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="set_target" id="set_target">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="position.x">
+				<xs:annotation>
+					<xs:documentation>X coordinate of the particle</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="position.y">
+				<xs:annotation>
+					<xs:documentation>Y coordinate of the particle</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="position.z">
+				<xs:annotation>
+					<xs:documentation>Z coordinate of the particle</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="velocity.x">
+				<xs:annotation>
+					<xs:documentation>X velocity of the particle</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="velocity.y">
+				<xs:annotation>
+					<xs:documentation>Y velocity of the particle</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="velocity.z">
+				<xs:annotation>
+					<xs:documentation>Z velocity of the particle</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="size">
+				<xs:annotation>
+					<xs:documentation>size of the particle</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="rotation">
+				<xs:annotation>
+					<xs:documentation>rotation of the particle (in radians)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+
+			<xs:enumeration value="user0">
+				<xs:annotation>
+					<xs:documentation>A user defined value (this value is stored per-particle)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="user1">
+				<xs:annotation>
+					<xs:documentation>A user defined value (this value is stored per-particle)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="user2">
+				<xs:annotation>
+					<xs:documentation>A user defined value (this value is stored per-particle)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="user3">
+				<xs:annotation>
+					<xs:documentation>A user defined value (this value is stored per-particle)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="red">
+				<xs:annotation>
+					<xs:documentation>Red RGBA colour value of the particle</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="blue">
+				<xs:annotation>
+					<xs:documentation>Blue RGBA colour value of the particle</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="green">
+				<xs:annotation>
+					<xs:documentation>Green RGBA colour value of the particle</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="alpha">
+				<xs:annotation>
+					<xs:documentation>Alpha RGBA colour value of the particle (transparency)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+
+			<xs:enumeration value="local0">
+				<xs:annotation>
+					<xs:documentation>A user defined local value (this value is not stored)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="local1">
+				<xs:annotation>
+					<xs:documentation>A user defined local value (this value is not stored)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="local2">
+				<xs:annotation>
+					<xs:documentation>A user defined local value (this value is not stored)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="local3">
+				<xs:annotation>
+					<xs:documentation>A user defined local value (this value is not stored)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="get_target" id="get_target">
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="set_target"/>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="age">
+						<xs:annotation>
+							<xs:documentation>Age of the particle in seconds (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="life">
+						<xs:annotation>
+							<xs:documentation>Life length of the particle in seconds (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="delta_time">
+						<xs:annotation>
+							<xs:documentation>time step in seconds (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+
+					<!-- should be enough :-) -->
+					<xs:enumeration value="global0">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global1">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global2">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global3">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global4">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global5">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global6">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global7">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global8">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global9">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global10">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global11">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global12">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global13">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global14">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="global15">
+						<xs:annotation>
+							<xs:documentation>A global value defined by the particle system (readonly)</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+
+	<xs:simpleType name="value">
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal">
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="get_target"/>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+
+	<xs:complexType name="argtarget">
+		<xs:attribute name="target" type="set_target" use="required">
+			<xs:annotation>
+				<xs:documentation>Output target</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="arg0" type="value" use="required">
+			<xs:annotation>
+				<xs:documentation>First argument</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="arg1" type="value" use="optional">
+			<xs:annotation>
+				<xs:documentation>Second argument (optional)</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="argtarget1">
+		<xs:attribute name="target" type="set_target" use="required">
+			<xs:annotation>
+				<xs:documentation>Output target</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="arg0" type="value" use="required">
+			<xs:annotation>
+				<xs:documentation>Method argument</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="argtarget2">
+		<xs:attribute name="target" type="set_target" use="required">
+			<xs:annotation>
+				<xs:documentation>Output target</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="arg0" type="value" use="required">
+			<xs:annotation>
+				<xs:documentation>First argument</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="arg1" type="value" use="required">
+			<xs:annotation>
+				<xs:documentation>Second argument</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="oplist_system">
+		<xs:choice maxOccurs="unbounded" minOccurs="1">
+			<xs:element maxOccurs="unbounded" name="loop" type="loop_system"/>
+			<xs:element maxOccurs="unbounded" name="every" type="every_system">
+				<xs:annotation>
+					<xs:documentation>Logic that is run every 'interval' seconds</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" name="chance" type="chance_system">
+				<xs:annotation>
+					<xs:documentation>Logic that is run with a percentage chance (0-100)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" name="emit" type="emit">
+				<xs:annotation>
+					<xs:documentation>Emit a particle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:complexType name="oplist_system_once">
+		<xs:choice maxOccurs="unbounded" minOccurs="1">
+			<xs:element maxOccurs="unbounded" name="loop" type="loop_system_once"/>
+			<xs:element maxOccurs="unbounded" name="emit" type="emit">
+				<xs:annotation>
+					<xs:documentation>Emit a particle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" name="chance" type="chance_system_once">
+				<xs:annotation>
+					<xs:documentation>Logic that is run with a percentage chance (0-100)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:complexType name="oplist">
+		<xs:choice maxOccurs="unbounded" minOccurs="1">
+			<xs:element maxOccurs="unbounded" name="set" type="argtarget1">
+				<xs:annotation>
+					<xs:documentation>target = arg0</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" name="add" type="argtarget">
+				<xs:annotation>
+					<xs:documentation>target += arg0, target = arg0 + arg1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" name="mul" type="argtarget">
+				<xs:annotation>
+					<xs:documentation>target *= arg0, target = arg0 * arg1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" name="div" type="argtarget">
+				<xs:annotation>
+					<xs:documentation>target /= arg0, target = arg0 / arg1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" name="sub" type="argtarget">
+				<xs:annotation>
+					<xs:documentation>target -= arg0, target = arg0 - arg1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" name="rand" type="argtarget">
+				<xs:annotation>
+					<xs:documentation>Random number between arg0 and arg1 (or between 0 and arg0) - linear distrubution</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" name="rand_smooth" type="argtarget">
+				<xs:annotation>
+					<xs:documentation>Random number between arg0 and arg1 (or between 0 and arg0) - non linear distrubution</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" name="abs" type="argtarget1"/>
+			<xs:element maxOccurs="unbounded" name="sign" type="argtarget1"/>
+			<xs:element maxOccurs="unbounded" name="saturate" type="argtarget1"/>
+			<xs:element maxOccurs="unbounded" name="sin" type="argtarget1"/>
+			<xs:element maxOccurs="unbounded" name="cos" type="argtarget1"/>
+			<xs:element maxOccurs="unbounded" name="tan" type="argtarget1"/>
+			<xs:element maxOccurs="unbounded" name="asin" type="argtarget1"/>
+			<xs:element maxOccurs="unbounded" name="acos" type="argtarget1"/>
+			<xs:element maxOccurs="unbounded" name="atan" type="argtarget1"/>
+			<xs:element maxOccurs="unbounded" name="sqrt" type="argtarget1"/>
+			<xs:element maxOccurs="unbounded" name="rsqrt" type="argtarget1"/>
+			<xs:element maxOccurs="unbounded" name="atan2" type="argtarget2"/>
+			<xs:element maxOccurs="unbounded" name="min" type="argtarget2"/>
+			<xs:element maxOccurs="unbounded" name="max" type="argtarget2"/>
+			<xs:element maxOccurs="unbounded" name="madd" type="argtarget2">
+				<xs:annotation>
+					<xs:documentation>target += arg0 * arg1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" name="loop" type="loop"/>
+			<xs:element maxOccurs="unbounded" name="if_equal" type="if_equal"/>
+			<xs:element maxOccurs="unbounded" name="if_notequal" type="if_notequal"/>
+			<xs:element maxOccurs="unbounded" name="if_lessequal" type="if_lessequal"/>
+			<xs:element maxOccurs="unbounded" name="if_greaterequal" type="if_greaterequal"/>
+			<xs:element maxOccurs="unbounded" name="if_less" type="if_less"/>
+			<xs:element maxOccurs="unbounded" name="if_greater" type="if_greater"/>
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:complexType name="loop">
+		<xs:complexContent>
+			<xs:extension base="oplist">
+				<xs:attribute name="count" type="xs:integer" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+	<xs:complexType name="trigger">
+		<xs:complexContent>
+			<xs:extension base="oplist_system_once">
+				<xs:attribute name="name" type="xs:string" use="required"/>
+				<xs:attribute name="allocation_multiplier" type="xs:positiveInteger" use="required">
+					<xs:annotation>
+						<xs:documentation>Firing this trigger will create a certain number of particles. This number is a multiplier for how much memory to allocate to make room for particles created by this trigger.</xs:documentation>
+						<xs:documentation>If you set this value to 1, enough memory will be allocated for a single particle effect created by this trigger.</xs:documentation>
+						<xs:documentation>For example, if your triggered particle effect lasts 5 seconds, and you fire the trigger every 2 seconds, you potentially have 3 concurrent triggered particle effects - so should set the multiplier to 3.</xs:documentation>
+						<xs:documentation>If the particle system runs out of allocated memory, the particles it produces may exhibit visual artifacts (they may dissapear, become brighter, etc)</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="toggle">
+		<xs:complexContent>
+			<xs:extension base="oplist_system">
+				<xs:attribute name="name" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="loop_system">
+		<xs:complexContent>
+			<xs:extension base="oplist_system">
+				<xs:attribute name="count" type="xs:integer" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="loop_system_once">
+		<xs:complexContent>
+			<xs:extension base="oplist_system_once">
+				<xs:attribute name="count" type="xs:integer" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="emit">
+		<xs:attribute name="type" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>typename of the particle to emit</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="life" type="xs:decimal" use="required">
+			<xs:annotation>
+				<xs:documentation>life of the emitted particle (in seconds)</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="life_variance" type="xs:decimal" use="optional">
+			<xs:annotation>
+				<xs:documentation>random +/- offset to the life of the particle (in seconds)</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="sound">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="every">
+		<xs:complexContent>
+			<xs:extension base="oplist">
+				<xs:attribute name="interval" type="xs:decimal" use="required">
+					<xs:annotation>
+						<xs:documentation>interval for the logic to run (in seconds)</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="every_system">
+		<xs:complexContent>
+			<xs:extension base="oplist_system">
+				<xs:attribute name="interval" type="xs:decimal" use="required">
+					<xs:annotation>
+						<xs:documentation>interval for the logic to run (in seconds)</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+	<xs:complexType name="chance">
+		<xs:complexContent>
+			<xs:extension base="oplist">
+				<xs:attribute name="percent" type="xs:decimal" use="required">
+					<xs:annotation>
+						<xs:documentation>percentage chance of logic being run (0-100)</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="chance_system">
+		<xs:complexContent>
+			<xs:extension base="oplist_system">
+				<xs:attribute name="percent" type="xs:decimal" use="required">
+					<xs:annotation>
+						<xs:documentation>percentage chance of logic being run (0-100)</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="chance_system_once">
+		<xs:complexContent>
+			<xs:extension base="oplist_system_once">
+				<xs:attribute name="percent" type="xs:decimal" use="required">
+					<xs:annotation>
+						<xs:documentation>percentage chance of logic being run (0-100)</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="if">
+		<xs:complexContent>
+			<xs:extension base="oplist">
+				<xs:attribute name="arg0" type="value" use="required"/>
+				<xs:attribute name="arg1" type="value" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+	<xs:complexType name="if_less">
+		<xs:complexContent>
+			<xs:extension base="if"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="if_greater">
+		<xs:complexContent>
+			<xs:extension base="if"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="if_lessequal">
+		<xs:complexContent>
+			<xs:extension base="if"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="if_greaterequal">
+		<xs:complexContent>
+			<xs:extension base="if"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="if_equal">
+		<xs:complexContent>
+			<xs:extension base="if"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="if_notequal">
+		<xs:complexContent>
+			<xs:extension base="if"/>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="logic">
+		<xs:all>
+			<xs:element name="once" minOccurs="1" maxOccurs="1" type="oplist">
+				<xs:annotation>
+					<xs:documentation>
+						logic that is run when this particle is created
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="frame" minOccurs="0" maxOccurs="1" type="oplist">
+				<xs:annotation>
+					<xs:documentation>
+						logic that is run every frame for every particle (60 or 30 times per second)
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:all>
+	</xs:complexType>
+
+	<xs:complexType name="emitterlogic">
+		<xs:all>
+			<xs:element name="frame" type="oplist_system" maxOccurs ="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						logic that is run every frame (60 or 30 times per second)
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="remove" type="oplist_system_once" maxOccurs ="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						logic that is run when the particle is removed
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:all>
+	</xs:complexType>
+
+	<xs:complexType name="systemlogic">
+		<xs:all>
+			<xs:element name="once" type="oplist_system_once" minOccurs="0" maxOccurs="1" >
+				<xs:annotation>
+					<xs:documentation>
+						logic that is run when the particle system is created
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="frame" type="oplist_system" minOccurs="0" maxOccurs="1" >
+				<xs:annotation>
+					<xs:documentation>
+						logic that is run every frame (60 or 30 times per second)
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="triggers" type="systemtriggers" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						logic that is run when a trigger is called by the application
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="toggles" type="systemtoggles" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						logic that is run when a named toggle tigger is enabled
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:all>
+
+		<xs:attribute name="frame_rate" type="framerate" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					rate that frame logic is performed
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+
+		<!--<xs:attribute name="precision" type="precision" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					storage precision for GPU assisted particles (default is 16bit float)
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>-->
+
+	</xs:complexType>
+
+	<xs:complexType name="systemtriggers">
+		<xs:sequence>
+			<xs:element name="trigger" type="trigger" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						logic that is run when a trigger is called by the application
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="systemtoggles">
+		<xs:sequence>
+			<xs:element name="toggle" type="toggle" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						logic that is run when a named toggle tigger is enabled
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="particlesystem">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="system" type="systemlogic" maxOccurs="1" minOccurs="1">
+					<xs:annotation>
+						<xs:documentation>
+							system emitter logic that is run by the entire particle system
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="particle" maxOccurs="unbounded" minOccurs="1">
+					<xs:complexType>
+						<xs:all>
+
+							<xs:element name="emitter" type="emitterlogic" maxOccurs ="1" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>
+										emitter logic that is run for each instance of a particle of this type
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+
+							<xs:element name="logic" type="logic" maxOccurs ="1" minOccurs="1">
+								<xs:annotation>
+									<xs:documentation>
+										logic that is run for each instance of a particle of this type
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+
+						</xs:all>
+						<xs:attribute name="name" type="xs:string" use="required" />
+						<xs:attribute name="blend" type="blend" use="optional">
+							<xs:annotation>
+								<xs:documentation>
+									Blend mode of the particle
+								</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="texture" type="xs:string" use="required">
+							<xs:annotation>
+								<xs:documentation>
+									Texture file name of the particle (May be any empty string for no texture)
+								</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="gpu_buffer_position" type="xs:boolean" use="optional">
+							<xs:annotation>
+								<xs:documentation>
+									(optional) Set to true, and [user1,user2,user3] will be used to store the initial position of the particle, to improve velocity precision for GPU particles spawned at a distance from the origin
+								</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -22,7 +22,7 @@
 
 -->
 <particlesystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:noNamespaceSchemaLocation="../../../../bin/Xen.Ex.ParticleSystemImporter/particlesystem.xsd">
+	xsi:noNamespaceSchemaLocation="../../XenGame/References/Xen/Xen.Ex.ParticleSystemImporter/particlesystem.xsd">
 
 	<!-- 
 		
